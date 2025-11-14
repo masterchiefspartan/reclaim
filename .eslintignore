@@ -1,0 +1,28 @@
+node_modules/
+.expo/
+dist/
+build/
+*.log
+.DS_Store
+.env
+.env.local
+.env.*.local
+
+# TypeScript
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+
+# Testing
+coverage/
+
+# Expo
+.expo/
+web-build/
+
+# Native
+ios/
+android/
+
