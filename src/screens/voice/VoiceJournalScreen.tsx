@@ -7,7 +7,6 @@ import { PrimaryButton } from '@components/common/PrimaryButton';
 import { RecordingVisualizer } from '@components/voice/RecordingVisualizer';
 import { useVoiceRecorder } from '@hooks/useVoiceRecorder';
 import { createJournalEntry } from '@services/journal/journalService';
-import { requestAiResponse, requestEntryTranscription } from '@services/ai/aiService';
 import type { RootStackParamList } from '@navigation/types';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -50,9 +49,11 @@ export const VoiceJournalScreen = () => {
         duration: result.durationMillis,
         checkInType: mode,
       });
-      await requestEntryTranscription(entryId);
-      await requestAiResponse(entryId);
+      // Backend triggers automatically handle transcription and AI response
       navigation.replace('AIResponse', { entryId });
+    } catch (error) {
+      console.error('Failed to save entry:', error);
+      // Optional: Show error to user
     } finally {
       setIsSaving(false);
     }

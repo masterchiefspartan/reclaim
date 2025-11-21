@@ -1,12 +1,13 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { NavigatorScreenParams } from '@react-navigation/native';
 
 import type { SubscriptionPlan } from '@/types/user';
 
 export type RootStackParamList = {
   Loading: undefined;
   Onboarding: undefined;
-  Main: undefined;
+  Main: NavigatorScreenParams<MainTabParamList>;
   VoiceJournal: { mode: 'free' | 'guided' } | undefined;
   AIResponse: { entryId: string };
   EntryDetail: { entryId: string };

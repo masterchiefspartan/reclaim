@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { Audio } from 'expo-av';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
@@ -8,7 +8,7 @@ import { AppText } from '@components/common/AppText';
 import { PrimaryButton } from '@components/common/PrimaryButton';
 import { MoodSelector } from '@components/common/MoodSelector';
 import { useJournalEntry } from '@hooks/useJournalEntries';
-import type { MoodLevel } from '@/types/journal';
+import type { MoodLevel, ProcessingStage } from '@/types/journal';
 import { updateEntryMood } from '@services/journal/journalService';
 import type { RootStackParamList } from '@navigation/types';
 
@@ -54,11 +54,49 @@ export const AIResponseScreen = () => {
     setSaving(false);
   };
 
+  const statusMessage = useMemo(() => {
+    if (!entry?.processingStage) return 'Initializing...';
+    const messages: Record<ProcessingStage, string> = {
+      uploading: 'Uploading audio...',
+      transcribing: 'Transcribing your voice...',
+      analyzing: 'AI is analyzing your thoughts...',
+      synthesizing: 'Preparing voice response...',
+      completed: 'Response ready',
+      failed: 'Processing failed',
+    };
+    return messages[entry.processingStage] ?? 'Processing...';
+  }, [entry?.processingStage]);
+
   if (loading || !entry) {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" />
-        <AppText>Waiting for your AI companion...</AppText>
+        <AppText>Loading entry...</AppText>
+      </View>
+    );
+  }
+
+  // Still processing
+  if (entry.processingStage && entry.processingStage !== 'completed' && entry.processingStage !== 'failed') {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" />
+        <AppText variant="h3">{statusMessage}</AppText>
+        <AppText style={styles.subtext}>This usually takes about 30 seconds.</AppText>
+      </View>
+    );
+  }
+
+  // Failed state
+  if (entry.processingStage === 'failed' || entry.transcriptionStatus === 'failed' || entry.aiResponseStatus === 'failed') {
+    return (
+      <View style={styles.center}>
+        <AppText variant="h3" style={styles.errorText}>Something went wrong</AppText>
+        <AppText>We couldn't process your entry. You can still view it in your journal.</AppText>
+        <PrimaryButton
+          label="Go to Journal"
+          onPress={() => navigation.navigate('Main', { screen: 'JournalTab' })}
+        />
       </View>
     );
   }
@@ -66,19 +104,13 @@ export const AIResponseScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <AppText variant="h2">Your AI Companion</AppText>
-      {entry.aiResponseStatus !== 'completed' ? (
-        <View style={styles.center}>
-          <ActivityIndicator size="large" />
-          <AppText>Analyzing your entry. This usually takes less than a minute.</AppText>
-        </View>
-      ) : (
-        <View style={styles.responseCard}>
-          <AppText>{entry.aiResponse}</AppText>
-          {entry.aiResponseAudioUrl ? (
-            <PrimaryButton label="Listen to response" onPress={handlePlayResponse} />
-          ) : null}
-        </View>
-      )}
+      
+      <View style={styles.responseCard}>
+        <AppText>{entry.aiResponse}</AppText>
+        {entry.aiResponseAudioUrl ? (
+          <PrimaryButton label="Listen to response" onPress={handlePlayResponse} />
+        ) : null}
+      </View>
 
       <View style={styles.section}>
         <AppText variant="h3">How do you feel now?</AppText>
@@ -98,7 +130,10 @@ export const AIResponseScreen = () => {
           label="View full entry"
           onPress={() => navigation.navigate('EntryDetail', { entryId: entry.id })}
         />
-        <PrimaryButton label="Back to Home" onPress={() => navigation.navigate('Main')} />
+        <PrimaryButton
+          label="Back to Home"
+          onPress={() => navigation.navigate('Main', { screen: 'HomeTab' })}
+        />
       </View>
     </ScrollView>
   );
@@ -110,8 +145,11 @@ const styles = StyleSheet.create({
     gap: 24,
   },
   center: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 12,
+    padding: 24,
+    gap: 16,
   },
   responseCard: {
     borderRadius: 16,
@@ -129,6 +167,11 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: '#fff',
   },
+  subtext: {
+    opacity: 0.6,
+    textAlign: 'center',
+  },
+  errorText: {
+    color: '#ef4444',
+  },
 });
-
-

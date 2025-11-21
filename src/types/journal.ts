@@ -10,11 +10,14 @@ export interface EntryInsights {
 
 export type EntryStatus = 'pending' | 'processing' | 'completed' | 'failed';
 
+export type ProcessingStage = 'uploading' | 'transcribing' | 'analyzing' | 'synthesizing' | 'completed' | 'failed';
+
 export interface JournalEntry {
   id: string;
   userId: string;
   audioUrl: string;
   duration: number;
+  processingStage?: ProcessingStage;
   transcript?: string;
   transcriptionStatus: EntryStatus;
   aiResponse?: string;
