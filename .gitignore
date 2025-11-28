@@ -11,10 +11,20 @@ RecoverVoiceApp/.expo/
 RecoverVoiceApp/dist/
 RecoverVoiceApp/web-build/
 RecoverVoiceApp/*.log
+RecoverVoiceApp/ios/
+RecoverVoiceApp/android/
+
+# Dependencies
+node_modules/
+
+# Debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
 
 # System
 .DS_Store
 .env
 .env.*
 !.env.example
-
+*.pem
