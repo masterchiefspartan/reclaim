@@ -1,0 +1,20 @@
+# Functions
+functions/node_modules/
+functions/lib/
+functions/*.log
+functions/.firebase/
+functions/.runtimeconfig.json
+
+# React Native App
+RecoverVoiceApp/node_modules/
+RecoverVoiceApp/.expo/
+RecoverVoiceApp/dist/
+RecoverVoiceApp/web-build/
+RecoverVoiceApp/*.log
+
+# System
+.DS_Store
+.env
+.env.*
+!.env.example
+

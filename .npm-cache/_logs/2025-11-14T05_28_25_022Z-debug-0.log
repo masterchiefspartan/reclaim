@@ -1,0 +1,19 @@
+0 verbose cli /opt/homebrew/Cellar/node/23.7.0/bin/node /opt/homebrew/bin/npm
+1 info using npm@10.9.2
+2 info using node@v23.7.0
+3 silly config load:file:/opt/homebrew/lib/node_modules/npm/npmrc
+4 silly config load:file:/Users/nikhilmohanty/Documents/reclaim/RecoverVoiceApp/.npmrc
+5 silly config load:file:/Users/nikhilmohanty/.npmrc
+6 silly config load:file:/opt/homebrew/etc/npmrc
+7 verbose title npm install @react-navigation/native @react-navigation/native-stack @react-navigation/bottom-tabs react-native-safe-area-context react-native-screens firebase @react-native-async-storage/async-storage @expo/vector-icons axios expo-linear-gradient expo-linking expo-constants
+8 verbose argv "install" "@react-navigation/native" "@react-navigation/native-stack" "@react-navigation/bottom-tabs" "react-native-safe-area-context" "react-native-screens" "firebase" "@react-native-async-storage/async-storage" "@expo/vector-icons" "axios" "expo-linear-gradient" "expo-linking" "expo-constants"
+9 verbose logfile logs-max:10 dir:/Users/nikhilmohanty/Documents/reclaim/.npm-cache/_logs/2025-11-14T05_28_25_022Z-
+10 verbose logfile /Users/nikhilmohanty/Documents/reclaim/.npm-cache/_logs/2025-11-14T05_28_25_022Z-debug-0.log
+11 silly logfile done cleaning log files
+12 verbose cwd /Users/nikhilmohanty/Documents/reclaim/RecoverVoiceApp
+13 verbose os Darwin 24.3.0
+14 verbose node v23.7.0
+15 verbose npm  v10.9.2
+16 verbose exit 1
+17 verbose code 1
+18 error A complete log of this run can be found in: /Users/nikhilmohanty/Documents/reclaim/.npm-cache/_logs/2025-11-14T05_28_25_022Z-debug-0.log

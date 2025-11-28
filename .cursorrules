@@ -1,0 +1,1118 @@
+# Cursor Rules for RecoverVoiceApp
+# Voice Journal App - React Native + Expo + Firebase + AI Integration
+
+## Project Context
+This is a React Native mobile application built with Expo, featuring voice recording, AI-powered journaling, mood tracking, and conversation capabilities. The app integrates with Firebase (Auth, Firestore, Functions), Deepgram (speech-to-text), Claude API (AI conversations), and ElevenLabs (text-to-speech).
+
+## Tech Stack
+- **Frontend:** React Native 0.81.5, Expo SDK 54, React 19.1.0
+- **Language:** TypeScript (preferred, JavaScript acceptable during migration)
+- **Backend:** Firebase Functions (serverless), Firestore (NoSQL database)
+- **Authentication:** Firebase Auth
+- **AI Services:** Claude API (Anthropic), Deepgram, ElevenLabs
+- **State Management:** React Hooks (useState, useEffect, useContext, custom hooks)
+- **Navigation:** React Navigation (to be implemented)
+- **Styling:** StyleSheet API, Flexbox-first layout
+
+## Code Style & Standards
+
+### General Principles
+- Write self-documenting code with clear variable and function names
+- Prefer explicit over implicit
+- Follow single responsibility principle
+- Keep functions small and focused
+- Use TypeScript for type safety (gradual migration acceptable)
+- Always handle errors explicitly - never swallow errors silently
+
+### File Organization
+```
+src/
+├── components/     # Reusable UI components
+│   ├── voice/     # Voice-related components
+│   ├── journal/   # Journal-related components
+│   ├── dashboard/ # Dashboard components
+│   └── common/    # Shared components (Button, Card, etc.)
+├── screens/        # Full-screen components (pages)
+├── services/       # API clients, external integrations
+├── hooks/          # Custom React hooks
+├── types/          # TypeScript type definitions
+├── utils/          # Helper functions, utilities
+├── navigation/     # Navigation configuration
+└── config/         # Configuration files (Firebase, etc.)
+```
+
+### Naming Conventions
+- **Files:** PascalCase for components (`VoiceRecorder.tsx`), camelCase for utilities (`dateHelpers.ts`)
+- **Components:** PascalCase (`VoiceRecorder`, `JournalCard`)
+- **Functions:** camelCase (`handleRecordStart`, `processTranscript`)
+- **Constants:** UPPER_SNAKE_CASE (`API_BASE_URL`, `MAX_RECORDING_DURATION`)
+- **Types/Interfaces:** PascalCase with descriptive names (`User`, `JournalEntry`, `VoiceRecording`)
+- **Hooks:** camelCase starting with `use` (`useVoiceRecording`, `useAIConversation`)
+
+### Component Patterns
+
+#### Functional Components Only
+- Always use functional components, never class components
+- Use React Hooks for state and lifecycle management
+- Prefer composition over inheritance
+
+#### Component Structure
+```typescript
+// Import order: React, React Native, third-party, local
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { SomeThirdPartyLib } from 'library';
+import { CustomHook } from '../hooks/useCustomHook';
+import { CustomType } from '../types';
+
+// Component definition
+export const ComponentName: React.FC<Props> = ({ prop1, prop2 }) => {
+  // Hooks first
+  const [state, setState] = useState<Type>(initialValue);
+  
+  // Effects
+  useEffect(() => {
+    // Effect logic
+  }, [dependencies]);
+  
+  // Custom hooks
+  const customHookResult = useCustomHook();
+  
+  // Event handlers
+  const handleEvent = () => {
+    // Handler logic
+  };
+  
+  // Render
+  return (
+    <View style={styles.container}>
+      {/* JSX */}
+    </View>
+  );
+};
+
+// Styles
+const styles = StyleSheet.create({
+  container: {
+    // Styles
+  },
+});
+```
+
+#### Props Types
+- Always define TypeScript interfaces for component props
+- Use descriptive prop names
+- Mark optional props with `?`
+- Provide default values when appropriate
+
+```typescript
+interface VoiceRecorderProps {
+  onRecordingComplete: (audioUri: string) => void;
+  maxDuration?: number;
+  disabled?: boolean;
+}
+```
+
+### TypeScript Standards
+
+#### Type Definitions
+- Create dedicated type files in `src/types/`
+- Use interfaces for object shapes
+- Use types for unions, intersections, and computed types
+- Never use `any` - use `unknown` if type is truly unknown
+- Use generic types for reusable components/hooks
+
+```typescript
+// types/journal.ts
+export interface JournalEntry {
+  id: string;
+  userId: string;
+  transcript: string;
+  audioUrl: string;
+  createdAt: Date;
+  mood?: MoodLevel;
+  aiResponse?: string;
+}
+
+export type MoodLevel = 'happy' | 'neutral' | 'sad' | 'anxious' | 'excited';
+```
+
+#### Type Safety
+- Always type function parameters and return types
+- Use type guards for runtime type checking
+- Leverage discriminated unions for state management
+- Use `as const` for literal types when needed
+
+### Error Handling
+
+#### Pattern
+- Always wrap async operations in try-catch blocks
+- Provide meaningful error messages
+- Log errors appropriately (use console.error in development)
+- Create custom error types for domain-specific errors
+- Never expose sensitive information in error messages
+
+```typescript
+try {
+  const result = await asyncOperation();
+  return result;
+} catch (error) {
+  console.error('Operation failed:', error);
+  throw new Error('User-friendly error message');
+}
+```
+
+#### Error Boundaries
+- Implement error boundaries for critical sections
+- Provide fallback UI for error states
+- Handle network errors gracefully
+
+### State Management
+
+#### Hooks Pattern
+- Use `useState` for local component state
+- Use `useContext` for shared state (auth, theme)
+- Create custom hooks for reusable state logic
+- Keep state as close to where it's used as possible
+- Lift state up only when necessary
+
+#### State Updates
+- Always use functional updates for state that depends on previous state
+- Batch state updates when possible
+- Use `useCallback` for memoized callbacks passed to children
+- Use `useMemo` for expensive computations
+
+```typescript
+// Good
+setCount(prev => prev + 1);
+
+// Memoize expensive callbacks
+const handlePress = useCallback(() => {
+  // Handler logic
+}, [dependencies]);
+```
+
+### Async/Await Patterns
+
+#### Always Use Async/Await
+- Never use `.then()` chains - use async/await
+- Always handle errors with try-catch
+- Use Promise.all() for parallel operations
+- Use Promise.allSettled() when you need all results
+
+```typescript
+// Good
+const fetchData = async () => {
+  try {
+    const [user, entries] = await Promise.all([
+      fetchUser(),
+      fetchEntries(),
+    ]);
+    return { user, entries };
+  } catch (error) {
+    handleError(error);
+  }
+};
+```
+
+### React Native Specific Rules
+
+#### Components
+- **Text:** All text must be wrapped in `<Text>` component - never render plain strings
+- **View:** Use `<View>` instead of `<div>` - it's the primary container
+- **StyleSheet:** Always use `StyleSheet.create()` for styles - never inline style objects
+- **Keys:** Always provide `key` prop for list items
+- **Accessibility:** Include `accessibilityLabel` for interactive elements
+
+#### Styling
+- Use Flexbox for all layouts (default in React Native)
+- Use unitless numbers for dimensions (or percentages)
+- Use `StyleSheet.create()` for performance
+- No CSS classes - style objects only
+- Use Platform.select() for platform-specific styles
+
+```typescript
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#fff',
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#000',
+  },
+});
+
+// Platform-specific
+const styles = StyleSheet.create({
+  container: {
+    ...Platform.select({
+      ios: { paddingTop: 20 },
+      android: { paddingTop: 10 },
+    }),
+  },
+});
+```
+
+#### Performance
+- Use `FlatList` or `SectionList` for long lists (never `ScrollView` with `map`)
+- Implement `keyExtractor` for list items
+- Use `React.memo()` for expensive components
+- Lazy load images with `expo-image`
+- Avoid inline functions in render methods
+
+### Firebase Integration
+
+#### Authentication
+- Always verify authentication state before accessing protected resources
+- Use Firebase Auth hooks for reactive auth state
+- Handle auth errors gracefully
+- Never store sensitive tokens in AsyncStorage
+
+#### Firestore
+- Use Firebase admin SDK in Functions, client SDK in app
+- Implement proper security rules (never trust client-side validation alone)
+- Use batch writes for multiple operations
+- Implement pagination for large collections
+- Use transactions for critical operations
+
+#### Functions
+- Keep functions focused and single-purpose
+- Implement proper error handling
+- Use environment variables for sensitive data
+- Validate all inputs
+- Return consistent response formats
+
+### API Integration
+
+#### API Clients
+- Create dedicated service files for each API (Deepgram, Claude, ElevenLabs)
+- Use environment variables for API keys (never commit keys)
+- Implement request/response interceptors for error handling
+- Use TypeScript interfaces for API responses
+- Handle rate limiting and retries
+
+```typescript
+// services/claudeAI.ts
+export interface ClaudeRequest {
+  message: string;
+  conversationHistory?: ConversationMessage[];
+}
+
+export interface ClaudeResponse {
+  response: string;
+  tokensUsed: number;
+}
+
+export const sendToClaude = async (request: ClaudeRequest): Promise<ClaudeResponse> => {
+  // Implementation
+};
+```
+
+#### Error Handling
+- Create custom error types for API errors
+- Provide user-friendly error messages
+- Implement retry logic with exponential backoff
+- Handle network failures gracefully
+
+### Environment Variables
+
+#### Pattern
+- Use `expo-constants` for environment variables
+- Never commit `.env` files
+- Use `.env.example` to document required variables
+- Access via `process.env.VARIABLE_NAME` or `Constants.expoConfig.extra`
+
+```typescript
+// config/env.ts
+export const ENV = {
+  DEEPGRAM_API_KEY: process.env.EXPO_PUBLIC_DEEPGRAM_API_KEY,
+  CLAUDE_API_KEY: process.env.EXPO_PUBLIC_CLAUDE_API_KEY,
+  FIREBASE_API_KEY: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+};
+```
+
+### Testing Standards
+
+#### Unit Tests
+- Write tests for utility functions
+- Test custom hooks
+- Test service functions
+- Aim for >80% code coverage
+
+#### Component Tests
+- Test user interactions
+- Test error states
+- Test loading states
+- Use React Native Testing Library
+
+#### Integration Tests
+- Test API integrations
+- Test Firebase operations
+- Test navigation flows
+
+### Security Best Practices
+
+**CRITICAL: Security must be verified at every code change. Follow this checklist:**
+
+## Security Checklist - MANDATORY FOR ALL CODE CHANGES
+
+### Configuration Security
+
+#### ✅ Detect Secrets in Code
+- **NEVER** hardcode API keys, passwords, tokens, or secrets
+- **NEVER** commit `.env` files or configuration files with secrets
+- Use environment variables (`.env` files excluded from git)
+- Use `process.env.EXPO_PUBLIC_*` for public variables, never for secrets
+- Secrets must only exist in Firebase Functions config or secure environment variables
+
+```typescript
+// ❌ BAD - Never do this
+const API_KEY = 'sk-1234567890abcdef';
+
+// ✅ GOOD
+const API_KEY = process.env.DEEPGRAM_API_KEY;
+if (!API_KEY) {
+  throw new Error('API key not configured');
+}
+```
+
+#### ✅ Identify Secrets Committed to Version Control
+- Before committing, scan for:
+  - API keys (Deepgram, Claude, ElevenLabs)
+  - Firebase service account keys
+  - JWT secrets
+  - Database connection strings
+  - OAuth client secrets
+- If secrets are found in git history, rotate them immediately
+- Use `git-secrets` or similar tools to prevent commits
+
+#### ✅ Flag Hardcoded Credentials
+- Check for hardcoded:
+  - Passwords
+  - API tokens
+  - Authentication tokens
+  - Service account credentials
+- All credentials must use environment variables or secure storage
+
+### Authentication & Authorization
+
+#### ✅ Identify Missing Authentication Checks
+
+**Frontend:**
+- Always check `useAuth()` hook before accessing protected routes
+- Verify user is authenticated before API calls
+- Show loading/error states for auth state
+
+```typescript
+// ✅ GOOD - Always check auth
+const { user, loading } = useAuth();
+if (loading) return <LoadingSpinner />;
+if (!user) return <LoginScreen />;
+```
+
+**Backend (Firebase Functions):**
+- Always verify `context.auth` exists
+- Check user authentication before processing requests
+- Return proper error codes for unauthenticated requests
+
+```typescript
+// ✅ GOOD - Always verify auth
+export const protectedFunction = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'Must be authenticated');
+  }
+  // ... rest of function
+});
+```
+
+#### ✅ Detect Improper Authorization Patterns
+
+**Firebase Functions:**
+- Verify user owns resources before allowing access
+- Check `userId` matches `context.auth.uid`
+- Never trust client-provided user IDs
+
+```typescript
+// ✅ GOOD - Verify ownership
+const entry = await db.collection('journalEntries').doc(entryId).get();
+if (entry.data()?.userId !== context.auth.uid) {
+  throw new functions.https.HttpsError('permission-denied', 'Access denied');
+}
+```
+
+**Firestore Security Rules:**
+- Always include ownership checks in rules
+- Never allow public read/write on user data
+- Use `request.auth.uid` to verify ownership
+
+```javascript
+// ✅ GOOD - Security rules
+match /journalEntries/{entryId} {
+  allow read, write: if request.auth != null && 
+    resource.data.userId == request.auth.uid;
+}
+```
+
+#### ✅ Flag Violations of Principle of Least Privilege
+- Grant minimum permissions necessary
+- Review Firebase Security Rules regularly
+- Limit API access scopes
+- Use role-based access when needed
+- Don't grant admin access unless absolutely necessary
+
+### Data Protection
+
+#### ✅ Identify Unencrypted Sensitive Data
+- Never store sensitive data (passwords, tokens, credit cards) in plain text
+- Use Firebase Auth for password management (never store passwords)
+- Encrypt sensitive data at rest if stored locally
+- Use secure storage (Keychain/Keystore) for sensitive app data
+
+```typescript
+// ❌ BAD - Never store sensitive data unencrypted
+AsyncStorage.setItem('apiKey', 'secret-key');
+
+// ✅ GOOD - Use secure storage
+import * as SecureStore from 'expo-secure-store';
+await SecureStore.setItemAsync('apiKey', 'secret-key');
+```
+
+#### ✅ Detect Missing Input Validation
+
+**Frontend:**
+- Validate all user inputs before submission
+- Check email format, password strength, required fields
+- Sanitize inputs to prevent injection attacks
+
+```typescript
+// ✅ GOOD - Validate inputs
+const validateEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+const validateInput = (input: string): string => {
+  return input.trim().replace(/[<>]/g, ''); // Basic sanitization
+};
+```
+
+**Backend:**
+- Validate all inputs in Firebase Functions
+- Check types, formats, ranges
+- Reject invalid inputs with clear error messages
+- Never trust client-side validation alone
+
+```typescript
+// ✅ GOOD - Server-side validation
+export const createEntry = functions.https.onCall(async (data, context) => {
+  if (!data.audioUrl || typeof data.audioUrl !== 'string') {
+    throw new functions.https.HttpsError('invalid-argument', 'Audio URL required');
+  }
+  if (data.audioUrl.length > 2000) {
+    throw new functions.https.HttpsError('invalid-argument', 'Invalid URL');
+  }
+  // ... process
+});
+```
+
+#### ✅ Find XSS Vulnerabilities Through Missing Output Encoding
+- React Native components generally prevent XSS
+- Still sanitize user-generated content before displaying
+- Use `Text` component instead of rendering raw HTML
+- Escape special characters in user inputs
+
+```typescript
+// ❌ BAD - Potential XSS
+<Text>{userInput}</Text> // If userInput contains malicious script
+
+// ✅ GOOD - Sanitize first
+const sanitize = (text: string) => text.replace(/[<>]/g, '');
+<Text>{sanitize(userInput)}</Text>
+```
+
+#### ✅ Identify SQL Injection Vulnerabilities
+- **Not applicable** - Using Firestore (NoSQL), not SQL
+- However, watch for Firestore query injection:
+  - Never concatenate user input directly into queries
+  - Use parameterized queries
+
+```typescript
+// ❌ BAD - Potential injection
+const query = db.collection('entries').where('userId', '==', userId + ' OR 1=1');
+
+// ✅ GOOD - Use proper query syntax
+const query = db.collection('entries').where('userId', '==', userId);
+```
+
+### API Security
+
+#### ✅ Detect Missing Rate Limiting
+- Implement rate limiting for API endpoints
+- Use Firebase Functions quotas
+- Monitor API usage
+- Return rate limit errors appropriately
+
+```typescript
+// ✅ GOOD - Rate limiting example
+const rateLimiter = new Map<string, number[]>();
+
+function checkRateLimit(userId: string): boolean {
+  const now = Date.now();
+  const windowMs = 60000; // 1 minute
+  const maxRequests = 10;
+  
+  const requests = rateLimiter.get(userId) || [];
+  const recentRequests = requests.filter(time => now - time < windowMs);
+  
+  if (recentRequests.length >= maxRequests) {
+    return false;
+  }
+  
+  recentRequests.push(now);
+  rateLimiter.set(userId, recentRequests);
+  return true;
+}
+```
+
+#### ✅ Identify Improper Error Handling That Leaks Information
+
+**NEVER expose:**
+- Stack traces to users
+- Internal error messages
+- Database structure
+- API keys or secrets
+- File paths
+- Implementation details
+
+```typescript
+// ❌ BAD - Leaks information
+catch (error) {
+  throw new Error(`Database error: ${error.message} at ${error.stack}`);
+}
+
+// ✅ GOOD - Generic error messages
+catch (error) {
+  console.error('Database error:', error); // Log detailed error
+  throw new functions.https.HttpsError(
+    'internal',
+    'An error occurred. Please try again.'
+  );
+}
+```
+
+#### ✅ Find Missing Input Validation in API Endpoints
+- Validate all parameters in Firebase Functions
+- Check types, ranges, formats
+- Validate file uploads (type, size)
+- Sanitize string inputs
+
+```typescript
+// ✅ GOOD - Comprehensive validation
+export const uploadAudio = functions.https.onCall(async (data, context) => {
+  // Auth check
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'Must be authenticated');
+  }
+  
+  // Input validation
+  if (!data.audioUrl || typeof data.audioUrl !== 'string') {
+    throw new functions.https.HttpsError('invalid-argument', 'Audio URL required');
+  }
+  
+  // URL validation
+  try {
+    new URL(data.audioUrl);
+  } catch {
+    throw new functions.https.HttpsError('invalid-argument', 'Invalid URL format');
+  }
+  
+  // Size validation (if applicable)
+  if (data.size && data.size > 50 * 1024 * 1024) { // 50MB
+    throw new functions.https.HttpsError('invalid-argument', 'File too large');
+  }
+  
+  // ... process
+});
+```
+
+### Logging & Monitoring
+
+#### ✅ Identify Sensitive Information in Logs
+
+**NEVER log:**
+- API keys or secrets
+- Passwords or tokens
+- Full credit card numbers
+- Social Security Numbers
+- Authentication tokens
+- User personal data (unless necessary)
+
+```typescript
+// ❌ BAD - Logs sensitive data
+console.log('User data:', user); // May contain sensitive info
+console.log('API key:', apiKey);
+
+// ✅ GOOD - Log safely
+console.log('User ID:', user.id);
+console.log('API request successful'); // Don't log keys
+console.log('Error occurred:', error.message); // Generic error
+```
+
+**Use structured logging:**
+```typescript
+// ✅ GOOD - Structured logging
+logger.info('User action', {
+  userId: user.id,
+  action: 'create_entry',
+  timestamp: Date.now(),
+  // Never include sensitive data
+});
+```
+
+#### ✅ Detect Missing Error Logging
+- Always log errors for debugging
+- Use appropriate log levels (error, warn, info)
+- Include context but not sensitive data
+- Monitor logs for security issues
+
+```typescript
+// ✅ GOOD - Proper error logging
+try {
+  await processAudio();
+} catch (error) {
+  console.error('Audio processing failed:', {
+    userId: context.auth?.uid,
+    error: error.message,
+    timestamp: Date.now(),
+  });
+  throw new functions.https.HttpsError('internal', 'Processing failed');
+}
+```
+
+### Dependency Management
+
+#### ✅ Flag Outdated Dependencies with Known Vulnerabilities
+- Regularly run `npm audit` or `yarn audit`
+- Update dependencies regularly
+- Check for security advisories
+- Review dependency licenses
+
+```bash
+# Run regularly
+npm audit
+npm audit fix
+```
+
+**Keep dependencies minimal:**
+- Only install what you need
+- Review each dependency's necessity
+- Check dependency security history
+
+#### ✅ Identify Excessive Dependencies That Increase Attack Surface
+- Minimize dependencies
+- Prefer official packages over small packages
+- Review transitive dependencies
+- Consider alternatives with fewer dependencies
+
+### Resilience & Availability
+
+#### ✅ Detect Missing Error Handling
+- Wrap all async operations in try-catch
+- Handle network errors gracefully
+- Provide fallback UI for errors
+- Never let errors crash the app
+
+```typescript
+// ✅ GOOD - Comprehensive error handling
+const fetchData = async () => {
+  try {
+    const data = await apiCall();
+    return data;
+  } catch (error) {
+    if (error.code === 'network-error') {
+      // Handle network error
+      showNetworkError();
+    } else if (error.code === 'auth-error') {
+      // Handle auth error
+      redirectToLogin();
+    } else {
+      // Handle generic error
+      showGenericError();
+    }
+    console.error('Fetch failed:', error);
+  }
+};
+```
+
+#### ✅ Identify Potential DoS Vulnerabilities
+- Implement rate limiting
+- Validate input sizes (file uploads, strings)
+- Use pagination for large datasets
+- Set timeouts for external API calls
+- Limit resource-intensive operations
+
+```typescript
+// ✅ GOOD - Size limits and timeouts
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+const API_TIMEOUT = 30000; // 30 seconds
+
+if (file.size > MAX_FILE_SIZE) {
+  throw new Error('File too large');
+}
+
+const response = await Promise.race([
+  apiCall(),
+  new Promise((_, reject) => 
+    setTimeout(() => reject(new Error('Timeout')), API_TIMEOUT)
+  ),
+]);
+```
+
+#### ✅ Find Missing Timeout Configurations
+- Set timeouts for all external API calls
+- Configure Firebase Functions timeout (max 9 minutes)
+- Set timeout for file uploads
+- Handle timeout errors gracefully
+
+```typescript
+// ✅ GOOD - Timeout configuration
+const axios = require('axios');
+
+const apiClient = axios.create({
+  timeout: 30000, // 30 seconds
+  // ... other config
+});
+```
+
+### SDLC Security
+
+#### ✅ Identify Common Security Issues Through Static Analysis
+- Use ESLint security plugins
+- Run security scanners regularly
+- Review code for security anti-patterns
+- Use TypeScript for type safety (prevents some vulnerabilities)
+
+**ESLint Security Plugins:**
+```json
+{
+  "extends": [
+    "plugin:security/recommended"
+  ]
+}
+```
+
+#### ✅ Suggest Security Improvements in Code Reviews
+- Review all code changes for security implications
+- Check authentication/authorization
+- Verify input validation
+- Ensure error handling doesn't leak information
+- Verify secrets aren't exposed
+
+### Security Checklist for Every Code Change
+
+Before committing any code, verify:
+
+- [ ] No secrets or API keys in code
+- [ ] Authentication checks are in place
+- [ ] Authorization verified (user owns resources)
+- [ ] Input validation implemented
+- [ ] Error handling doesn't leak information
+- [ ] Sensitive data not logged
+- [ ] HTTPS used for all API calls
+- [ ] Dependencies reviewed for vulnerabilities
+- [ ] Rate limiting considered (if applicable)
+- [ ] Timeouts configured for external calls
+- [ ] Security rules updated (if database changes)
+
+### React Native Specific Security
+
+#### Secure Storage
+- Use `expo-secure-store` for sensitive data
+- Never use `AsyncStorage` for secrets
+- Use Keychain/Keystore for platform-specific secure storage
+
+#### Network Security
+- Always use HTTPS (never HTTP)
+- Validate SSL certificates
+- Use certificate pinning if high security needed
+- Handle network errors gracefully
+
+#### Permissions
+- Request permissions explicitly
+- Explain why permissions are needed
+- Handle permission denials gracefully
+- Revoke permissions when no longer needed
+
+### Firebase Security
+
+#### Firestore Security Rules
+- Write rules for all collections
+- Test security rules thoroughly
+- Never allow public read/write on user data
+- Use `request.auth` to verify identity
+- Validate data structure in rules
+
+#### Firebase Functions Security
+- Always verify authentication
+- Validate all inputs
+- Use environment variables for secrets
+- Implement proper error handling
+- Monitor function execution logs
+
+#### Firebase Storage Security
+- Set appropriate security rules
+- Validate file types and sizes
+- Scan uploaded files for malware (if applicable)
+- Use signed URLs for temporary access
+
+### Performance Guidelines
+
+#### Optimization
+- Use `React.memo()` for expensive components
+- Implement `useMemo()` for expensive computations
+- Use `useCallback()` for stable function references
+- Optimize images (compress, use appropriate formats)
+- Implement code splitting for large features
+
+#### Loading States
+- Always show loading indicators for async operations
+- Implement skeleton screens for better UX
+- Use optimistic updates when appropriate
+
+### Git Conventions
+
+#### Commit Messages
+- Use conventional commits format
+- Be descriptive and specific
+- Reference issues/tickets when applicable
+
+```
+feat: add voice recording component
+fix: resolve audio playback issue on iOS
+refactor: extract voice recording logic to custom hook
+docs: update README with setup instructions
+test: add unit tests for date helpers
+```
+
+#### Branch Naming
+- `feature/feature-name` for new features
+- `fix/bug-description` for bug fixes
+- `refactor/component-name` for refactoring
+- `docs/documentation-update` for documentation
+
+### Code Review Checklist
+
+Before submitting code, ensure:
+
+**General Code Quality:**
+- [ ] TypeScript types are defined and correct
+- [ ] Error handling is implemented
+- [ ] Code follows naming conventions
+- [ ] Styles use StyleSheet.create()
+- [ ] Async operations use try-catch
+- [ ] No console.log statements in production code
+- [ ] Components are properly typed
+- [ ] No unused imports or variables
+- [ ] Proper accessibility labels added
+- [ ] Performance considerations addressed
+
+**Security Checklist (MANDATORY):**
+- [ ] No secrets or API keys in code
+- [ ] Authentication checks are in place
+- [ ] Authorization verified (user owns resources)
+- [ ] Input validation implemented (frontend and backend)
+- [ ] Error handling doesn't leak sensitive information
+- [ ] Sensitive data not logged
+- [ ] HTTPS used for all API calls
+- [ ] Dependencies reviewed for vulnerabilities (`npm audit`)
+- [ ] Rate limiting considered (if applicable)
+- [ ] Timeouts configured for external calls
+- [ ] Security rules updated (if database changes)
+- [ ] Firestore security rules tested
+- [ ] Secure storage used for sensitive data (not AsyncStorage)
+
+### Documentation Standards
+
+#### Code Comments
+- Write self-documenting code (prefer clear names over comments)
+- Comment complex logic and business rules
+- Document function parameters and return types with JSDoc
+- Explain "why" not "what"
+
+```typescript
+/**
+ * Processes voice transcript and sends to Claude API for analysis
+ * @param transcript - The voice transcript text
+ * @param conversationHistory - Previous conversation messages for context
+ * @returns AI response with analysis and insights
+ */
+export const processTranscript = async (
+  transcript: string,
+  conversationHistory?: ConversationMessage[]
+): Promise<AIResponse> => {
+  // Implementation
+};
+```
+
+#### File Headers
+- Optional file headers for complex modules
+- Include purpose and key exports
+
+### Common Patterns to Avoid
+
+#### Anti-patterns
+- ❌ Don't use class components
+- ❌ Don't use `.then()` chains (use async/await)
+- ❌ Don't use inline style objects (use StyleSheet.create())
+- ❌ Don't mutate state directly
+- ❌ Don't use `any` type
+- ❌ Don't ignore TypeScript errors
+- ❌ Don't commit API keys or secrets
+- ❌ Don't use `ScrollView` with long lists
+- ❌ Don't render plain text without `<Text>` wrapper
+- ❌ Don't swallow errors silently
+
+### Cursor AI Instructions
+
+**ACCELERATION PRINCIPLES: Generate Complete Features, Not Components**
+
+When generating code:
+1. **SECURITY FIRST** - Always verify security checklist before generating code
+2. **GENERATE COMPLETE FEATURES** - Build entire features, not just components
+   - Example: "Create complete voice recording feature with recording, transcription, upload, error handling" NOT "Create a button"
+3. **USE COMPREHENSIVE PROMPTS** - Include all requirements in one prompt:
+   - Reference @BACKEND_PLAN.md for API contracts
+   - Reference @APP_PLAN.md for UI requirements
+   - Reference @ARCHITECTURE_DECISIONS.md for patterns
+   - Reference @codebase for existing patterns
+4. Always use TypeScript when possible
+5. Follow the file structure conventions
+6. Include proper error handling
+7. Use StyleSheet.create() for styles
+8. Type all function parameters and returns
+9. Use functional components with hooks
+10. Include accessibility labels
+11. Add comments for complex logic
+12. Follow naming conventions
+13. Consider performance implications
+14. **Verify no secrets are exposed**
+15. **Ensure authentication/authorization is properly implemented**
+16. **Validate all inputs**
+
+**Code Generation Best Practices:**
+- Generate multiple related files together (e.g., screen + service + types + hooks)
+- Use @codebase reference to understand existing patterns
+- Generate complete features with all states (loading, error, success, empty)
+- Include API integration in component generation
+- Generate tests alongside code when possible
+
+**Example Comprehensive Prompt:**
+```
+"Create complete journal entry list feature:
+- src/screens/JournalListScreen.tsx
+- src/components/journal/JournalEntryCard.tsx
+- src/hooks/useJournalEntries.ts
+- src/services/journalService.ts
+- Include: loading states, error handling, empty states, pagination
+- API: Use getJournalEntries from @BACKEND_PLAN.md
+- UI: Follow @APP_PLAN.md Section 5 specifications
+- Patterns: Follow @ARCHITECTURE_DECISIONS.md
+- Types: Use @types/journal.ts
+- Security: Follow @.cursorrules security checklist"
+```
+
+When refactoring:
+1. Maintain existing functionality
+2. Improve type safety
+3. Extract reusable logic to hooks
+4. Break down large components
+5. Improve error handling
+6. Optimize performance
+7. **Review security implications of changes**
+8. **Verify authentication/authorization still works**
+9. **Check that input validation is preserved**
+10. **Use @codebase to understand dependencies before refactoring**
+
+When debugging:
+1. Check error messages carefully
+2. Verify types match expected values
+3. Check async/await usage
+4. Verify Firebase rules and permissions
+5. Check network requests and responses
+6. Verify environment variables are set
+7. **Use @file to reference specific files with errors**
+8. **Ask Cursor to explain the error and provide fix**
+
+## Change Verification Requirements
+
+### CRITICAL: Always Verify Changes Won't Break Existing Code
+
+Before making ANY code changes, you MUST:
+
+1. **Understand the Impact**
+   - Identify all files that will be affected
+   - Check for dependent code that uses the code being changed
+   - Review imports and exports
+   - Check if the change affects shared utilities or types
+
+2. **Check Dependencies**
+   - Verify TypeScript types are compatible
+   - Ensure function signatures match call sites
+   - Check that prop interfaces haven't changed incompatibly
+   - Verify API contracts remain consistent
+
+3. **Preserve Functionality**
+   - Never remove functionality without explicit user request
+   - Maintain backward compatibility when possible
+   - If breaking changes are necessary, document them clearly
+   - Keep existing API contracts intact
+
+4. **Validate Before Committing**
+   - Verify TypeScript compilation succeeds (`tsc --noEmit`)
+   - Check for linting errors
+   - Ensure no unused imports or variables
+   - Verify all function calls remain valid
+   - Check that component props match updated interfaces
+
+5. **Test Critical Paths**
+   - If modifying shared utilities, verify all usages still work
+   - If changing API contracts, ensure backend alignment
+   - If updating types, verify all implementations are updated
+   - Check that error handling still works correctly
+
+6. **Document Breaking Changes**
+   - If a change breaks existing code, explicitly state what broke
+   - Provide migration steps if needed
+   - Update affected documentation
+
+### Verification Checklist
+
+Before implementing any change:
+- [ ] Identified all affected files and dependencies
+- [ ] Checked TypeScript types for compatibility
+- [ ] Verified function signatures match call sites
+- [ ] Ensured API contracts remain consistent (if applicable)
+- [ ] Confirmed no breaking changes to existing functionality
+- [ ] Verified all imports/exports are correct
+- [ ] Checked that error handling is preserved
+- [ ] Confirmed TypeScript compilation succeeds
+- [ ] No linting errors introduced
+
+### When in Doubt
+
+- Ask for clarification before making changes
+- Propose changes for review first
+- Break large changes into smaller, verifiable steps
+- Test incrementally rather than all at once
+
+## Additional Context
+
+- This is a learning project - favor clarity over cleverness
+- Prefer explicit code over implicit
+- Ask questions if requirements are unclear
+- Test thoroughly before committing
+- Document decisions and trade-offs
+
