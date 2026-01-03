@@ -47,9 +47,7 @@
     "node_modules",
     ".expo",
     "dist",
-    "build",
-    "**/*.test.ts",
-    "**/*.test.tsx"
+    "build"
   ]
 }
 
