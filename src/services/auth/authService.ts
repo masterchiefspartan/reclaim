@@ -16,7 +16,7 @@ import {
   runTransaction,
 } from 'firebase/firestore';
 
-import { firebaseAuth, firestore } from '@services/firebase/client';
+import { getFirebaseAuth, getFirestoreDb } from '@services/firebase/client';
 import type {
   EditableProfileFields,
   OnboardingPayload,
@@ -29,7 +29,7 @@ import type {
 const usersCollection = 'users';
 
 export const signUpWithEmail = async (email: string, password: string) => {
-  const credential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
+  const credential = await createUserWithEmailAndPassword(getFirebaseAuth(), email, password);
   if (credential.user && !credential.user.emailVerified) {
     await sendEmailVerification(credential.user);
   }
@@ -37,14 +37,14 @@ export const signUpWithEmail = async (email: string, password: string) => {
 };
 
 export const signInWithEmail = async (email: string, password: string) => {
-  const credential = await signInWithEmailAndPassword(firebaseAuth, email, password);
+  const credential = await signInWithEmailAndPassword(getFirebaseAuth(), email, password);
   return credential.user;
 };
 
-export const signOut = () => firebaseSignOut(firebaseAuth);
+export const signOut = () => firebaseSignOut(getFirebaseAuth());
 
 export const fetchUserProfile = async (uid: string): Promise<UserProfile | null> => {
-  const ref = doc(firestore, usersCollection, uid);
+  const ref = doc(getFirestoreDb(), usersCollection, uid);
   const snapshot = await getDoc(ref);
   if (!snapshot.exists()) {
     return null;
@@ -53,7 +53,7 @@ export const fetchUserProfile = async (uid: string): Promise<UserProfile | null>
 };
 
 export const upsertUserProfile = async (user: User, overrides?: Partial<UserProfile>) => {
-  const ref = doc(firestore, usersCollection, user.uid);
+  const ref = doc(getFirestoreDb(), usersCollection, user.uid);
   const now = serverTimestamp();
   await setDoc(
     ref,
@@ -70,7 +70,7 @@ export const upsertUserProfile = async (user: User, overrides?: Partial<UserProf
 };
 
 export const saveOnboardingProfile = async (uid: string, payload: OnboardingPayload) => {
-  const ref = doc(firestore, usersCollection, uid);
+  const ref = doc(getFirestoreDb(), usersCollection, uid);
   await updateDoc(ref, {
     displayName: payload.displayName,
     recoveryContext: payload.recoveryContext,
@@ -84,7 +84,7 @@ export const saveOnboardingProfile = async (uid: string, payload: OnboardingPayl
 };
 
 export const updateUserPermissions = async (uid: string, permissions: UserPermissions) => {
-  const ref = doc(firestore, usersCollection, uid);
+  const ref = doc(getFirestoreDb(), usersCollection, uid);
   await updateDoc(ref, {
     permissions,
     updatedAt: serverTimestamp(),
@@ -92,7 +92,7 @@ export const updateUserPermissions = async (uid: string, permissions: UserPermis
 };
 
 export const updateUserProfile = async (uid: string, updates: EditableProfileFields) => {
-  const ref = doc(firestore, usersCollection, uid);
+  const ref = doc(getFirestoreDb(), usersCollection, uid);
   await updateDoc(ref, {
     ...updates,
     updatedAt: serverTimestamp(),
@@ -105,9 +105,9 @@ export const updateDisplayName = async (user: User, displayName: string) => {
 };
 
 export const incrementUserStats = async (uid: string, delta: Partial<UserStats>) => {
-  const ref = doc(firestore, usersCollection, uid);
+  const ref = doc(getFirestoreDb(), usersCollection, uid);
   try {
-    await runTransaction(firestore, async (transaction) => {
+    await runTransaction(getFirestoreDb(), async (transaction) => {
       const snapshot = await transaction.get(ref);
       const stats = (snapshot.data()?.stats ?? {}) as UserStats;
       const nextStats: UserStats = {

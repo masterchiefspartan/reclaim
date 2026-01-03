@@ -50,9 +50,9 @@ const deriveStatus = (user: User | null, profile: UserProfile | null): AuthStatu
 };
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [user, setUser] = useState<User | null>(firebaseAuth.currentUser);
+  const [user, setUser] = useState<User | null>(firebaseAuth?.currentUser ?? null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [status, setStatus] = useState<AuthStatus>('checking');
+  const [status, setStatus] = useState<AuthStatus>(firebaseAuth ? 'checking' : 'unauthenticated');
 
   const hydrateProfile = useCallback(
     async (currentUser: User | null) => {
@@ -78,6 +78,11 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   );
 
   useEffect(() => {
+    if (!firebaseAuth) {
+      setStatus('unauthenticated');
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(firebaseAuth, async (nextUser) => {
       setUser(nextUser);
       await hydrateProfile(nextUser);

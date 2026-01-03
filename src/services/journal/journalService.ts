@@ -22,7 +22,7 @@ import {
   type UploadResult,
 } from 'firebase/storage';
 
-import { firebaseAuth, firebaseStorage, firestore } from '@services/firebase/client';
+import { getFirebaseAuth, getFirebaseStorage, getFirestoreDb } from '@services/firebase/client';
 import type { CreateEntryPayload, JournalEntry, MoodLevel } from '@/types/journal';
 
 const journalCollection = 'journalEntries';
@@ -41,7 +41,7 @@ export const subscribeToEntries = (
   onEntries: (entries: JournalEntry[]) => void,
   entryLimit = 50,
 ) => {
-  const entriesRef = collection(firestore, journalCollection);
+  const entriesRef = collection(getFirestoreDb(), journalCollection);
   const q = query(
     entriesRef,
     where('userId', '==', uid),
@@ -55,7 +55,7 @@ export const subscribeToEntries = (
 };
 
 export const subscribeToEntry = (entryId: string, onEntry: (entry: JournalEntry | null) => void) => {
-  const refDoc = doc(firestore, journalCollection, entryId);
+  const refDoc = doc(getFirestoreDb(), journalCollection, entryId);
   return onSnapshot(refDoc, (snapshot) => {
     if (!snapshot.exists()) {
       onEntry(null);
@@ -66,7 +66,7 @@ export const subscribeToEntry = (entryId: string, onEntry: (entry: JournalEntry 
 };
 
 const uploadAudio = async (uid: string, entryId: string, uri: string): Promise<UploadResult> => {
-  const storageRef = ref(firebaseStorage, `audio/${uid}/${entryId}.m4a`);
+  const storageRef = ref(getFirebaseStorage(), `audio/${uid}/${entryId}.m4a`);
   const response = await fetch(uri);
   const blob = await response.blob();
   return uploadBytes(storageRef, blob, {
@@ -75,12 +75,12 @@ const uploadAudio = async (uid: string, entryId: string, uri: string): Promise<U
 };
 
 export const createJournalEntry = async (payload: CreateEntryPayload): Promise<string> => {
-  const user = firebaseAuth.currentUser;
+  const user = getFirebaseAuth().currentUser;
   if (!user) {
     throw new Error('User must be authenticated to create an entry');
   }
 
-  const entriesRef = collection(firestore, journalCollection);
+  const entriesRef = collection(getFirestoreDb(), journalCollection);
   const entryRef = await addDoc(entriesRef, {
     userId: user.uid,
     duration: payload.duration,
@@ -93,7 +93,7 @@ export const createJournalEntry = async (payload: CreateEntryPayload): Promise<s
   });
 
   await uploadAudio(user.uid, entryRef.id, payload.localAudioUri);
-  const storageRef = ref(firebaseStorage, `audio/${user.uid}/${entryRef.id}.m4a`);
+  const storageRef = ref(getFirebaseStorage(), `audio/${user.uid}/${entryRef.id}.m4a`);
   const audioUrl = await getDownloadURL(storageRef);
 
   await updateDoc(entryRef, {
@@ -109,7 +109,7 @@ export const updateEntryMood = async (
   moodScore: number,
   painLevel?: number,
 ) => {
-  const refDoc = doc(firestore, journalCollection, entryId);
+  const refDoc = doc(getFirestoreDb(), journalCollection, entryId);
   await updateDoc(refDoc, {
     mood,
     moodScore,
@@ -119,7 +119,7 @@ export const updateEntryMood = async (
 };
 
 export const deleteEntry = async (entryId: string) => {
-  const refDoc = doc(firestore, journalCollection, entryId);
+  const refDoc = doc(getFirestoreDb(), journalCollection, entryId);
   const snapshot = await getDoc(refDoc);
   const entry = snapshot.data() as JournalEntry | undefined;
   await deleteDoc(refDoc);
@@ -127,7 +127,7 @@ export const deleteEntry = async (entryId: string) => {
     try {
       const url = new URL(entry.audioUrl);
       const path = decodeURIComponent(url.pathname.replace('/o/', ''));
-      await deleteObject(ref(firebaseStorage, path));
+      await deleteObject(ref(getFirebaseStorage(), path));
     } catch (error) {
       console.warn('Failed to delete audio file', error);
     }
