@@ -1,4 +1,5 @@
 # RecoverVoice App Plan
+
 # Complete App Experience, User Flows, and Design Specifications
 
 **Last Updated:** December 2024  
@@ -44,17 +45,19 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 ✅ **Recovery-phase aware** - Prompts and support adapt to Week 1 vs Week 8 challenges  
 ✅ **Recovery-relevant tracking** - Measures pain, mobility, exercise adherence (not generic metrics)  
 ✅ **Medical context** - Understands PT terminology, surgery phases, recovery milestones  
-✅ **Evidence-based** - Tracks measurable progress to combat "recovery feels invisible" mentality  
+✅ **Evidence-based** - Tracks measurable progress to combat "recovery feels invisible" mentality
 
 ### Target Audience
 
 **Primary Users:**
+
 - People recovering from surgery (knee, hip, shoulder, back, etc.)
 - Individuals in physical therapy programs
 - People recovering from sports injuries
 - Post-surgical patients navigating recovery challenges
 
 **Market Size:**
+
 - 50M+ Americans undergo physical therapy annually
 - Recovery typically spans 6-12 weeks per incident
 - Emotional support needs peak at Week 2-4 (when support network fades)
@@ -78,11 +81,12 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 🎯 Celebrates recovery-specific milestones ("First day without crutches!")  
 🎯 Tracks recovery-relevant KPIs (pain, mobility, exercise adherence)  
 🎯 Language that understands PT terminology and challenges  
-🎯 Integration potential with PT clinics/surgeons  
+🎯 Integration potential with PT clinics/surgeons
 
 ### App Goals
 
 **Primary Goals:**
+
 1. Provide emotional support during recovery isolation
 2. Track measurable progress (pain, mood, mobility)
 3. Build daily engagement habits through streaks
@@ -92,24 +96,28 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 **Success Metrics:**
 
 **Onboarding (Day 1):**
+
 - Paywall conversion rate >15%
 - Complete first voice journal >60%
 - Receive first AI response >90%
 - **Goal:** User feels heard and understood
 
 **Early Engagement (Days 2-7):**
+
 - Day 2 return rate >60%
 - Complete 3+ entries in first week >50%
 - View progress dashboard >40%
 - **Goal:** Form daily habit
 
 **Retention (Weeks 2-4):**
+
 - Maintain 5+ entries per week >60%
 - View dashboard 3+ times/week >50%
 - Churn rate <15%
 - **Goal:** User sees measurable progress
 
 **Long-Term (Month 2+):**
+
 - 30+ day streak achievement >30%
 - Improved mood/pain metrics >70%
 - Refer friends (NPS >50)
@@ -118,12 +126,14 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 ### Business Model
 
 **Pricing Strategy:**
+
 - **Monthly:** $9.99/month
 - **Annual:** $59.99/year (Save 40% - Best Value)
 - **Free Trial:** 7-day free trial, then $9.99/month
 - **Guarantee:** 30-Day Money-Back Guarantee
 
 **Conversion Funnel:**
+
 - 100% see pain awareness screens
 - 80% create account
 - 70% verify email
@@ -140,6 +150,7 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 ### Primary User Persona: Sarah
 
 **Demographics:**
+
 - **Name:** Sarah
 - **Age:** 32
 - **Situation:** 3 weeks post-ACL knee surgery
@@ -147,6 +158,7 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 - **Occupation:** Marketing professional (works from home)
 
 **Pain Points:**
+
 - Friends who checked in at first... stopped calling
 - Family who was worried... moved on
 - Left alone at 2am when pain keeps her awake
@@ -156,6 +168,7 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 - Worries about recovery timeline and setbacks
 
 **Goals:**
+
 - Stay motivated during recovery
 - Track progress objectively
 - Have emotional support when needed
@@ -163,17 +176,20 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 - See evidence that recovery is working
 
 **When & Where She Uses the App:**
+
 - **Morning:** After waking up, before PT (9:00 AM) - Daily check-in
 - **Evening:** After PT session - Reflect on session
 - **Night:** When pain keeps her awake (2:00 AM) - Need for support
 - **Post-Appointment:** After doctor visits - Processing news
 
 **Technology Comfort:**
+
 - High - Uses smartphone daily
 - Comfortable with voice assistants
 - Values convenience and speed
 
 **Emotional Journey:**
+
 - **Week 1:** Optimistic but naive
 - **Week 2-3:** Reality hits, motivation drops
 - **Week 4-6:** Needs support most
@@ -182,6 +198,7 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 ### Secondary Persona: Michael
 
 **Demographics:**
+
 - **Name:** Michael
 - **Age:** 45
 - **Situation:** 6 weeks post-hip replacement
@@ -189,6 +206,7 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 - **Occupation:** Construction manager (on disability leave)
 
 **Pain Points:**
+
 - Can't work, financial stress
 - Family expects him to be "better" by now
 - Frustrated with slow progress
@@ -196,12 +214,14 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 - Depression creeping in
 
 **Goals:**
+
 - Mental health support
 - Track recovery milestones
 - Prepare for return to work
 - Maintain hope during slow recovery
 
 **Use Cases:**
+
 - Daily morning check-ins
 - After PT sessions
 - When feeling discouraged
@@ -210,6 +230,7 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 ### Tertiary Persona: Jennifer
 
 **Demographics:**
+
 - **Name:** Jennifer
 - **Age:** 28
 - **Situation:** 2 weeks post-shoulder surgery (athlete)
@@ -217,18 +238,21 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 - **Occupation:** Fitness instructor (can't work)
 
 **Pain Points:**
+
 - Identity crisis (athlete can't train)
 - Fear of never returning to sport
 - Mental health struggles
 - Isolation from athletic community
 
 **Goals:**
+
 - Maintain athletic identity
 - Process emotional trauma of injury
 - Track recovery for return to sport
 - Stay mentally strong
 
 **Use Cases:**
+
 - Morning and evening check-ins
 - After PT sessions
 - When missing training
@@ -237,6 +261,7 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 ### User Persona: Post-Surgical Patient (Generic)
 
 **Common Characteristics:**
+
 - Recently had surgery (within 6 months)
 - In physical therapy program
 - Experiencing emotional challenges
@@ -244,6 +269,7 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 - Needs validation and encouragement
 
 **Common Use Cases:**
+
 1. **Daily Check-In:** Morning routine to start day
 2. **PT Reflection:** After physical therapy sessions
 3. **Pain Episodes:** When pain is particularly bad
@@ -260,6 +286,7 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 #### MVP Features (Phase 1 - Essential)
 
 **Must Have:**
+
 1. ✅ **Voice Recording** - Core functionality
 2. ✅ **Real-time Transcription** - Deepgram integration
 3. ✅ **AI Response Generation** - Claude API integration
@@ -271,6 +298,7 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 9. ✅ **Onboarding** - Profile setup, permissions
 
 **MVP User Flow:**
+
 1. Welcome screen
 2. Value prop (3 slides)
 3. Create account
@@ -289,6 +317,7 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 #### Phase 2 Features (Weeks 2-4)
 
 **Important:**
+
 1. ✅ **Guided Check-Ins** - Structured prompts for recovery phases
 2. ✅ **Text-to-Speech** - ElevenLabs integration for AI responses
 3. ✅ **Entry Detail View** - Full entry with audio playback
@@ -300,6 +329,7 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 #### Phase 3 Features (Month 2+)
 
 **Nice to Have:**
+
 1. ✅ **Proactive AI Insights** - Pattern recognition and suggestions
 2. ✅ **Personalized Prompts** - AI-generated prompts based on history
 3. ✅ **Social Sharing** - Share milestones (anonymized)
@@ -316,6 +346,7 @@ RecoverVoice solves the critical problem of emotional isolation during physical 
 Core feature allowing users to record voice journals. Records audio, transcribes in real-time, and processes for AI response.
 
 **Functionality:**
+
 - Start/stop/pause recording
 - Real-time transcription display (Deepgram)
 - Audio playback of recordings
@@ -323,6 +354,7 @@ Core feature allowing users to record voice journals. Records audio, transcribes
 - Maximum recording length: 10 minutes
 
 **User Flow:**
+
 1. Tap "Start Recording" button
 2. Speak for 2-3 minutes
 3. See real-time transcript appear
@@ -332,6 +364,7 @@ Core feature allowing users to record voice journals. Records audio, transcribes
 7. AI response generated
 
 **Technical Requirements:**
+
 - Deepgram real-time transcription
 - Firebase Storage for audio files
 - Claude API for response generation
@@ -343,6 +376,7 @@ Core feature allowing users to record voice journals. Records audio, transcribes
 AI-powered companion that provides empathetic, recovery-specific responses to voice journals. Remembers conversation history and recovery context.
 
 **Functionality:**
+
 - Generates empathetic responses
 - References previous entries
 - Understands recovery terminology
@@ -351,6 +385,7 @@ AI-powered companion that provides empathetic, recovery-specific responses to vo
 - Celebrates milestones
 
 **Response Characteristics:**
+
 - Empathetic and validating
 - Recovery-specific language
 - References user's specific injury/situation
@@ -358,6 +393,7 @@ AI-powered companion that provides empathetic, recovery-specific responses to vo
 - Actionable when appropriate
 
 **Technical Requirements:**
+
 - Claude API integration
 - Conversation history storage
 - Context management (recovery phase, injury type)
@@ -369,6 +405,7 @@ AI-powered companion that provides empathetic, recovery-specific responses to vo
 Simple, quick mood selection after each journal entry. Tracks mood trends over time.
 
 **Functionality:**
+
 - 5 emoji options: 😢 😐 🙂 😊 ✨
 - Optional mood score (1-10)
 - Mood trends visualization
@@ -376,6 +413,7 @@ Simple, quick mood selection after each journal entry. Tracks mood trends over t
 - Daily mood averages
 
 **User Flow:**
+
 1. After AI response, user sees mood selector
 2. Tap emoji or drag slider
 3. Optionally add mood score
@@ -388,6 +426,7 @@ Simple, quick mood selection after each journal entry. Tracks mood trends over t
 Complete journal entry system with list view, detail view, search, and filtering.
 
 **Functionality:**
+
 - Chronological list of entries
 - Entry detail view with audio playback
 - Search by keyword or date
@@ -397,6 +436,7 @@ Complete journal entry system with list view, detail view, search, and filtering
 - Export entries (PDF)
 
 **Entry Components:**
+
 - Date and time
 - Audio recording (playback)
 - Transcript
@@ -411,6 +451,7 @@ Complete journal entry system with list view, detail view, search, and filtering
 Visual representation of recovery progress, streaks, mood trends, and milestones.
 
 **Functionality:**
+
 - Streak counter (consecutive days)
 - Mood trend chart (14/30/90 days)
 - Pain level tracking (1-10 scale)
@@ -421,6 +462,7 @@ Visual representation of recovery progress, streaks, mood trends, and milestones
 - Progress insights
 
 **Metrics Displayed:**
+
 - Current streak
 - Mood trend (improving/declining)
 - Pain reduction percentage
@@ -434,6 +476,7 @@ Visual representation of recovery progress, streaks, mood trends, and milestones
 Structured prompts for daily check-ins based on recovery phase. Reduces "blank page" anxiety and ensures consistent data tracking.
 
 **Functionality:**
+
 - Phase-specific prompts (Week 1 vs Week 8)
 - 4 structured questions:
   1. Physical Progress
@@ -444,6 +487,7 @@ Structured prompts for daily check-ins based on recovery phase. Reduces "blank p
 - Saves structured data for analytics
 
 **Example Prompts (Week 2-3):**
+
 - "How's your mobility today vs yesterday?"
 - "Scale of 1-10, what's your pain?"
 - "What emotions came up during PT?"
@@ -455,6 +499,7 @@ Structured prompts for daily check-ins based on recovery phase. Reduces "blank p
 Recovery-specific achievements that celebrate progress and maintain motivation.
 
 **Milestones:**
+
 - ✅ First Entry Complete
 - ✅ 7-Day Warrior
 - ✅ Two Week Champion
@@ -465,6 +510,7 @@ Recovery-specific achievements that celebrate progress and maintain motivation.
 - ✅ PT Adherence Champion
 
 **Functionality:**
+
 - Auto-detection of milestones
 - Celebration animations
 - Progress tracking toward next milestone
@@ -479,21 +525,25 @@ Recovery-specific achievements that celebrate progress and maintain motivation.
 #### Phase 1: Onboarding (First 5 Minutes)
 
 **Screen 1: Welcome**
+
 - "RecoverVoice - Your AI companion for recovery & resilience"
 - [Get Started]
 
 **Screen 2-4: Value Slides (Swipe Through)**
+
 - Slide 1: "Voice Journaling - Talk about your struggles and wins"
 - Slide 2: "AI Companion - An AI that remembers YOUR journey"
 - Slide 3: "Track Progress - See your emotional and physical growth"
 - [Next]
 
 **Screen 5: Create Account**
-- Email: ________________
-- Password: _____________
+
+- Email: ******\_\_\_\_******
+- Password: ******\_******
 - [Sign Up]
 
 **Screen 6: Email Verification**
+
 - "Check your email - verify to continue"
 - [I've Verified]
 
@@ -510,18 +560,21 @@ When recovering from surgery, the hardest part isn't physical pain. It's the lon
 - You're left alone at 2am when pain keeps you awake
 
 Without support, most people:
+
 - ❌ Miss PT appointments (low motivation)
 - ❌ Experience depression/anxiety
 - ❌ Feel isolated and misunderstood
 - ❌ Give up when recovery gets hard
 
 **WHAT YOU GET:**
+
 - ✅ A companion who's ALWAYS there (3am? We're here)
 - ✅ An AI that truly KNOWS you (remembers your entire journey)
 - ✅ Proof of progress (visual charts showing you're healing)
 - ✅ Structure when everything feels chaotic (daily guided check-ins)
 
 **PRICING:**
+
 - MONTHLY: $9.99/month [Select Monthly]
 - ANNUAL: $59.99/year Save 40% - Best Value 🔥 [Select Annual]
 - 7-DAY FREE TRIAL Then $9.99/month [Start Free Trial]
@@ -529,19 +582,22 @@ Without support, most people:
 30-Day Money-Back Guarantee
 
 **SOCIAL PROOF:**
+
 - ⭐⭐⭐⭐⭐ "After hip replacement, my family went back to normal but I was still struggling. RecoverVoice became the one constant I could count on." - Michael, 45
 - ⭐⭐⭐⭐⭐ "I was depressed 3 weeks post-op. Seeing my progress charts literally saved my mental health." - Jennifer, 28
 
 [User selects payment → Subscribes]
 
 **Screen 8: Profile Setup (Post-Payment)**
-- What's your name? ________________
-- What are you recovering from? ________________
+
+- What's your name? ******\_\_\_\_******
+- What are you recovering from? ******\_\_\_\_******
 - When did your surgery happen? [Date Picker]
-- What's your biggest struggle? ________________
+- What's your biggest struggle? ******\_\_\_\_******
 - [Continue]
 
 **Screen 9: Permissions**
+
 - 🎙️ Microphone Access (to record voice journals) [Allow]
 - 🔔 Notifications (daily check-in reminders) [Allow]
 - [Finish Setup]
@@ -549,6 +605,7 @@ Without support, most people:
 #### Phase 2: First Session (Next 5-10 Minutes)
 
 **Screen 10: Home Screen - Day 1**
+
 - 👋 Welcome, Sarah!
 - 🎙️ Start Your First Voice Journal [Tap to Begin]
 - 💭 Suggested Prompts:
@@ -557,6 +614,7 @@ Without support, most people:
   - What are you worried about?
 
 **Screen 11: Voice Recording (CORE FEATURE)**
+
 - 🎙️ Large microphone icon
 - Recording... 0:23
 - Real-time transcript display:
@@ -564,16 +622,19 @@ Without support, most people:
 - [⏸️ Pause] [⏹️ Stop]
 
 **User Flow:**
+
 - User talks for 2-3 minutes
 - Voice converts to text in real-time (Deepgram)
 - Transcript sent to Claude API when user stops
 - AI generates empathetic response
 
 **Screen 12: Processing**
+
 - ⏳ Your AI companion is listening and thinking...
 - Loading indicator
 
 **Screen 13: AI Response**
+
 - 🤖 Your AI Companion
 - Response text:
   "Sarah, I hear how frustrating today was. Swelling at 3 weeks post-surgery is completely normal, even though it doesn't feel that way. The fact that you attempted your PT exercises despite pain? That's real strength..."
@@ -585,6 +646,7 @@ Without support, most people:
 **CRITICAL MOMENT:** User feels validated and understood
 
 **Screen 14: Celebration**
+
 - ⭐ First Entry Complete! 🎉
 - You've started your recovery journey. Come back tomorrow!
 - 🔥 Day 1 Streak Started
@@ -593,9 +655,11 @@ Without support, most people:
 #### Phase 3: Daily Habit (Days 2-7)
 
 **Notification (9:00 AM Daily):**
+
 - 📱 "Good morning Sarah! ☀️ Ready for today's check-in? Your 2-day streak is waiting. 🎙️"
 
 **Home Screen - Day 3:**
+
 - 🔥 3 Day Streak! Keep it going, Sarah
 - 🎙️ Daily Check-In [Start Recording]
 - 📊 This Week's Progress:
@@ -605,6 +669,7 @@ Without support, most people:
 - 📖 Your Journal [View Past Entries] (3 entries)
 
 **Key Changes:**
+
 - ✅ Streak counter (gamification)
 - ✅ Progress preview (motivation)
 - ✅ Quick access to history
@@ -612,6 +677,7 @@ Without support, most people:
 #### Phase 4: Structured Check-Ins (Week 2+)
 
 **Guided Prompts Screen:**
+
 - Daily Check-In - Day 5
 - Let's talk about your recovery:
   1. Physical Progress: "How's your mobility today vs yesterday?"
@@ -626,6 +692,7 @@ Without support, most people:
 #### Phase 5: Progress Visualization (Week 2+)
 
 **Dashboard Screen:**
+
 - 🔥 14 Day Streak! 🏆
 - 📈 MOOD TREND (Last 14 Days) - Visual chart showing improvement
 - 💪 PHYSICAL PROGRESS:
@@ -647,6 +714,7 @@ Without support, most people:
 #### Phase 6: Journal History (Ongoing)
 
 **Journal Entries Screen:**
+
 - Your Journal
 - This Week ▼
   - Today, 9:15 AM 😊 Feeling hopeful
@@ -658,6 +726,7 @@ Without support, most people:
 - Last Week ▼ [7 entries]
 
 **Entry Detail View:**
+
 - 📅 October 15, 2024 - 9:15 AM
 - 😊 Feeling: Hopeful
 - 🎙️ YOUR VOICE (3m 24s) [▶️ Play Audio]
@@ -672,6 +741,7 @@ Without support, most people:
 #### Phase 7: Long-Term Engagement (Month 2+)
 
 **AI Proactive Support:**
+
 - 🔥 47 Day Streak! 🏆
 - 🤖 YOUR AI COMPANION NOTICED SOMETHING
 - "Sarah, I've noticed over the last 3 weeks you mention that Tuesday PT appointments cause extra anxiety the night before. Your sleep drops on Monday nights, and you wake with more pain on Tuesdays. Want to talk about strategies for managing Tuesday anxiety? We could create a pre-PT routine together."
@@ -680,6 +750,7 @@ Without support, most people:
 **KEY FEATURE:** AI remembers patterns and proactively helps
 
 **Personalized Check-In:**
+
 - 🤖 PERSONALIZED PROMPT
 - "Good morning, Sarah! You're 7 weeks post-op. Last time you hit Week 7 (2 years ago with other knee), you mentioned hitting a motivation wall. How are you feeling today compared to that experience? What's different this time?"
 - [Start Check-In]
@@ -689,30 +760,36 @@ Without support, most people:
 ### Emotional Journey Summary
 
 **DAY 1: Discovery**
+
 - Emotion: Hopeful → Curious → Skeptical
 - Thought: "Will this actually help me?"
 
 **FIRST SESSION: Breakthrough**
+
 - Emotion: Hesitant → Surprised → Relieved → Validated
 - Thought: "Wow, it actually understood me. This isn't generic."
 - KEY MOMENT: AI response that references specific injury
 
 **WEEK 1: Habit Formation**
+
 - Emotion: Motivated → Accountable → Accomplished
 - Thought: "I don't want to break my streak. This helps."
 - KEY MOMENT: Day 3 seeing streak and progress trends
 
 **WEEK 2: Evidence**
+
 - Emotion: Surprised → Validated → Hopeful
 - Thought: "My pain level HAS gone down. The charts prove it."
 - KEY MOMENT: Dashboard showing measurable improvement
 
 **MONTH 1: Transformation**
+
 - Emotion: Empowered → Proud → Grateful → Resilient
 - Thought: "I can't believe how far I've come. This app helped when I had no one."
 - KEY MOMENT: 30-day streak + reading early entries
 
 **MONTH 2+: Advocacy**
+
 - Emotion: Loyal → Evangelical
 - Thought: "Everyone recovering needs this. I can't imagine recovery without it."
 - KEY MOMENT: Proactive AI insights showing deep understanding
@@ -882,6 +959,7 @@ Without support, most people:
 #### Authentication Screens (5 screens)
 
 **1. Welcome Screen**
+
 - **Purpose:** First impression, brand introduction
 - **Components:**
   - App logo
@@ -891,6 +969,7 @@ Without support, most people:
 - **Navigation:** → Value Slides
 
 **2. Value Slide 1: Voice Journaling**
+
 - **Purpose:** Explain voice journaling feature
 - **Components:**
   - Illustration/icon
@@ -901,6 +980,7 @@ Without support, most people:
 - **Navigation:** → Value Slide 2
 
 **3. Value Slide 2: AI Companion**
+
 - **Purpose:** Explain AI companion feature
 - **Components:**
   - Illustration/icon
@@ -911,6 +991,7 @@ Without support, most people:
 - **Navigation:** → Value Slide 3
 
 **4. Value Slide 3: Track Progress**
+
 - **Purpose:** Explain progress tracking feature
 - **Components:**
   - Illustration/icon
@@ -921,6 +1002,7 @@ Without support, most people:
 - **Navigation:** → Create Account
 
 **5. Create Account Screen**
+
 - **Purpose:** User registration
 - **Components:**
   - Email input field
@@ -932,6 +1014,7 @@ Without support, most people:
 - **Navigation:** → Email Verification
 
 **6. Email Verification Screen**
+
 - **Purpose:** Verify email address
 - **Components:**
   - Message: "Check your email - verify to continue"
@@ -941,6 +1024,7 @@ Without support, most people:
 - **Navigation:** → Paywall
 
 **7. Paywall Screen**
+
 - **Purpose:** Convert to paid subscription
 - **Components:**
   - Headline: "Recovery Is Hard. You Shouldn't Have To Do It Alone."
@@ -954,6 +1038,7 @@ Without support, most people:
 - **Navigation:** → Payment Processing → Profile Setup
 
 **8. Profile Setup Screen**
+
 - **Purpose:** Collect recovery context
 - **Components:**
   - Name input
@@ -966,6 +1051,7 @@ Without support, most people:
 - **Navigation:** → Permissions
 
 **9. Permissions Screen**
+
 - **Purpose:** Request microphone and notification permissions
 - **Components:**
   - Microphone permission request
@@ -978,6 +1064,7 @@ Without support, most people:
 #### Main App Screens (10+ screens)
 
 **10. Home Screen**
+
 - **Purpose:** Main entry point, daily check-in
 - **Components:**
   - Welcome message with name
@@ -998,6 +1085,7 @@ Without support, most people:
   - → Settings
 
 **11. Voice Recording Screen**
+
 - **Purpose:** Record voice journal entry
 - **Components:**
   - Large microphone icon
@@ -1020,6 +1108,7 @@ Without support, most people:
   - → Home Screen (if cancelled)
 
 **12. Processing Screen**
+
 - **Purpose:** Show processing status
 - **Components:**
   - Loading indicator
@@ -1029,6 +1118,7 @@ Without support, most people:
 - **Navigation:** → AI Response Screen
 
 **13. AI Response Screen**
+
 - **Purpose:** Display AI response and collect mood
 - **Components:**
   - AI avatar/icon
@@ -1047,6 +1137,7 @@ Without support, most people:
   - → Home Screen (after save)
 
 **14. Celebration Screen**
+
 - **Purpose:** Celebrate completion and motivate return
 - **Components:**
   - Celebration animation/icon
@@ -1062,6 +1153,7 @@ Without support, most people:
   - → Home Screen
 
 **15. Journal List Screen**
+
 - **Purpose:** Display all journal entries
 - **Components:**
   - Header: "Your Journal"
@@ -1082,6 +1174,7 @@ Without support, most people:
   - → Recording Screen (new entry)
 
 **16. Entry Detail Screen**
+
 - **Purpose:** Full view of individual journal entry
 - **Components:**
   - Date and time header
@@ -1106,6 +1199,7 @@ Without support, most people:
   - → Export confirmation
 
 **17. Dashboard Screen**
+
 - **Purpose:** Visual progress tracking
 - **Components:**
   - Streak counter (prominent)
@@ -1129,6 +1223,7 @@ Without support, most people:
   - → Home Screen
 
 **18. Guided Check-In Screen**
+
 - **Purpose:** Structured daily check-in prompts
 - **Components:**
   - Header: "Daily Check-In - Day X"
@@ -1147,6 +1242,7 @@ Without support, most people:
   - → Recording Screen (free mode)
 
 **19. Settings Screen**
+
 - **Purpose:** User preferences and account management
 - **Components:**
   - Profile section:
@@ -1177,6 +1273,7 @@ Without support, most people:
 #### Error & Loading Screens (5 screens)
 
 **20. Network Error Screen**
+
 - **Purpose:** Handle network failures
 - **Components:**
   - Error icon
@@ -1187,6 +1284,7 @@ Without support, most people:
 - **Navigation:** → Retry operation or → Home Screen
 
 **21. Loading Screen**
+
 - **Purpose:** Generic loading state
 - **Components:**
   - Loading indicator
@@ -1195,6 +1293,7 @@ Without support, most people:
 - **Navigation:** → Next screen when loaded
 
 **22. Empty State Screen**
+
 - **Purpose:** Show when no data available
 - **Components:**
   - Empty state illustration
@@ -1204,6 +1303,7 @@ Without support, most people:
 - **Navigation:** → Recording Screen
 
 **23. Error Screen**
+
 - **Purpose:** Handle unexpected errors
 - **Components:**
   - Error icon
@@ -1214,6 +1314,7 @@ Without support, most people:
 - **Navigation:** → Retry or → Support
 
 **24. Offline Screen**
+
 - **Purpose:** Handle offline scenarios
 - **Components:**
   - Offline icon
@@ -1228,11 +1329,13 @@ Without support, most people:
 **Total Screens:** 24 screens
 
 **Categories:**
+
 - Authentication: 9 screens
 - Main App: 10 screens
 - Error/Loading: 5 screens
 
 **Key Interactions Per Screen:**
+
 - Tap actions
 - Swipe gestures (value slides)
 - Long press (future features)
@@ -1287,18 +1390,21 @@ App Navigation
 #### Bottom Tab Navigation
 
 **Tabs (4 tabs):**
+
 1. **Home** - Main entry point, daily check-in
 2. **Journal** - View all entries
 3. **Dashboard** - Progress and analytics
 4. **Settings** - Preferences and account
 
 **Tab Icons:**
+
 - Home: 🏠 House icon
 - Journal: 📖 Book icon
 - Dashboard: 📊 Chart icon
 - Settings: ⚙️ Gear icon
 
 **Behavior:**
+
 - Always visible when authenticated
 - Badge indicator on Home tab (for notifications)
 - Active tab highlighted
@@ -1306,6 +1412,7 @@ App Navigation
 #### Stack Navigation
 
 **Home Stack:**
+
 - Home Screen (root)
 - Recording Screen
 - Processing Screen
@@ -1313,14 +1420,17 @@ App Navigation
 - Celebration Screen
 
 **Journal Stack:**
+
 - Journal List (root)
 - Entry Detail Screen
 
 **Dashboard Stack:**
+
 - Dashboard Screen (root)
 - Detailed Stats Screen
 
 **Settings Stack:**
+
 - Settings Screen (root)
 - Edit Profile Screen
 - Subscription Management Screen
@@ -1328,6 +1438,7 @@ App Navigation
 #### Modal Navigation
 
 **Modals:**
+
 - Guided Check-In (slides up from bottom)
 - Share Sheet (native iOS/Android)
 - Export Options (modal)
@@ -1336,6 +1447,7 @@ App Navigation
 ### Deep Linking Structure
 
 **Supported Deep Links:**
+
 - `recovervoice://home` - Home screen
 - `recovervoice://journal` - Journal list
 - `recovervoice://journal/{entryId}` - Specific entry
@@ -1344,6 +1456,7 @@ App Navigation
 - `recovervoice://settings` - Settings
 
 **Use Cases:**
+
 - Push notifications → Deep link to specific screen
 - External sharing → Deep link to entry
 - Email links → Deep link to entry or dashboard
@@ -1351,6 +1464,7 @@ App Navigation
 ### Navigation Flow Examples
 
 **Flow 1: Daily Check-In**
+
 ```
 Home Screen
   ↓ (tap Start Recording)
@@ -1366,6 +1480,7 @@ Home Screen
 ```
 
 **Flow 2: Viewing Past Entry**
+
 ```
 Home Screen
   ↓ (tap View Past Entries)
@@ -1377,6 +1492,7 @@ Journal List Screen
 ```
 
 **Flow 3: Viewing Progress**
+
 ```
 Home Screen
   ↓ (tap Dashboard or Dashboard tab)
@@ -1392,6 +1508,7 @@ Detailed Stats Screen
 ### Design System Overview
 
 **Design Philosophy:**
+
 - Warm, empathetic, supportive
 - Clean and uncluttered
 - Recovery-focused (not clinical)
@@ -1399,6 +1516,7 @@ Detailed Stats Screen
 - Respectful of struggle
 
 **Core Principles:**
+
 1. **Empathy First** - Every design decision prioritizes emotional connection
 2. **Progress Visibility** - Always show progress, never hide it
 3. **Simplicity** - Reduce cognitive load during recovery
@@ -1408,11 +1526,13 @@ Detailed Stats Screen
 ### Color Palette
 
 **Primary Colors:**
+
 - **Recovery Blue:** `#4A90E2` - Trust, calm, healing
 - **Progress Green:** `#52C41A` - Growth, improvement, success
 - **Warm Orange:** `#FF8C42` - Energy, warmth, encouragement
 
 **Secondary Colors:**
+
 - **Mood Sad:** `#FF6B6B` - Red for difficult emotions
 - **Mood Neutral:** `#FFD93D` - Yellow for neutral
 - **Mood Happy:** `#6BCF7F` - Green for positive
@@ -1421,6 +1541,7 @@ Detailed Stats Screen
 - **Text Secondary:** `#7F8C8D` - Medium gray text
 
 **Semantic Colors:**
+
 - **Success:** `#52C41A`
 - **Warning:** `#FAAD14`
 - **Error:** `#FF4D4F`
@@ -1429,10 +1550,12 @@ Detailed Stats Screen
 ### Typography
 
 **Font Families:**
+
 - **Primary:** System fonts (SF Pro iOS, Roboto Android)
 - **Fallback:** Sans-serif
 
 **Font Sizes:**
+
 - **H1 (Headlines):** 32pt / 2rem
 - **H2 (Section Headers):** 24pt / 1.5rem
 - **H3 (Card Titles):** 20pt / 1.25rem
@@ -1441,12 +1564,14 @@ Detailed Stats Screen
 - **Caption:** 12pt / 0.75rem
 
 **Font Weights:**
+
 - **Bold:** 700 (Headlines, emphasis)
 - **Semibold:** 600 (Subheadings)
 - **Regular:** 400 (Body text)
 - **Light:** 300 (Secondary text)
 
 **Line Height:**
+
 - Headlines: 1.2
 - Body: 1.5
 - Dense text: 1.4
@@ -1456,6 +1581,7 @@ Detailed Stats Screen
 #### Buttons
 
 **Primary Button:**
+
 - Background: Recovery Blue (#4A90E2)
 - Text: White
 - Padding: 16px vertical, 24px horizontal
@@ -1464,6 +1590,7 @@ Detailed Stats Screen
 - Height: 48px minimum
 
 **Secondary Button:**
+
 - Background: Transparent
 - Border: 1px Recovery Blue
 - Text: Recovery Blue
@@ -1471,12 +1598,14 @@ Detailed Stats Screen
 - Border radius: 8px
 
 **Text Button:**
+
 - Background: Transparent
 - Text: Recovery Blue
 - Padding: 8px vertical, 16px horizontal
 - No border
 
 **States:**
+
 - Default
 - Pressed (slightly darker)
 - Disabled (50% opacity)
@@ -1485,6 +1614,7 @@ Detailed Stats Screen
 #### Cards
 
 **Entry Card:**
+
 - Background: White
 - Border radius: 12px
 - Shadow: Subtle elevation
@@ -1493,6 +1623,7 @@ Detailed Stats Screen
 - Border: 1px light gray (optional)
 
 **Dashboard Card:**
+
 - Background: White
 - Border radius: 16px
 - Shadow: Medium elevation
@@ -1502,6 +1633,7 @@ Detailed Stats Screen
 #### Input Fields
 
 **Text Input:**
+
 - Background: White
 - Border: 1px light gray
 - Border radius: 8px
@@ -1511,6 +1643,7 @@ Detailed Stats Screen
 - Focus state: Blue border, 2px
 
 **Text Area:**
+
 - Same as text input
 - Height: Auto (min 100px)
 - Multiline: Yes
@@ -1518,17 +1651,20 @@ Detailed Stats Screen
 #### Icons
 
 **Icon Size:**
+
 - Small: 16px
 - Medium: 24px
 - Large: 32px
 - XLarge: 48px
 
 **Icon Style:**
+
 - Outlined style (not filled)
 - Consistent stroke width
 - Accessible contrast
 
 **Key Icons:**
+
 - 🎙️ Microphone (recording)
 - 📖 Journal (entries)
 - 📊 Dashboard (analytics)
@@ -1539,24 +1675,28 @@ Detailed Stats Screen
 ### Animation & Transitions
 
 **Animation Principles:**
+
 - Subtle and supportive
 - Never jarring or distracting
 - Celebrate positive moments
 - Guide attention
 
 **Transitions:**
+
 - Screen transitions: 300ms ease-in-out
 - Button press: 100ms scale down
 - Card appearance: 200ms fade + slide
 - Progress updates: 500ms smooth
 
 **Celebration Animations:**
+
 - Entry completion: Confetti animation
 - Milestone unlock: Burst animation
 - Streak update: Pulse animation
 - Progress improvement: Smooth chart animation
 
 **Micro-interactions:**
+
 - Recording button: Pulse animation
 - Mood selection: Scale animation
 - Loading states: Smooth spinner
@@ -1565,32 +1705,38 @@ Detailed Stats Screen
 ### Accessibility Requirements
 
 **WCAG Compliance:**
+
 - Target: WCAG 2.1 Level AA
 
 **Text Accessibility:**
+
 - Minimum text size: 14pt
 - Color contrast: 4.5:1 minimum
 - Support Dynamic Type (iOS)
 - Support system font scaling
 
 **Touch Targets:**
+
 - Minimum size: 44x44pt (iOS), 48x48dp (Android)
 - Adequate spacing between targets
 - No overlapping interactive elements
 
 **Screen Reader Support:**
+
 - All interactive elements labeled
 - Descriptive alt text for images
 - Semantic HTML structure
 - Focus management
 
 **Motor Accessibility:**
+
 - Large touch targets
 - Swipe gestures optional (not required)
 - Voice control support (where possible)
 - One-handed operation possible
 
 **Visual Accessibility:**
+
 - High contrast mode support
 - Color-blind friendly (not color-only indicators)
 - Clear visual hierarchy
@@ -1607,6 +1753,7 @@ Detailed Stats Screen
 **So that** [benefit]
 
 **Acceptance Criteria:**
+
 - [ ] Criterion 1
 - [ ] Criterion 2
 - [ ] Criterion 3
@@ -1620,6 +1767,7 @@ Detailed Stats Screen
 **So that** I can access the app and save my journal entries
 
 **Acceptance Criteria:**
+
 - [ ] User can enter email and password
 - [ ] Email format is validated
 - [ ] Password meets strength requirements (8+ chars, 1 uppercase, 1 number)
@@ -1635,6 +1783,7 @@ Detailed Stats Screen
 **So that** I can access the full app features
 
 **Acceptance Criteria:**
+
 - [ ] Verification email is sent immediately
 - [ ] User can resend verification email
 - [ ] User can mark email as verified
@@ -1648,6 +1797,7 @@ Detailed Stats Screen
 **So that** I can access all features
 
 **Acceptance Criteria:**
+
 - [ ] User sees paywall after email verification
 - [ ] User can select monthly, annual, or trial plan
 - [ ] Pricing is clearly displayed
@@ -1665,6 +1815,7 @@ Detailed Stats Screen
 **So that** I can express my thoughts and feelings
 
 **Acceptance Criteria:**
+
 - [ ] User can start recording with one tap
 - [ ] Recording begins immediately
 - [ ] Timer displays recording duration
@@ -1682,6 +1833,7 @@ Detailed Stats Screen
 **So that** I know my voice is being captured accurately
 
 **Acceptance Criteria:**
+
 - [ ] Transcript appears within 1 second of speaking
 - [ ] Transcript is accurate (90%+ accuracy)
 - [ ] Transcript scrolls automatically
@@ -1695,6 +1847,7 @@ Detailed Stats Screen
 **So that** I feel heard and supported
 
 **Acceptance Criteria:**
+
 - [ ] AI response generates within 10 seconds
 - [ ] Response is empathetic and validating
 - [ ] Response references specific content from entry
@@ -1712,6 +1865,7 @@ Detailed Stats Screen
 **So that** the app can track my emotional progress
 
 **Acceptance Criteria:**
+
 - [ ] Mood selector appears after AI response
 - [ ] User can select from 5 emoji options
 - [ ] User can optionally add mood score (1-10)
@@ -1728,6 +1882,7 @@ Detailed Stats Screen
 **So that** I can reflect on my recovery journey
 
 **Acceptance Criteria:**
+
 - [ ] Entries are displayed in chronological order (newest first)
 - [ ] Each entry shows date, time, mood, and preview
 - [ ] User can scroll through entries
@@ -1743,6 +1898,7 @@ Detailed Stats Screen
 **So that** I can read my transcript and AI response
 
 **Acceptance Criteria:**
+
 - [ ] Entry detail shows full date and time
 - [ ] Entry detail shows mood indicator
 - [ ] Entry detail shows audio player
@@ -1763,6 +1919,7 @@ Detailed Stats Screen
 **So that** I can see how far I've come
 
 **Acceptance Criteria:**
+
 - [ ] Dashboard displays current streak
 - [ ] Dashboard shows mood trend chart (14 days)
 - [ ] Dashboard shows pain progress
@@ -1779,6 +1936,7 @@ Detailed Stats Screen
 **So that** I stay motivated to journal daily
 
 **Acceptance Criteria:**
+
 - [ ] Streak counter is prominently displayed
 - [ ] Streak updates after each entry
 - [ ] Streak resets if user misses a day
@@ -1795,6 +1953,7 @@ Detailed Stats Screen
 **So that** I can track my recovery consistently
 
 **Acceptance Criteria:**
+
 - [ ] User sees 4 structured questions
 - [ ] Questions are recovery-phase specific
 - [ ] User can start guided check-in
@@ -1812,6 +1971,7 @@ Detailed Stats Screen
 **So that** I don't lose my journal entries
 
 **Acceptance Criteria:**
+
 - [ ] Error message is clear and helpful
 - [ ] User can retry failed operation
 - [ ] Audio is saved locally if upload fails
@@ -1825,6 +1985,7 @@ Detailed Stats Screen
 **So that** I can complete my journal entry
 
 **Acceptance Criteria:**
+
 - [ ] Error message explains the issue
 - [ ] User can retry recording
 - [ ] User can grant microphone permission if needed
@@ -1833,6 +1994,7 @@ Detailed Stats Screen
 ### Definition of Done
 
 **For each user story to be considered "done":**
+
 - [ ] Feature implemented according to acceptance criteria
 - [ ] Code reviewed and approved
 - [ ] Unit tests written and passing
@@ -1856,6 +2018,7 @@ Detailed Stats Screen
 **User Action:** User tries to record entry  
 **Error:** No internet connection  
 **Handling:**
+
 - Show clear error message: "No internet connection"
 - Save audio locally
 - Save transcript locally
@@ -1865,6 +2028,7 @@ Detailed Stats Screen
 - Notify user when sync completes
 
 **UI Flow:**
+
 ```
 Recording Screen
   ↓ (No connection)
@@ -1882,6 +2046,7 @@ Toast: "Entry synced successfully"
 **User Action:** User uploads audio file  
 **Error:** Upload takes too long  
 **Handling:**
+
 - Show progress indicator
 - Allow user to continue using app
 - Upload continues in background
@@ -1893,6 +2058,7 @@ Toast: "Entry synced successfully"
 **User Action:** Waiting for AI response  
 **Error:** API request times out  
 **Handling:**
+
 - Show timeout message: "Taking longer than usual..."
 - Auto-retry once
 - If retry fails: "AI response unavailable. Try again?"
@@ -1906,6 +2072,7 @@ Toast: "Entry synced successfully"
 **User Action:** User tries to login  
 **Error:** Email/password incorrect  
 **Handling:**
+
 - Show error: "Invalid email or password"
 - Highlight incorrect field
 - Allow retry
@@ -1916,6 +2083,7 @@ Toast: "Entry synced successfully"
 **User Action:** User tries to login  
 **Error:** Email not verified  
 **Handling:**
+
 - Show message: "Please verify your email"
 - Resend verification email option
 - Redirect to verification screen
@@ -1925,6 +2093,7 @@ Toast: "Entry synced successfully"
 **User Action:** User tries to access app  
 **Error:** Authentication token expired  
 **Handling:**
+
 - Silent refresh if possible
 - If refresh fails: Show login screen
 - Preserve user's current state
@@ -1937,6 +2106,7 @@ Toast: "Entry synced successfully"
 **User Action:** User tries to record  
 **Error:** Microphone permission not granted  
 **Handling:**
+
 - Show permission request dialog
 - Explain why permission is needed
 - Link to settings if permission denied
@@ -1947,6 +2117,7 @@ Toast: "Entry synced successfully"
 **User Action:** User tries to record  
 **Error:** Microphone hardware issue  
 **Handling:**
+
 - Show error: "Microphone unavailable"
 - Check device permissions
 - Suggest troubleshooting steps
@@ -1957,6 +2128,7 @@ Toast: "Entry synced successfully"
 **User Action:** Phone call interrupts recording  
 **Error:** Recording stopped by system  
 **Handling:**
+
 - Save partial recording
 - Show message: "Recording interrupted"
 - Offer to resume or start over
@@ -1969,6 +2141,7 @@ Toast: "Entry synced successfully"
 **User Action:** User stops recording  
 **Error:** Transcription service unavailable  
 **Handling:**
+
 - Show error: "Transcription unavailable"
 - Save audio file
 - Queue for retry
@@ -1980,6 +2153,7 @@ Toast: "Entry synced successfully"
 **User Action:** User waits for AI response  
 **Error:** AI service unavailable  
 **Handling:**
+
 - Show error: "AI response unavailable"
 - Save entry without AI response
 - Queue for retry
@@ -1991,6 +2165,7 @@ Toast: "Entry synced successfully"
 **User Action:** User taps "Listen to Response"  
 **Error:** TTS service unavailable  
 **Handling:**
+
 - Show error: "Audio playback unavailable"
 - Allow user to read text response
 - Retry automatically
@@ -2003,6 +2178,7 @@ Toast: "Entry synced successfully"
 **User Action:** User tries to view entry  
 **Error:** Entry data corrupted  
 **Handling:**
+
 - Show error: "Entry unavailable"
 - Attempt to recover partial data
 - Show what data is available
@@ -2014,6 +2190,7 @@ Toast: "Entry synced successfully"
 **User Action:** User tries to save entry  
 **Error:** Device storage full  
 **Handling:**
+
 - Show error: "Storage full"
 - Suggest freeing up space
 - Allow cloud-only storage option
@@ -2026,6 +2203,7 @@ Toast: "Entry synced successfully"
 **User Action:** User opens journal list  
 **State:** No entries yet  
 **UI:**
+
 - Show empty state illustration
 - Message: "No entries yet"
 - Call-to-action: "Start Your First Entry"
@@ -2036,6 +2214,7 @@ Toast: "Entry synced successfully"
 **User Action:** User opens dashboard  
 **State:** Less than 7 days of data  
 **UI:**
+
 - Show partial dashboard
 - Message: "Keep journaling to see trends"
 - Show available data (streak, entry count)
@@ -2046,6 +2225,7 @@ Toast: "Entry synced successfully"
 **User Action:** User searches entries  
 **State:** No matching entries  
 **UI:**
+
 - Show empty state illustration
 - Message: "No entries found"
 - Show search query
@@ -2058,6 +2238,7 @@ Toast: "Entry synced successfully"
 
 **State:** App is loading  
 **UI:**
+
 - Show loading spinner
 - Show app logo
 - Message: "Loading your recovery journey..."
@@ -2067,6 +2248,7 @@ Toast: "Entry synced successfully"
 
 **State:** Fetching journal entries  
 **UI:**
+
 - Show skeleton screens
 - Show loading indicator in list
 - Maintain scroll position when loaded
@@ -2075,6 +2257,7 @@ Toast: "Entry synced successfully"
 
 **State:** Processing audio/transcription  
 **UI:**
+
 - Show processing screen
 - Animated loading indicator
 - Message: "Your AI companion is listening..."
@@ -2140,31 +2323,37 @@ Update UI
 #### Native iOS Features
 
 **1. Siri Shortcuts**
+
 - "Hey Siri, start my recovery journal"
 - "Hey Siri, how's my recovery progress?"
 - Integration with iOS Shortcuts app
 
 **2. Apple Health Integration**
+
 - Sync mood data to Health app
 - Track pain levels in Health
 - Share recovery metrics with Health
 
 **3. Share Sheet Integration**
+
 - Native iOS share sheet
 - Share entries to Messages, Email, Notes
 - Export to Files app
 
 **4. Widget Support**
+
 - Home screen widget showing streak
 - Today view widget with quick entry
 - Widget showing mood trend
 
 **5. Spotlight Search**
+
 - Entries indexed in Spotlight
 - Search entries from iOS search
 - Deep link from search results
 
 **6. Handoff**
+
 - Continue on Mac/iPad
 - Seamless device switching
 - Sync via iCloud
@@ -2172,6 +2361,7 @@ Update UI
 #### iOS UI Considerations
 
 **Design:**
+
 - Follow iOS Human Interface Guidelines
 - Use SF Symbols for icons
 - Native iOS navigation patterns
@@ -2179,12 +2369,14 @@ Update UI
 - Dark mode support
 
 **Navigation:**
+
 - Native iOS navigation bar
 - Swipe gestures for back navigation
 - Native tab bar styling
 - Modal presentation styles
 
 **Interactions:**
+
 - Haptic feedback for important actions
 - Native iOS animations
 - 3D Touch/Haptic Touch support (if available)
@@ -2195,31 +2387,37 @@ Update UI
 #### Native Android Features
 
 **1. Google Assistant Integration**
+
 - "Hey Google, start my recovery journal"
 - Voice commands for journaling
 - Integration with Assistant routines
 
 **2. Google Fit Integration**
+
 - Sync mood data to Google Fit
 - Track recovery metrics
 - Share with health apps
 
 **3. Share Intent**
+
 - Native Android share sheet
 - Share to any Android app
 - Export to Google Drive
 
 **4. Widget Support**
+
 - Home screen widget
 - Streak counter widget
 - Quick entry widget
 
 **5. App Shortcuts**
+
 - Long-press app icon for shortcuts
 - Quick actions from home screen
 - Direct entry creation
 
 **6. Notification Channels**
+
 - Separate notification channels
 - User control over notification types
 - Rich notifications with actions
@@ -2227,6 +2425,7 @@ Update UI
 #### Android UI Considerations
 
 **Design:**
+
 - Follow Material Design guidelines
 - Use Material icons
 - Material colors and theming
@@ -2234,12 +2433,14 @@ Update UI
 - Tablet optimization
 
 **Navigation:**
+
 - Android navigation patterns
 - Back button handling
 - Bottom navigation bar
 - Drawer navigation (if needed)
 
 **Interactions:**
+
 - Android haptic feedback
 - Material animations
 - Ripple effects
@@ -2250,17 +2451,20 @@ Update UI
 #### Shared Design Elements
 
 **Components:**
+
 - Same component library
 - Consistent spacing and sizing
 - Same color palette
 - Same typography scale
 
 **Interactions:**
+
 - Same gesture patterns where possible
 - Consistent animation timing
 - Same feedback patterns
 
 **Data:**
+
 - Same data models
 - Same API contracts
 - Same caching strategy
@@ -2269,24 +2473,29 @@ Update UI
 #### Platform Adaptations
 
 **Navigation:**
+
 - iOS: Native navigation bar, swipe gestures
 - Android: Material navigation, back button
 
 **Notifications:**
+
 - iOS: Native iOS notifications
 - Android: Android notification channels
 
 **Sharing:**
+
 - iOS: Native share sheet
 - Android: Android intent system
 
 **Storage:**
+
 - iOS: Keychain for sensitive data
 - Android: Keystore for sensitive data
 
 ### Platform-Specific Testing
 
 #### iOS Testing
+
 - Test on multiple iOS versions (iOS 15+)
 - Test on different device sizes (iPhone SE to iPhone Pro Max)
 - Test iPad compatibility
@@ -2296,6 +2505,7 @@ Update UI
 - Test with different network conditions
 
 #### Android Testing
+
 - Test on multiple Android versions (Android 10+)
 - Test on different screen sizes
 - Test on different manufacturers (Samsung, Google, etc.)
@@ -2306,16 +2516,19 @@ Update UI
 ### Platform-Specific Optimizations
 
 #### Performance
+
 - iOS: Optimize for Metal rendering
 - Android: Optimize for different GPU capabilities
 - Both: Lazy loading, image optimization, code splitting
 
 #### Accessibility
+
 - iOS: VoiceOver optimization
 - Android: TalkBack optimization
 - Both: Large text support, high contrast, reduced motion
 
 #### Battery Life
+
 - Optimize background processing
 - Efficient audio recording
 - Smart caching strategies
@@ -2328,12 +2541,14 @@ Update UI
 ### Backend Integration
 
 **API Endpoints:**
+
 - All endpoints documented in `BACKEND_PLAN.md`
 - TypeScript interfaces match frontend types
 - Error codes standardized
 - Response formats consistent
 
 **Data Models:**
+
 - Frontend types match Firestore schemas
 - Journal entry structure aligned
 - User profile structure aligned
@@ -2344,6 +2559,7 @@ Update UI
 **Reference:** `ARCHITECTURE_DECISIONS.md`
 
 **Constraints:**
+
 - React Native + Expo framework
 - Firebase backend services
 - TypeScript for type safety
@@ -2354,6 +2570,7 @@ Update UI
 **Reference:** `.cursorrules`
 
 **Standards:**
+
 - TypeScript preferred
 - Functional components
 - StyleSheet.create() for styles
@@ -2366,23 +2583,27 @@ Update UI
 ## Success Metrics Summary
 
 ### Onboarding Metrics
+
 - Paywall conversion: >15%
 - First entry completion: >60%
 - Profile setup completion: >90%
 
 ### Engagement Metrics
+
 - Day 2 return: >60%
 - Weekly active users: >70%
 - Entries per week: 5+ entries
 - Dashboard views: 3+ per week
 
 ### Retention Metrics
+
 - 7-day retention: >60%
 - 30-day retention: >40%
 - Churn rate: <15%
 - 30+ day streaks: >30%
 
 ### Quality Metrics
+
 - AI response quality: >4.5/5 stars
 - User satisfaction: NPS >50
 - App store rating: >4.5 stars
@@ -2403,4 +2624,3 @@ Update UI
 ---
 
 **This document serves as the single source of truth for the RecoverVoice app experience. All design, development, and testing should reference this plan.**
-

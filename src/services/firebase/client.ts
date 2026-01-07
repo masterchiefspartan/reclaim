@@ -58,5 +58,6 @@ const assertConfigured = <T>(value: T | null, name: string): T => {
 
 export const getFirebaseAuth = (): Auth => assertConfigured(_firebaseAuth, 'Auth');
 export const getFirestoreDb = (): Firestore => assertConfigured(_firestore, 'Firestore');
-export const getFirebaseStorage = (): FirebaseStorage => assertConfigured(_firebaseStorage, 'Storage');
+export const getFirebaseStorage = (): FirebaseStorage =>
+  assertConfigured(_firebaseStorage, 'Storage');
 export const getCloudFunctions = (): Functions => assertConfigured(_cloudFunctions, 'Functions');

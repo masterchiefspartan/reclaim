@@ -54,4 +54,3 @@ export const darkThemeColors: ThemeColorSet = {
   border: '#1F2937',
   muted: '#334155',
 };
-

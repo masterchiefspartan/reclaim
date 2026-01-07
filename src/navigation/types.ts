@@ -42,4 +42,3 @@ export type MainTabScreenProps<Screen extends keyof MainTabParamList> = BottomTa
   MainTabParamList,
   Screen
 >;
-

@@ -7,6 +7,7 @@ import { AppText } from '@components/common/AppText';
 import type { OnboardingStackScreenProps } from '@navigation/types';
 import { signUpWithEmail } from '@services/auth/authService';
 import { useAuth } from '@hooks/useAuth';
+import { getUserFriendlyMessage } from '@utils/errors';
 
 export const SignUpScreen = ({ navigation }: OnboardingStackScreenProps<'SignUp'>) => {
   const [email, setEmail] = useState('');
@@ -16,11 +17,38 @@ export const SignUpScreen = ({ navigation }: OnboardingStackScreenProps<'SignUp'
   const [isLoading, setIsLoading] = useState(false);
   const { refreshProfile } = useAuth();
 
+  const validateInputs = (): string | null => {
+    if (!email.trim()) {
+      return 'Please enter your email address.';
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      return 'Please enter a valid email address.';
+    }
+
+    if (!password) {
+      return 'Please enter a password.';
+    }
+
+    if (password.length < 6) {
+      return 'Password must be at least 6 characters.';
+    }
+
+    if (password !== confirmPassword) {
+      return 'Passwords do not match.';
+    }
+
+    return null;
+  };
+
   const handleSignUp = useCallback(async () => {
-    if (!email || !password || password !== confirmPassword) {
-      setError('Please enter matching passwords and a valid email.');
+    const validationError = validateInputs();
+    if (validationError) {
+      setError(validationError);
       return;
     }
+
     try {
       setIsLoading(true);
       setError('');
@@ -28,7 +56,8 @@ export const SignUpScreen = ({ navigation }: OnboardingStackScreenProps<'SignUp'
       await refreshProfile();
       navigation.navigate('EmailVerification');
     } catch (err) {
-      setError((err as Error).message ?? 'Failed to create account');
+      // Use centralized error handling for user-friendly messages
+      setError(getUserFriendlyMessage(err));
     } finally {
       setIsLoading(false);
     }
@@ -44,7 +73,12 @@ export const SignUpScreen = ({ navigation }: OnboardingStackScreenProps<'SignUp'
           keyboardType="email-address"
           placeholder="you@example.com"
           value={email}
-          onChangeText={setEmail}
+          onChangeText={text => {
+            setEmail(text);
+            if (error) setError('');
+          }}
+          autoComplete="email"
+          textContentType="emailAddress"
         />
       </View>
       <View style={styles.field}>
@@ -52,9 +86,14 @@ export const SignUpScreen = ({ navigation }: OnboardingStackScreenProps<'SignUp'
         <TextInput
           style={styles.input}
           secureTextEntry
-          placeholder="At least 8 characters"
+          placeholder="At least 6 characters"
           value={password}
-          onChangeText={setPassword}
+          onChangeText={text => {
+            setPassword(text);
+            if (error) setError('');
+          }}
+          autoComplete="password-new"
+          textContentType="newPassword"
         />
       </View>
       <View style={styles.field}>
@@ -64,11 +103,20 @@ export const SignUpScreen = ({ navigation }: OnboardingStackScreenProps<'SignUp'
           secureTextEntry
           placeholder="Repeat password"
           value={confirmPassword}
-          onChangeText={setConfirmPassword}
+          onChangeText={text => {
+            setConfirmPassword(text);
+            if (error) setError('');
+          }}
+          autoComplete="password-new"
+          textContentType="newPassword"
         />
       </View>
 
-      {error ? <AppText style={styles.error}>{error}</AppText> : null}
+      {error ? (
+        <View style={styles.errorContainer}>
+          <AppText style={styles.error}>{error}</AppText>
+        </View>
+      ) : null}
 
       <PrimaryButton label="Create account" onPress={handleSignUp} isLoading={isLoading} />
     </OnboardingLayout>
@@ -87,9 +135,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     backgroundColor: '#fff',
   },
+  errorContainer: {
+    backgroundColor: '#fef2f2',
+    borderRadius: 8,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#fecaca',
+  },
   error: {
     color: '#dc2626',
+    textAlign: 'center',
   },
 });
-
-

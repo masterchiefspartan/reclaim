@@ -10,4 +10,3 @@ export const spacing = {
 export type SpacingToken = keyof typeof spacing;
 
 export const verticalSpacing = (multiplier: number = 1) => spacing.md * multiplier;
-

@@ -23,7 +23,7 @@ const AnimatedPulse = () => {
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
         }),
-      ]),
+      ])
     );
     animation.start();
     return () => animation.stop();
@@ -92,5 +92,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#ef4444',
   },
 });
-
-

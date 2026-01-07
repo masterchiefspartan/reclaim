@@ -44,15 +44,13 @@ export const JournalListScreen = (_props: Props) => {
         <FlatList
           style={styles.list}
           data={entries}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id}
           renderItem={({ item }) => (
             <JournalEntryCard entry={item} onPress={() => handleOpenEntry(item.id)} />
           )}
           contentContainerStyle={styles.listContent}
           ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
-          ListHeaderComponent={
-            <PrimaryButton label="Start New Entry" onPress={handleNewEntry} />
-          }
+          ListHeaderComponent={<PrimaryButton label="Start New Entry" onPress={handleNewEntry} />}
         />
       )}
     </ScreenContainer>
@@ -76,5 +74,3 @@ const styles = StyleSheet.create({
     gap: 16,
   },
 });
-
-

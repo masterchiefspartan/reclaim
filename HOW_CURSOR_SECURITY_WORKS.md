@@ -21,6 +21,7 @@
 ### Why It's Not Guaranteed
 
 **Limitations:**
+
 - AI models are probabilistic - they can miss things
 - Complex context might cause the AI to prioritize other concerns
 - Security checks require reasoning that might not always be perfect
@@ -32,12 +33,14 @@
 
 **Recommended Approach: Use Multiple Layers**
 
-#### Layer 1: Cursor AI (` enhanced with `.cursorrules`)
+#### Layer 1: Cursor AI (`enhanced with`.cursorrules`)
+
 - First line of defense
 - AI follows your security checklist
 - Catches issues during code generation
 
 #### Layer 2: Linters & Static Analysis
+
 ```json
 // .eslintrc.js or package.json
 {
@@ -54,6 +57,7 @@
 ```
 
 #### Layer 3: Pre-commit Hooks
+
 ```bash
 # Install husky for git hooks
 npm install --save-dev husky
@@ -66,6 +70,7 @@ npm run type-check
 ```
 
 #### Layer 4: CI/CD Checks
+
 ```yaml
 # .github/workflows/security.yml
 name: Security Checks
@@ -100,6 +105,7 @@ jobs:
 **Always review AI-generated code before committing:**
 
 **Security Review Checklist:**
+
 - [ ] Scan for hardcoded secrets/API keys
 - [ ] Verify authentication checks
 - [ ] Check input validation
@@ -111,11 +117,13 @@ jobs:
 ### 4. Use Cursor's Built-in Security Features
 
 **Cursor has some built-in security features:**
+
 - Code scanning for secrets (when enabled)
 - TypeScript type checking
 - Syntax validation
 
 **Enable these in Cursor Settings:**
+
 - Settings → Security → Enable secret detection
 - Settings → Editor → Show security warnings
 
@@ -155,21 +163,25 @@ Reference: .cursorrules security checklist
 **Recommended Tools:**
 
 1. **ESLint Security Plugin**
+
 ```bash
 npm install --save-dev eslint-plugin-security
 ```
 
 2. **npm audit** (already available)
+
 ```bash
 npm audit
 npm audit fix
 ```
 
 3. **Secret Scanning** (GitHub/GitLab)
+
 - Automatically scans commits for secrets
 - Can be enabled in repository settings
 
 4. **TypeScript Strict Mode**
+
 ```json
 // tsconfig.json
 {
@@ -236,11 +248,13 @@ describe('Security Tests', () => {
    - Use the security checklist as a review guide
 
 2. **Set Up Linting**
+
    ```bash
    npm install --save-dev eslint eslint-plugin-security
    ```
 
 3. **Enable Git Hooks**
+
    ```bash
    npm install --save-dev husky
    npx husky install
@@ -267,12 +281,14 @@ describe('Security Tests', () => {
 ## Summary
 
 **How `.cursorrules` Works:**
+
 - ✅ Provides context and instructions to AI
 - ✅ AI reads and follows these rules
 - ❌ Not automatic enforcement
 - ❌ Requires human review
 
 **How to Make It Effective:**
+
 1. ✅ Use explicit security prompts
 2. ✅ Pair with automated tools (linting, audits)
 3. ✅ Always review generated code
@@ -280,6 +296,7 @@ describe('Security Tests', () => {
 5. ✅ Use CI/CD security checks
 
 **Reality Check:**
+
 - `.cursorrules` significantly improves AI-generated code security
 - But it's not a replacement for human review
 - Combine with automated tools for best results
@@ -288,6 +305,7 @@ describe('Security Tests', () => {
 ## Recommended Setup
 
 **Ideal Security Stack:**
+
 1. `.cursorrules` (AI guidance) ← **You have this**
 2. ESLint security plugin (static analysis)
 3. npm audit (dependency scanning)
@@ -296,4 +314,3 @@ describe('Security Tests', () => {
 6. Code review process (human verification)
 
 This multi-layered approach gives you the best security coverage.
-

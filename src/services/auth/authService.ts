@@ -12,11 +12,11 @@ import {
   serverTimestamp,
   setDoc,
   updateDoc,
-  FirestoreError,
   runTransaction,
 } from 'firebase/firestore';
 
 import { getFirebaseAuth, getFirestoreDb } from '@services/firebase/client';
+import { withErrorHandling, silentAsync } from '@utils/errors';
 import type {
   EditableProfileFields,
   OnboardingPayload,
@@ -28,105 +28,207 @@ import type {
 
 const usersCollection = 'users';
 
-export const signUpWithEmail = async (email: string, password: string) => {
-  const credential = await createUserWithEmailAndPassword(getFirebaseAuth(), email, password);
-  if (credential.user && !credential.user.emailVerified) {
-    await sendEmailVerification(credential.user);
-  }
-  return credential.user;
-};
-
-export const signInWithEmail = async (email: string, password: string) => {
-  const credential = await signInWithEmailAndPassword(getFirebaseAuth(), email, password);
-  return credential.user;
-};
-
-export const signOut = () => firebaseSignOut(getFirebaseAuth());
-
-export const fetchUserProfile = async (uid: string): Promise<UserProfile | null> => {
-  const ref = doc(getFirestoreDb(), usersCollection, uid);
-  const snapshot = await getDoc(ref);
-  if (!snapshot.exists()) {
-    return null;
-  }
-  return snapshot.data() as UserProfile;
-};
-
-export const upsertUserProfile = async (user: User, overrides?: Partial<UserProfile>) => {
-  const ref = doc(getFirestoreDb(), usersCollection, user.uid);
-  const now = serverTimestamp();
-  await setDoc(
-    ref,
-    {
-      uid: user.uid,
-      email: user.email ?? '',
-      onboardingCompleted: false,
-      createdAt: now,
-      updatedAt: now,
-      ...overrides,
+/**
+ * Creates a new user account with email and password
+ * @throws AppError with user-friendly message on failure
+ */
+export const signUpWithEmail = async (email: string, password: string): Promise<User> => {
+  return withErrorHandling(
+    'signUpWithEmail',
+    async () => {
+      const credential = await createUserWithEmailAndPassword(getFirebaseAuth(), email, password);
+      if (credential.user && !credential.user.emailVerified) {
+        await sendEmailVerification(credential.user);
+      }
+      return credential.user;
     },
-    { merge: true },
+    { email }
   );
 };
 
-export const saveOnboardingProfile = async (uid: string, payload: OnboardingPayload) => {
-  const ref = doc(getFirestoreDb(), usersCollection, uid);
-  await updateDoc(ref, {
-    displayName: payload.displayName,
-    recoveryContext: payload.recoveryContext,
-    onboardingCompleted: true,
-    subscription: {
-      plan: payload.plan,
-      status: payload.plan === 'trial' ? 'trialing' : 'active',
-    } satisfies UserSubscription,
-    updatedAt: serverTimestamp(),
-  });
+/**
+ * Signs in an existing user with email and password
+ * @throws AppError with user-friendly message on failure
+ */
+export const signInWithEmail = async (email: string, password: string): Promise<User> => {
+  return withErrorHandling(
+    'signInWithEmail',
+    async () => {
+      const credential = await signInWithEmailAndPassword(getFirebaseAuth(), email, password);
+      return credential.user;
+    },
+    { email }
+  );
 };
 
-export const updateUserPermissions = async (uid: string, permissions: UserPermissions) => {
-  const ref = doc(getFirestoreDb(), usersCollection, uid);
-  await updateDoc(ref, {
-    permissions,
-    updatedAt: serverTimestamp(),
-  });
+/**
+ * Signs out the current user
+ * @throws AppError with user-friendly message on failure
+ */
+export const signOut = (): Promise<void> => {
+  return withErrorHandling('signOut', () => firebaseSignOut(getFirebaseAuth()));
 };
 
-export const updateUserProfile = async (uid: string, updates: EditableProfileFields) => {
-  const ref = doc(getFirestoreDb(), usersCollection, uid);
-  await updateDoc(ref, {
-    ...updates,
-    updatedAt: serverTimestamp(),
-  });
+/**
+ * Fetches user profile from Firestore
+ * @returns UserProfile or null if not found
+ * @throws AppError on database errors
+ */
+export const fetchUserProfile = async (uid: string): Promise<UserProfile | null> => {
+  return withErrorHandling(
+    'fetchUserProfile',
+    async () => {
+      const ref = doc(getFirestoreDb(), usersCollection, uid);
+      const snapshot = await getDoc(ref);
+      if (!snapshot.exists()) {
+        return null;
+      }
+      return snapshot.data() as UserProfile;
+    },
+    { uid }
+  );
 };
 
-export const updateDisplayName = async (user: User, displayName: string) => {
-  await firebaseUpdateProfile(user, { displayName });
-  await updateUserProfile(user.uid, { displayName });
+/**
+ * Creates or updates user profile in Firestore
+ * @throws AppError on database errors
+ */
+export const upsertUserProfile = async (
+  user: User,
+  overrides?: Partial<UserProfile>
+): Promise<void> => {
+  return withErrorHandling(
+    'upsertUserProfile',
+    async () => {
+      const ref = doc(getFirestoreDb(), usersCollection, user.uid);
+      const now = serverTimestamp();
+      await setDoc(
+        ref,
+        {
+          uid: user.uid,
+          email: user.email ?? '',
+          onboardingCompleted: false,
+          createdAt: now,
+          updatedAt: now,
+          ...overrides,
+        },
+        { merge: true }
+      );
+    },
+    { uid: user.uid }
+  );
 };
 
-export const incrementUserStats = async (uid: string, delta: Partial<UserStats>) => {
-  const ref = doc(getFirestoreDb(), usersCollection, uid);
-  try {
-    await runTransaction(getFirestoreDb(), async (transaction) => {
-      const snapshot = await transaction.get(ref);
-      const stats = (snapshot.data()?.stats ?? {}) as UserStats;
-      const nextStats: UserStats = {
-        totalEntries: (stats.totalEntries ?? 0) + (delta.totalEntries ?? 0),
-        totalRecordingMinutes:
-          (stats.totalRecordingMinutes ?? 0) + (delta.totalRecordingMinutes ?? 0),
-        streakDays: delta.streakDays ?? stats.streakDays ?? 0,
-        lastEntryDate: delta.lastEntryDate ?? stats.lastEntryDate,
-      };
-
-      transaction.update(ref, {
-        stats: nextStats,
+/**
+ * Saves onboarding profile data
+ * @throws AppError on database errors
+ */
+export const saveOnboardingProfile = async (
+  uid: string,
+  payload: OnboardingPayload
+): Promise<void> => {
+  return withErrorHandling(
+    'saveOnboardingProfile',
+    async () => {
+      const ref = doc(getFirestoreDb(), usersCollection, uid);
+      await updateDoc(ref, {
+        displayName: payload.displayName,
+        recoveryContext: payload.recoveryContext,
+        onboardingCompleted: true,
+        subscription: {
+          plan: payload.plan,
+          status: payload.plan === 'trial' ? 'trialing' : 'active',
+        } satisfies UserSubscription,
         updatedAt: serverTimestamp(),
       });
-    });
-  } catch (error) {
-    const err = error as FirestoreError;
-    console.error('Failed to increment stats', err);
-  }
+    },
+    { uid }
+  );
 };
 
+/**
+ * Updates user permissions
+ * @throws AppError on database errors
+ */
+export const updateUserPermissions = async (
+  uid: string,
+  permissions: UserPermissions
+): Promise<void> => {
+  return withErrorHandling(
+    'updateUserPermissions',
+    async () => {
+      const ref = doc(getFirestoreDb(), usersCollection, uid);
+      await updateDoc(ref, {
+        permissions,
+        updatedAt: serverTimestamp(),
+      });
+    },
+    { uid }
+  );
+};
 
+/**
+ * Updates editable profile fields
+ * @throws AppError on database errors
+ */
+export const updateUserProfile = async (
+  uid: string,
+  updates: EditableProfileFields
+): Promise<void> => {
+  return withErrorHandling(
+    'updateUserProfile',
+    async () => {
+      const ref = doc(getFirestoreDb(), usersCollection, uid);
+      await updateDoc(ref, {
+        ...updates,
+        updatedAt: serverTimestamp(),
+      });
+    },
+    { uid }
+  );
+};
+
+/**
+ * Updates user display name in both Firebase Auth and Firestore
+ * @throws AppError on failure
+ */
+export const updateDisplayName = async (user: User, displayName: string): Promise<void> => {
+  return withErrorHandling(
+    'updateDisplayName',
+    async () => {
+      await firebaseUpdateProfile(user, { displayName });
+      await updateUserProfile(user.uid, { displayName });
+    },
+    { uid: user.uid, displayName }
+  );
+};
+
+/**
+ * Increments user stats atomically
+ * Non-critical operation - logs errors but doesn't throw
+ */
+export const incrementUserStats = async (uid: string, delta: Partial<UserStats>): Promise<void> => {
+  await silentAsync(
+    'incrementUserStats',
+    async () => {
+      const ref = doc(getFirestoreDb(), usersCollection, uid);
+      await runTransaction(getFirestoreDb(), async transaction => {
+        const snapshot = await transaction.get(ref);
+        const stats = (snapshot.data()?.stats ?? {}) as UserStats;
+        const nextStats: UserStats = {
+          totalEntries: (stats.totalEntries ?? 0) + (delta.totalEntries ?? 0),
+          totalRecordingMinutes:
+            (stats.totalRecordingMinutes ?? 0) + (delta.totalRecordingMinutes ?? 0),
+          streakDays: delta.streakDays ?? stats.streakDays ?? 0,
+          lastEntryDate: delta.lastEntryDate ?? stats.lastEntryDate,
+        };
+
+        transaction.update(ref, {
+          stats: nextStats,
+          updatedAt: serverTimestamp(),
+        });
+      });
+    },
+    { uid, delta }
+  );
+};

@@ -30,7 +30,7 @@ export const HomeScreen = () => {
     (mode: 'free' | 'guided' = 'free') => {
       navigation.navigate('VoiceJournal', { mode });
     },
-    [navigation],
+    [navigation]
   );
 
   const recentEntries = useMemo(() => entries.slice(0, 3), [entries]);
@@ -80,7 +80,7 @@ export const HomeScreen = () => {
         {recentEntries.length === 0 ? (
           <AppText>No entries yet. Start recording to see your history here.</AppText>
         ) : (
-          recentEntries.map((entry) => (
+          recentEntries.map(entry => (
             <JournalEntryCard
               key={entry.id}
               entry={entry}
@@ -130,4 +130,3 @@ const styles = StyleSheet.create({
     gap: 12,
   },
 });
-

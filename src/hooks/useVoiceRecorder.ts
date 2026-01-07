@@ -22,14 +22,14 @@ export const useVoiceRecorder = () => {
   const requestPermission = useCallback(async () => {
     const permission = await Audio.requestPermissionsAsync();
     const granted = permission.status === 'granted';
-    setState((prev) => ({ ...prev, hasPermission: granted }));
+    setState(prev => ({ ...prev, hasPermission: granted }));
     return granted;
   }, []);
 
   const startRecording = useCallback(async () => {
     const hasPermission = state.hasPermission || (await requestPermission());
     if (!hasPermission) {
-      setState((prev) => ({ ...prev, error: 'Microphone permission is required.' }));
+      setState(prev => ({ ...prev, error: 'Microphone permission is required.' }));
       return;
     }
     try {
@@ -41,18 +41,18 @@ export const useVoiceRecorder = () => {
       });
       const recording = new Audio.Recording();
       await recording.prepareToRecordAsync(
-        Audio.RecordingOptionsPresets.HIGH_QUALITY as Audio.RecordingOptions,
+        Audio.RecordingOptionsPresets.HIGH_QUALITY as Audio.RecordingOptions
       );
-      recording.setOnRecordingStatusUpdate((status) => {
+      recording.setOnRecordingStatusUpdate(status => {
         if (!status.isRecording) return;
-        setState((prev) => ({
+        setState(prev => ({
           ...prev,
           durationMillis: status.durationMillis ?? prev.durationMillis,
         }));
       });
       await recording.startAsync();
       recordingRef.current = recording;
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         isRecording: true,
         durationMillis: 0,
@@ -60,7 +60,7 @@ export const useVoiceRecorder = () => {
       }));
     } catch (error) {
       console.error('Failed to start recording', error);
-      setState((prev) => ({ ...prev, error: 'Unable to start recording. Try again.' }));
+      setState(prev => ({ ...prev, error: 'Unable to start recording. Try again.' }));
     }
   }, [requestPermission, state.hasPermission]);
 
@@ -71,7 +71,7 @@ export const useVoiceRecorder = () => {
       await recording.stopAndUnloadAsync();
       const uri = recording.getURI() ?? undefined;
       recordingRef.current = null;
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         isRecording: false,
         fileUri: uri,
@@ -82,7 +82,7 @@ export const useVoiceRecorder = () => {
       };
     } catch (error) {
       console.error('Failed to stop recording', error);
-      setState((prev) => ({ ...prev, error: 'Unable to stop recording.' }));
+      setState(prev => ({ ...prev, error: 'Unable to stop recording.' }));
       return undefined;
     }
   }, [state.durationMillis]);
@@ -99,5 +99,3 @@ export const useVoiceRecorder = () => {
     reset,
   };
 };
-
-

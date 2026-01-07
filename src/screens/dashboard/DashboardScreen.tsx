@@ -31,12 +31,12 @@ export const DashboardScreen = (_props: Props) => {
 
   const stats = useMemo(() => {
     const orderedEntries = [...entries].sort(
-      (a, b) => (b.createdAt?.toMillis() ?? 0) - (a.createdAt?.toMillis() ?? 0),
+      (a, b) => (b.createdAt?.toMillis() ?? 0) - (a.createdAt?.toMillis() ?? 0)
     );
     const dates = orderedEntries
-      .map((entry) => entry.createdAt?.toDate())
+      .map(entry => entry.createdAt?.toDate())
       .filter(Boolean)
-      .map((date) => dayjs(date as Date));
+      .map(date => dayjs(date as Date));
 
     const streak = calculateStreak(dates);
     const totalMinutes = entries.reduce((sum, entry) => sum + entry.duration / 60000, 0);
@@ -48,7 +48,7 @@ export const DashboardScreen = (_props: Props) => {
       grateful: 0,
       energized: 0,
     };
-    entries.forEach((entry) => {
+    entries.forEach(entry => {
       if (entry.mood) {
         moodCounts[entry.mood] += 1;
       }
@@ -56,7 +56,7 @@ export const DashboardScreen = (_props: Props) => {
     const favoriteMood =
       moodOrder.reduce(
         (best, mood) => (moodCounts[mood] > (moodCounts[best] ?? 0) ? mood : best),
-        'neutral' as MoodLevel,
+        'neutral' as MoodLevel
       ) ?? 'neutral';
 
     return {
@@ -128,5 +128,3 @@ const styles = StyleSheet.create({
     gap: 8,
   },
 });
-
-

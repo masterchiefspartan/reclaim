@@ -16,7 +16,12 @@ export const AppText = ({ children, style, variant = 'body', color, ...rest }: A
     <Text
       style={StyleSheet.flatten([
         styles.base,
-        { color: color ?? theme.colors.text, fontSize: variantStyle.fontSize, fontWeight: variantStyle.fontWeight as any, lineHeight: variantStyle.lineHeight },
+        {
+          color: color ?? theme.colors.text,
+          fontSize: variantStyle.fontSize,
+          fontWeight: variantStyle.fontWeight as any,
+          lineHeight: variantStyle.lineHeight,
+        },
         style,
       ])}
       {...rest}
@@ -31,4 +36,3 @@ const styles = StyleSheet.create({
     fontFamily: 'System',
   },
 });
-

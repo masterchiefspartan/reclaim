@@ -1,4 +1,5 @@
 # Pre-Coding Setup Checklist
+
 # RecoverVoiceApp - What's Missing Before We Start Coding
 
 **Last Updated:** December 2024  
@@ -9,6 +10,7 @@
 ## ✅ What's Already Done
 
 ### Documentation (Complete)
+
 - ✅ `.cursorrules` - Cursor AI configuration and security checklist
 - ✅ `BACKEND_PLAN.md` - Complete backend architecture (1,515 lines)
 - ✅ `APP_PLAN.md` - Complete app experience plan (2,400+ lines)
@@ -17,6 +19,7 @@
 - ✅ `HOW_CURSOR_SECURITY_WORKS.md` - Security enforcement guide
 
 ### Development Tools (Complete)
+
 - ✅ ESLint configuration (`.eslintrc.cjs`)
 - ✅ TypeScript configuration (`tsconfig.json`)
 - ✅ Prettier configuration (`.prettierrc.json`)
@@ -25,6 +28,7 @@
 - ✅ Security linting configured
 
 ### Basic Project Structure
+
 - ✅ Expo project initialized
 - ✅ Basic `App.js` file
 - ✅ `app.json` configuration
@@ -37,10 +41,12 @@
 ### 1. Missing Documentation
 
 #### FRONTEND_PLAN.md (High Priority)
+
 **Status:** ❌ Not Created  
 **Why Critical:** Frontend developers need technical implementation details
 
 **What Should Include:**
+
 - React Native component architecture
 - Component hierarchy and structure
 - State management approach (hooks, context)
@@ -54,10 +60,12 @@
 **Action:** Create comprehensive frontend technical plan
 
 #### TESTING_PLAN.md (High Priority)
+
 **Status:** ❌ Not Created  
 **Why Critical:** Need testing strategy before writing code
 
 **What Should Include:**
+
 - Unit testing strategy
 - Integration testing approach
 - E2E testing plan
@@ -74,10 +82,12 @@
 ### 2. Firebase Project Setup (Critical)
 
 #### Firebase Project Creation
+
 **Status:** ❌ Not Done  
 **Why Critical:** Backend depends entirely on Firebase
 
 **Missing Steps:**
+
 - [ ] Create Firebase project in Firebase Console
 - [ ] Enable Authentication (Email/Password, Google)
 - [ ] Enable Firestore Database
@@ -88,10 +98,12 @@
 **Action:** Complete Firebase Console setup
 
 #### Firebase Configuration Files
+
 **Status:** ❌ Not Created  
 **Why Critical:** App cannot connect to Firebase without config
 
 **Missing Files:**
+
 - [ ] `RecoverVoiceApp/firebase.json` - Firebase project config
 - [ ] `RecoverVoiceApp/.firebaserc` - Firebase project aliases
 - [ ] `RecoverVoiceApp/src/config/firebase.ts` - Firebase client config
@@ -100,10 +112,12 @@
 **Action:** Initialize Firebase in project and create config files
 
 #### Firebase Functions Setup
+
 **Status:** ❌ Not Created  
 **Why Critical:** All backend logic will be in Functions
 
 **Missing:**
+
 - [ ] `functions/` folder structure
 - [ ] `functions/package.json`
 - [ ] `functions/tsconfig.json`
@@ -117,16 +131,19 @@
 ### 3. Environment Variables Setup
 
 #### Environment Configuration
+
 **Status:** ❌ Not Set Up  
 **Why Critical:** API keys and secrets must be configured securely
 
 **Missing Files:**
+
 - [ ] `.env.example` - Template for required variables
 - [ ] `.env.local` - Local development variables (gitignored)
 - [ ] Environment variable documentation
 - [ ] Expo environment variable setup
 
 **Required Variables:**
+
 ```
 # Firebase (Public - OK to expose)
 EXPO_PUBLIC_FIREBASE_API_KEY=
@@ -149,10 +166,12 @@ EXPO_PUBLIC_FIREBASE_APP_ID=
 ### 4. Source Code Structure (Critical)
 
 #### Frontend Folder Structure
+
 **Status:** ❌ Not Created  
 **Why Critical:** Code needs organization before starting
 
 **Missing Structure:**
+
 ```
 RecoverVoiceApp/
 ├── src/
@@ -174,10 +193,12 @@ RecoverVoiceApp/
 **Action:** Create complete folder structure
 
 #### TypeScript Type Definitions
+
 **Status:** ❌ Not Created  
 **Why Critical:** Type safety requires types defined upfront
 
 **Missing Type Files:**
+
 - [ ] `src/types/user.ts` - User type definitions
 - [ ] `src/types/journal.ts` - Journal entry types
 - [ ] `src/types/ai.ts` - AI response types
@@ -191,10 +212,12 @@ RecoverVoiceApp/
 ### 5. Missing Dependencies (Critical)
 
 #### React Native Dependencies
+
 **Status:** ❌ Not Installed  
 **Why Critical:** Cannot build features without these
 
 **Missing Dependencies:**
+
 ```bash
 # Firebase
 npm install firebase
@@ -225,10 +248,12 @@ npm install axios  # For API calls (if needed)
 **Action:** Install all required dependencies
 
 #### Firebase Functions Dependencies
+
 **Status:** ❌ Not Installed  
 **Why Critical:** Backend cannot function without these
 
 **Missing (in `functions/` folder):**
+
 ```bash
 npm install firebase-functions firebase-admin
 npm install @deepgram/sdk
@@ -245,10 +270,12 @@ npm install --save-dev typescript @types/node
 ### 6. Git Repository Setup
 
 #### Git Configuration
+
 **Status:** ❌ Unknown  
 **Why Critical:** Version control essential
 
 **Missing:**
+
 - [ ] Git repository initialized?
 - [ ] `.gitignore` properly configured (already exists but verify)
 - [ ] Initial commit made?
@@ -256,6 +283,7 @@ npm install --save-dev typescript @types/node
 - [ ] Branching strategy defined?
 
 **Verify `.gitignore` Includes:**
+
 - `node_modules/`
 - `.env*.local`
 - `.expo/`
@@ -271,10 +299,12 @@ npm install --save-dev typescript @types/node
 ### 7. Testing Setup
 
 #### Testing Dependencies
+
 **Status:** ❌ Not Installed  
 **Why Critical:** Testing required from start
 
 **Missing:**
+
 - [ ] Jest configured
 - [ ] React Native Testing Library
 - [ ] Testing utilities
@@ -287,10 +317,12 @@ npm install --save-dev typescript @types/node
 ### 8. Firebase Security Rules
 
 #### Firestore Security Rules
+
 **Status:** ❌ Not Created  
 **Why Critical:** Database security essential
 
 **Missing:**
+
 - [ ] `firestore.rules` file
 - [ ] Rules tested
 - [ ] Rules documented
@@ -298,10 +330,12 @@ npm install --save-dev typescript @types/node
 **Action:** Create and test Firestore security rules
 
 #### Firebase Storage Rules
+
 **Status:** ❌ Not Created  
 **Why Critical:** File upload security essential
 
 **Missing:**
+
 - [ ] `storage.rules` file
 - [ ] Rules tested
 - [ ] Rules documented
@@ -315,10 +349,12 @@ npm install --save-dev typescript @types/node
 ### 9. API Keys Management
 
 #### API Keys Obtained
+
 **Status:** ❌ Not Obtained  
 **Why Important:** Cannot test integrations without keys
 
 **Missing:**
+
 - [ ] Deepgram API key obtained
 - [ ] Claude API key obtained
 - [ ] ElevenLabs API key obtained
@@ -329,10 +365,12 @@ npm install --save-dev typescript @types/node
 ### 10. Development Environment
 
 #### Local Development Setup
+
 **Status:** ⚠️ Partially Complete  
 **Why Important:** Need to run app locally
 
 **Missing:**
+
 - [ ] Expo CLI installed globally?
 - [ ] iOS Simulator setup (for Mac)
 - [ ] Android Emulator setup
@@ -344,10 +382,12 @@ npm install --save-dev typescript @types/node
 ### 11. Code Quality Tools
 
 #### Additional Tools
+
 **Status:** ⚠️ Partially Complete  
 **Why Important:** Code quality and developer experience
 
 **Missing:**
+
 - [ ] Pre-commit hook scripts completed
 - [ ] CI/CD pipeline setup (GitHub Actions, etc.)
 - [ ] Code coverage tools
@@ -362,11 +402,13 @@ npm install --save-dev typescript @types/node
 ### Must Do Before Writing Any Code:
 
 #### Documentation
+
 - [ ] Create `FRONTEND_PLAN.md` with technical implementation details
 - [ ] Create `TESTING_PLAN.md` with testing strategy
 - [ ] Review all documentation for consistency
 
 #### Firebase Setup
+
 - [ ] Create Firebase project in Console
 - [ ] Enable all required services (Auth, Firestore, Storage, Functions)
 - [ ] Initialize Firebase in project (`firebase init`)
@@ -375,36 +417,42 @@ npm install --save-dev typescript @types/node
 - [ ] Create Storage security rules (`storage.rules`)
 
 #### Project Structure
+
 - [ ] Create `src/` folder structure
 - [ ] Create all required subfolders (components, screens, services, etc.)
 - [ ] Create TypeScript type definitions
 - [ ] Create basic index files
 
 #### Dependencies
+
 - [ ] Install all React Native dependencies
 - [ ] Initialize Firebase Functions (`firebase init functions`)
 - [ ] Install Functions dependencies
 - [ ] Verify all packages install correctly
 
 #### Environment Variables
+
 - [ ] Create `.env.example` file
 - [ ] Document all required variables
 - [ ] Set up Expo environment variable access
 - [ ] Configure Firebase Functions environment variables
 
 #### Git Setup
+
 - [ ] Verify Git repository initialized
 - [ ] Verify `.gitignore` is complete
 - [ ] Make initial commit with setup files
 - [ ] Connect to remote repository (if applicable)
 
 #### Testing Setup
+
 - [ ] Install testing dependencies
 - [ ] Configure Jest
 - [ ] Set up test folder structure
 - [ ] Create example test file
 
 #### API Keys
+
 - [ ] Obtain Deepgram API key
 - [ ] Obtain Claude API key
 - [ ] Obtain ElevenLabs API key
@@ -415,6 +463,7 @@ npm install --save-dev typescript @types/node
 ## 🎯 Recommended Order of Setup
 
 ### Phase 1: Foundation (Do First)
+
 1. ✅ Documentation review (already done)
 2. ❌ Create `FRONTEND_PLAN.md`
 3. ❌ Create `TESTING_PLAN.md`
@@ -423,6 +472,7 @@ npm install --save-dev typescript @types/node
 6. ❌ Create project folder structure
 
 ### Phase 2: Configuration (Do Second)
+
 7. ❌ Install all dependencies
 8. ❌ Create Firebase config files
 9. ❌ Set up environment variables
@@ -430,6 +480,7 @@ npm install --save-dev typescript @types/node
 11. ❌ Create security rules
 
 ### Phase 3: Development Setup (Do Third)
+
 12. ❌ Set up testing infrastructure
 13. ❌ Complete Git setup
 14. ❌ Set up CI/CD (optional but recommended)
@@ -437,6 +488,7 @@ npm install --save-dev typescript @types/node
 16. ❌ Verify development environment
 
 ### Phase 4: Ready to Code
+
 17. ✅ All documentation complete
 18. ✅ All dependencies installed
 19. ✅ Firebase configured
@@ -468,6 +520,7 @@ npm install --save-dev typescript @types/node
 ## 📝 Next Steps
 
 ### Immediate Actions (Today)
+
 1. Create Firebase project in Console
 2. Initialize Firebase in project (`firebase init`)
 3. Create `src/` folder structure
@@ -475,6 +528,7 @@ npm install --save-dev typescript @types/node
 5. Install core dependencies
 
 ### This Week
+
 6. Create `FRONTEND_PLAN.md`
 7. Create `TESTING_PLAN.md`
 8. Set up environment variables
@@ -482,6 +536,7 @@ npm install --save-dev typescript @types/node
 10. Obtain API keys
 
 ### Before First Code Commit
+
 11. Complete all "Must Do" items above
 12. Verify app runs (even if blank)
 13. Verify Firebase connection works
@@ -525,4 +580,3 @@ npm install --save-dev typescript @types/node
 ---
 
 **This checklist should be reviewed and updated as setup progresses.**
-

@@ -15,4 +15,3 @@ When reviewing code changes or before committing, ALWAYS verify:
 - If i18n is set up, are the strings added localized and new routes internationalized?
 - Are there places we should use caching?
 - Are we missing critical o11y or logging on backend changes?
-

@@ -10,7 +10,13 @@ interface PrimaryButtonProps {
   testID?: string;
 }
 
-export const PrimaryButton = ({ label, onPress, isLoading = false, disabled = false, testID }: PrimaryButtonProps) => {
+export const PrimaryButton = ({
+  label,
+  onPress,
+  isLoading = false,
+  disabled = false,
+  testID,
+}: PrimaryButtonProps) => {
   const { theme } = useAppTheme();
   const isDisabled = disabled || isLoading;
 
@@ -50,4 +56,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-

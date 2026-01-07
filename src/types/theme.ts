@@ -8,4 +8,3 @@ export interface ThemeContextValue {
   setMode: (mode: ThemeMode) => void;
   toggleMode: () => void;
 }
-

@@ -52,10 +52,9 @@ export const env: AppEnv = {
 
 export const assertFirebaseConfig = () => {
   const requiredKeys: Array<keyof FirebaseConfig> = ['apiKey', 'projectId', 'appId'];
-  requiredKeys.forEach((key) => {
+  requiredKeys.forEach(key => {
     if (!env.firebase[key]) {
       throw new Error(`Missing Firebase configuration for ${key}`);
     }
   });
 };
-

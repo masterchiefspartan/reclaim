@@ -1,29 +1,8 @@
-<<<<<<< HEAD
-# Functions
-functions/node_modules/
-functions/lib/
-functions/*.log
-functions/.firebase/
-functions/.runtimeconfig.json
-
-# React Native App
-RecoverVoiceApp/node_modules/
-RecoverVoiceApp/.expo/
-RecoverVoiceApp/dist/
-RecoverVoiceApp/web-build/
-RecoverVoiceApp/*.log
-
-# System
-.DS_Store
-.env
-.env.*
-!.env.example
-
-=======
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
-# dependencies
+# Dependencies
 node_modules/
+functions/node_modules/
 
 # Expo
 .expo/
@@ -31,7 +10,14 @@ dist/
 web-build/
 expo-env.d.ts
 
-# Native
+# Firebase
+functions/lib/
+functions/*.log
+functions/.firebase/
+functions/.runtimeconfig.json
+.firebase/
+
+# Native builds
 .kotlin/
 *.orig.*
 *.jks
@@ -39,11 +25,13 @@ expo-env.d.ts
 *.p12
 *.key
 *.mobileprovision
+/ios
+/android
 
 # Metro
 .metro-health-check*
 
-# debug
+# Debug
 npm-debug.*
 yarn-debug.*
 yarn-error.*
@@ -51,15 +39,18 @@ yarn-error.*
 # macOS
 .DS_Store
 *.pem
-# local env files
-.env
-.env*.local
 
-# typescript
+# Environment variables - NEVER commit secrets
+.env
+.env.*
+.env*.local
+!.env.example
+
+# TypeScript
 *.tsbuildinfo
 
-# generated native folders
-/ios
-/android
->>>>>>> fadd45dd03ff8fcc6f8dfd7f7b0554781807f303
+# Build outputs
+build/
 
+# Logs
+*.log

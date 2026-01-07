@@ -34,16 +34,16 @@ Provide a supportive, empathetic response that:
     const message = await anthropic.messages.create({
       model: 'claude-3-5-sonnet-20241022',
       max_tokens: 500,
-      messages: [{
-        role: 'user',
-        content: userPrompt,
-      }],
+      messages: [
+        {
+          role: 'user',
+          content: userPrompt,
+        },
+      ],
       system: systemPrompt,
     });
 
-    const responseText = message.content[0].type === 'text' 
-      ? message.content[0].text 
-      : '';
+    const responseText = message.content[0].type === 'text' ? message.content[0].text : '';
 
     if (!responseText) {
       throw new Error('No response from Claude');
@@ -52,10 +52,6 @@ Provide a supportive, empathetic response that:
     return responseText;
   } catch (error) {
     console.error('Claude AI generation failed:', error);
-    throw new functions.https.HttpsError(
-      'internal',
-      'Failed to generate AI response'
-    );
+    throw new functions.https.HttpsError('internal', 'Failed to generate AI response');
   }
 }
-

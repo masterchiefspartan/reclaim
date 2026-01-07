@@ -11,7 +11,7 @@ export const SettingsScreen = () => {
   const { user, profile, signOut, refreshProfile } = useAuth();
   const [displayName, setDisplayName] = useState(profile?.displayName ?? '');
   const [notificationsEnabled, setNotificationsEnabled] = useState(
-    profile?.permissions?.notifications ?? true,
+    profile?.permissions?.notifications ?? true
   );
   const [isSaving, setIsSaving] = useState(false);
 
@@ -33,16 +33,13 @@ export const SettingsScreen = () => {
     await signOut();
   }, [signOut]);
 
-  const handleToggleNotifications = useCallback(
-    async (value: boolean) => {
-      setNotificationsEnabled(value);
-      Alert.alert(
-        'Reminder',
-        'Notification preferences sync with system settings. Adjust them in device settings if needed.',
-      );
-    },
-    [],
-  );
+  const handleToggleNotifications = useCallback(async (value: boolean) => {
+    setNotificationsEnabled(value);
+    Alert.alert(
+      'Reminder',
+      'Notification preferences sync with system settings. Adjust them in device settings if needed.'
+    );
+  }, []);
 
   return (
     <ScreenContainer scrollable testID="settings-screen">
@@ -93,5 +90,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
-

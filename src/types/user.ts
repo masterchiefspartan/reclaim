@@ -50,5 +50,3 @@ export interface OnboardingPayload {
   recoveryContext: RecoveryContext;
   plan: SubscriptionPlan;
 }
-
-

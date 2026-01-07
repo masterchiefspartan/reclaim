@@ -1,1 +1,29 @@
+#!/bin/sh
+
+echo "🔍 Running pre-commit checks..."
+
+# Type checking
+echo "📘 Running TypeScript check..."
 npm run type-check
+if [ $? -ne 0 ]; then
+  echo "❌ TypeScript check failed. Please fix errors before committing."
+  exit 1
+fi
+
+# Linting
+echo "📝 Running ESLint..."
+npm run lint
+if [ $? -ne 0 ]; then
+  echo "❌ Linting failed. Run 'npm run lint:fix' to auto-fix issues."
+  exit 1
+fi
+
+# Format check
+echo "✨ Checking formatting..."
+npm run format:check
+if [ $? -ne 0 ]; then
+  echo "❌ Formatting issues found. Run 'npm run format' to fix."
+  exit 1
+fi
+
+echo "✅ All checks passed!"

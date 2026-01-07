@@ -17,4 +17,3 @@ export const buildTheme = (mode: ColorScheme = 'light'): AppTheme => ({
   typography,
   isDark: mode === 'dark',
 });
-

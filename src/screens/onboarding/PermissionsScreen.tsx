@@ -85,5 +85,3 @@ const styles = StyleSheet.create({
     borderColor: '#d1d5db',
   },
 });
-
-

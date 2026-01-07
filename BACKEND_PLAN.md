@@ -1,4 +1,5 @@
 # Backend Architecture Plan
+
 # RecoverVoiceApp - Voice Journal with AI Integration
 
 **Last Updated:** December 2024  
@@ -50,6 +51,7 @@ External APIs (Deepgram, Claude, ElevenLabs)
 ### 1.1 Firebase Project Setup
 
 **Tasks:**
+
 - Create Firebase project in Firebase Console
 - Enable Authentication (Email/Password, Google Sign-In)
 - Enable Firestore Database
@@ -60,10 +62,10 @@ External APIs (Deepgram, Claude, ElevenLabs)
 
 ```javascript
 // functions/.env (local development)
-DEEPGRAM_API_KEY=your_deepgram_key
-CLAUDE_API_KEY=your_claude_key
-ELEVENLABS_API_KEY=your_elevenlabs_key
-FIREBASE_PROJECT_ID=recovervoiceapp
+DEEPGRAM_API_KEY = your_deepgram_key;
+CLAUDE_API_KEY = your_claude_key;
+ELEVENLABS_API_KEY = your_elevenlabs_key;
+FIREBASE_PROJECT_ID = recovervoiceapp;
 ```
 
 **Firebase Functions Setup:**
@@ -133,18 +135,18 @@ service cloud.firestore {
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
-    
+
     // Journal entries
     match /journalEntries/{entryId} {
-      allow read, write: if request.auth != null && 
+      allow read, write: if request.auth != null &&
         resource.data.userId == request.auth.uid;
-      allow create: if request.auth != null && 
+      allow create: if request.auth != null &&
         request.resource.data.userId == request.auth.uid;
     }
-    
+
     // Conversations
     match /conversations/{conversationId} {
-      allow read, write: if request.auth != null && 
+      allow read, write: if request.auth != null &&
         resource.data.userId == request.auth.uid;
     }
   }
@@ -162,15 +164,15 @@ service cloud.firestore {
 ```typescript
 // types/user.ts
 export interface User {
-  uid: string;                    // Firebase Auth UID
+  uid: string; // Firebase Auth UID
   email: string;
   displayName?: string;
   createdAt: FirebaseFirestore.Timestamp;
   updatedAt: FirebaseFirestore.Timestamp;
   preferences: {
     notificationEnabled: boolean;
-    defaultMoodReminder?: string;  // Time of day
-    language: string;               // Default: 'en'
+    defaultMoodReminder?: string; // Time of day
+    language: string; // Default: 'en'
   };
   stats: {
     totalEntries: number;
@@ -190,7 +192,7 @@ export interface User {
 import * as functions from 'firebase-functions';
 import { db } from '../config/firebase';
 
-export const onUserCreate = functions.auth.user().onCreate(async (user) => {
+export const onUserCreate = functions.auth.user().onCreate(async user => {
   const userData = {
     uid: user.uid,
     email: user.email || '',
@@ -218,19 +220,13 @@ export const onUserCreate = functions.auth.user().onCreate(async (user) => {
 // HTTP Function
 export const getUserProfile = functions.https.onCall(async (data, context) => {
   if (!context.auth) {
-    throw new functions.https.HttpsError(
-      'unauthenticated',
-      'User must be authenticated'
-    );
+    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
   }
 
   const userDoc = await db.collection('users').doc(context.auth.uid).get();
-  
+
   if (!userDoc.exists) {
-    throw new functions.https.HttpsError(
-      'not-found',
-      'User profile not found'
-    );
+    throw new functions.https.HttpsError('not-found', 'User profile not found');
   }
 
   return { user: userDoc.data() };
@@ -246,7 +242,7 @@ export const updateUserPreferences = functions.https.onCall(async (data, context
   }
 
   const { preferences } = data;
-  
+
   // Validate preferences
   if (!preferences || typeof preferences !== 'object') {
     throw new functions.https.HttpsError('invalid-argument', 'Invalid preferences');
@@ -264,6 +260,7 @@ export const updateUserPreferences = functions.https.onCall(async (data, context
 ### 2.3 Testing Authentication
 
 **Test Cases:**
+
 - [ ] User signup creates profile in Firestore
 - [ ] User profile retrieval works
 - [ ] User preferences update correctly
@@ -287,6 +284,7 @@ export const updateUserPreferences = functions.https.onCall(async (data, context
 ### 3.2 Audio Storage Structure
 
 **Firebase Storage Path:**
+
 ```
 /audio/{userId}/{entryId}/{timestamp}.m4a
 ```
@@ -301,38 +299,36 @@ import * as functions from 'firebase-functions';
 import { storage } from '../config/firebase';
 import { transcribeAudio } from '../services/deepgram';
 
-export const processVoiceRecording = functions.storage
-  .object()
-  .onFinalize(async (object) => {
-    // Check if file is in audio directory
-    if (!object.name?.startsWith('audio/')) {
-      return null;
-    }
+export const processVoiceRecording = functions.storage.object().onFinalize(async object => {
+  // Check if file is in audio directory
+  if (!object.name?.startsWith('audio/')) {
+    return null;
+  }
 
-    const userId = object.name.split('/')[1];
-    const entryId = object.name.split('/')[2];
-    const fileName = object.name;
+  const userId = object.name.split('/')[1];
+  const entryId = object.name.split('/')[2];
+  const fileName = object.name;
 
-    // Download audio file
-    const bucket = storage.bucket();
-    const file = bucket.file(fileName);
-    const [fileBuffer] = await file.download();
+  // Download audio file
+  const bucket = storage.bucket();
+  const file = bucket.file(fileName);
+  const [fileBuffer] = await file.download();
 
-    // Transcribe with Deepgram
-    const transcript = await transcribeAudio(fileBuffer);
+  // Transcribe with Deepgram
+  const transcript = await transcribeAudio(fileBuffer);
 
-    // Store transcript in Firestore
-    await db.collection('journalEntries').doc(entryId).update({
-      transcript: transcript,
-      transcriptionStatus: 'completed',
-      transcriptionCompletedAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
-
-    // Trigger AI processing
-    await processAIResponse(entryId, transcript, userId);
-
-    return { success: true };
+  // Store transcript in Firestore
+  await db.collection('journalEntries').doc(entryId).update({
+    transcript: transcript,
+    transcriptionStatus: 'completed',
+    transcriptionCompletedAt: admin.firestore.FieldValue.serverTimestamp(),
   });
+
+  // Trigger AI processing
+  await processAIResponse(entryId, transcript, userId);
+
+  return { success: true };
+});
 ```
 
 **Manual Transcription Request** (for retry scenarios)
@@ -344,18 +340,16 @@ export const transcribeAudioManual = functions.https.onCall(async (data, context
   }
 
   const { entryId } = data;
-  
+
   // Get entry and audio URL
-  const entryDoc = await db.collection('journalEntries')
-    .doc(entryId)
-    .get();
+  const entryDoc = await db.collection('journalEntries').doc(entryId).get();
 
   if (!entryDoc.exists) {
     throw new functions.https.HttpsError('not-found', 'Entry not found');
   }
 
   const entry = entryDoc.data();
-  
+
   if (entry?.userId !== context.auth.uid) {
     throw new functions.https.HttpsError('permission-denied', 'Access denied');
   }
@@ -394,20 +388,15 @@ interface WordTiming {
   end: number;
 }
 
-export async function transcribeAudio(
-  audioBuffer: Buffer
-): Promise<string> {
+export async function transcribeAudio(audioBuffer: Buffer): Promise<string> {
   try {
-    const { result, error } = await deepgram.listen.prerecorded.transcribeFile(
-      audioBuffer,
-      {
-        model: 'nova-2',
-        language: 'en-US',
-        smart_format: true,
-        punctuate: true,
-        diarize: false,
-      }
-    );
+    const { result, error } = await deepgram.listen.prerecorded.transcribeFile(audioBuffer, {
+      model: 'nova-2',
+      language: 'en-US',
+      smart_format: true,
+      punctuate: true,
+      diarize: false,
+    });
 
     if (error) {
       throw new Error(`Deepgram error: ${error.message}`);
@@ -420,9 +409,7 @@ export async function transcribeAudio(
   }
 }
 
-export async function transcribeAudioFromUrl(
-  audioUrl: string
-): Promise<string> {
+export async function transcribeAudioFromUrl(audioUrl: string): Promise<string> {
   // Implementation for URL-based transcription
   // Similar to buffer-based, but uses URL instead
 }
@@ -431,6 +418,7 @@ export async function transcribeAudioFromUrl(
 ### 3.5 Testing Voice Processing
 
 **Test Cases:**
+
 - [ ] Audio upload triggers transcription
 - [ ] Deepgram API integration works correctly
 - [ ] Transcript is stored in Firestore
@@ -451,13 +439,13 @@ export async function transcribeAudioFromUrl(
 export interface JournalEntry {
   id: string;
   userId: string;
-  audioUrl: string;                    // Firebase Storage URL
+  audioUrl: string; // Firebase Storage URL
   transcript: string;
   transcriptionStatus: 'pending' | 'processing' | 'completed' | 'failed';
   aiResponse?: string;
   aiResponseStatus: 'pending' | 'processing' | 'completed' | 'failed';
   mood?: MoodLevel;
-  moodScore?: number;                   // 1-10 scale
+  moodScore?: number; // 1-10 scale
   createdAt: FirebaseFirestore.Timestamp;
   updatedAt: FirebaseFirestore.Timestamp;
   transcriptionCompletedAt?: FirebaseFirestore.Timestamp;
@@ -470,13 +458,13 @@ export interface JournalEntry {
   };
 }
 
-export type MoodLevel = 
-  | 'happy' 
-  | 'neutral' 
-  | 'sad' 
-  | 'anxious' 
-  | 'excited' 
-  | 'frustrated' 
+export type MoodLevel =
+  | 'happy'
+  | 'neutral'
+  | 'sad'
+  | 'anxious'
+  | 'excited'
+  | 'frustrated'
   | 'grateful';
 ```
 
@@ -545,9 +533,7 @@ export async function sendToClaude(
   }
 }
 
-export async function analyzeTranscript(
-  transcript: string
-): Promise<{
+export async function analyzeTranscript(transcript: string): Promise<{
   mood: MoodLevel;
   moodScore: number;
   insights: {
@@ -577,7 +563,7 @@ export async function analyzeTranscript(
     Transcript: ${transcript}`;
 
   const response = await sendToClaude(analysisPrompt);
-  
+
   try {
     // Parse JSON response from Claude
     const parsed = JSON.parse(response.response);
@@ -639,15 +625,17 @@ export async function processAIResponse(
 
     // Store conversation message
     await saveConversationMessage(userId, transcript, aiResponse.response);
-
   } catch (error) {
     console.error('AI processing failed:', error);
-    
+
     // Update entry with failed status
-    await db.collection('journalEntries').doc(entryId).update({
-      aiResponseStatus: 'failed',
-      aiResponseError: error instanceof Error ? error.message : 'Unknown error',
-    });
+    await db
+      .collection('journalEntries')
+      .doc(entryId)
+      .update({
+        aiResponseStatus: 'failed',
+        aiResponseError: error instanceof Error ? error.message : 'Unknown error',
+      });
 
     throw error;
   }
@@ -665,7 +653,7 @@ async function getConversationHistory(
     .get();
 
   const messages: ConversationMessage[] = [];
-  
+
   messagesSnapshot.docs.reverse().forEach(doc => {
     const data = doc.data();
     messages.push({ role: 'user', content: data.userMessage });
@@ -696,15 +684,12 @@ async function saveConversationMessage(
 import axios from 'axios';
 
 export interface TTSOptions {
-  voice?: string;          // Default: '21m00Tcm4TlvDq8ikWAM'
-  stability?: number;      // 0-1, default: 0.5
+  voice?: string; // Default: '21m00Tcm4TlvDq8ikWAM'
+  stability?: number; // 0-1, default: 0.5
   similarityBoost?: number; // 0-1, default: 0.75
 }
 
-export async function generateSpeech(
-  text: string,
-  options: TTSOptions = {}
-): Promise<Buffer> {
+export async function generateSpeech(text: string, options: TTSOptions = {}): Promise<Buffer> {
   try {
     const apiKey = process.env.ELEVENLABS_API_KEY;
     if (!apiKey) {
@@ -723,7 +708,7 @@ export async function generateSpeech(
       },
       {
         headers: {
-          'Accept': 'audio/mpeg',
+          Accept: 'audio/mpeg',
           'Content-Type': 'application/json',
           'xi-api-key': apiKey,
         },
@@ -742,7 +727,7 @@ export async function generateAIResponseAudio(
   text: string
 ): Promise<{ audioUrl: string; audioBuffer: Buffer }> {
   const audioBuffer = await generateSpeech(text);
-  
+
   // Upload to Firebase Storage
   const bucket = storage.bucket();
   const fileName = `ai-responses/${Date.now()}.mp3`;
@@ -767,6 +752,7 @@ export async function generateAIResponseAudio(
 ### 4.5 Testing AI Integration
 
 **Test Cases:**
+
 - [ ] Claude API integration works correctly
 - [ ] AI responses are generated and stored
 - [ ] Conversation history is maintained correctly
@@ -958,26 +944,18 @@ export const deleteJournalEntry = functions.https.onCall(async (data, context) =
 ```typescript
 // functions/src/utils/stats.ts
 export async function updateUserStats(userId: string): Promise<void> {
-  const entriesSnapshot = await db
-    .collection('journalEntries')
-    .where('userId', '==', userId)
-    .get();
+  const entriesSnapshot = await db.collection('journalEntries').where('userId', '==', userId).get();
 
   const entries = entriesSnapshot.docs.map(doc => doc.data());
-  
+
   const totalEntries = entries.length;
-  const totalRecordingMinutes = entries.reduce(
-    (sum, entry) => sum + (entry.duration || 0) / 60,
-    0
-  );
+  const totalRecordingMinutes = entries.reduce((sum, entry) => sum + (entry.duration || 0) / 60, 0);
 
   // Calculate streak
   const streakDays = calculateStreakDays(entries);
 
   // Get last entry date
-  const sortedEntries = entries.sort(
-    (a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis()
-  );
+  const sortedEntries = entries.sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis());
   const lastEntryDate = sortedEntries[0]?.createdAt;
 
   await db.collection('users').doc(userId).update({
@@ -1022,6 +1000,7 @@ function calculateStreakDays(entries: any[]): number {
 ### 5.3 Testing Journal Management
 
 **Test Cases:**
+
 - [ ] Create journal entry works
 - [ ] Get journal entries with pagination
 - [ ] Get single entry works
@@ -1125,7 +1104,7 @@ export const getInsightsSummary = functions.https.onCall(async (data, context) =
 
       // Count sentiments
       if (entry.insights.sentiment) {
-        allSentiments[entry.insights.sentiment] = 
+        allSentiments[entry.insights.sentiment] =
           (allSentiments[entry.insights.sentiment] || 0) + 1;
       }
 
@@ -1154,6 +1133,7 @@ export const getInsightsSummary = functions.https.onCall(async (data, context) =
 ### 6.2 Testing Analytics
 
 **Test Cases:**
+
 - [ ] Mood trends calculation works
 - [ ] Insights summary aggregates correctly
 - [ ] Date range filtering works
@@ -1166,6 +1146,7 @@ export const getInsightsSummary = functions.https.onCall(async (data, context) =
 ### Collections
 
 #### `users`
+
 ```
 {
   uid: string (document ID)
@@ -1188,6 +1169,7 @@ export const getInsightsSummary = functions.https.onCall(async (data, context) =
 ```
 
 #### `journalEntries`
+
 ```
 {
   id: string (document ID)
@@ -1214,6 +1196,7 @@ export const getInsightsSummary = functions.https.onCall(async (data, context) =
 ```
 
 #### `conversations`
+
 ```
 {
   id: string (document ID)
@@ -1238,15 +1221,18 @@ export const getInsightsSummary = functions.https.onCall(async (data, context) =
 ## API Endpoints Summary
 
 ### Authentication
+
 - `onUserCreate` - Triggered on user signup
 - `getUserProfile` - Get user profile
 - `updateUserPreferences` - Update user preferences
 
 ### Voice Processing
+
 - `processVoiceRecording` - Triggered on audio upload
 - `transcribeAudioManual` - Manual transcription retry
 
 ### Journal Management
+
 - `createJournalEntry` - Create new journal entry
 - `getJournalEntries` - Get paginated journal entries
 - `getJournalEntry` - Get single journal entry
@@ -1254,11 +1240,13 @@ export const getInsightsSummary = functions.https.onCall(async (data, context) =
 - `deleteJournalEntry` - Delete entry and audio file
 
 ### AI Services
+
 - `processAIResponse` - Process transcript with Claude (triggered)
 - (Internal) `analyzeTranscript` - Analyze mood and insights
 - (Internal) `generateSpeech` - Generate TTS audio
 
 ### Analytics
+
 - `getMoodTrends` - Get mood trends over time
 - `getInsightsSummary` - Get aggregated insights
 
@@ -1290,10 +1278,7 @@ export function handleError(error: unknown): functions.https.HttpsError {
 
   if (error instanceof Error) {
     console.error('Unexpected error:', error);
-    return new functions.https.HttpsError(
-      'internal',
-      'An unexpected error occurred'
-    );
+    return new functions.https.HttpsError('internal', 'An unexpected error occurred');
   }
 
   return new functions.https.HttpsError('internal', 'Unknown error');
@@ -1311,8 +1296,13 @@ export function validateEmail(email: string): boolean {
 
 export function validateMood(mood: string): mood is MoodLevel {
   const validMoods: MoodLevel[] = [
-    'happy', 'neutral', 'sad', 'anxious', 
-    'excited', 'frustrated', 'grateful'
+    'happy',
+    'neutral',
+    'sad',
+    'anxious',
+    'excited',
+    'frustrated',
+    'grateful',
   ];
   return validMoods.includes(mood as MoodLevel);
 }
@@ -1327,26 +1317,31 @@ export function validateEntryId(entryId: string): boolean {
 ## Security Considerations
 
 ### Authentication
+
 - All endpoints require Firebase Auth token
 - Verify `context.auth.uid` matches resource ownership
 - Use Firestore Security Rules as additional layer
 
 ### Data Validation
+
 - Validate all inputs server-side
 - Sanitize user-provided text
 - Check file sizes and types for uploads
 
 ### API Keys
+
 - Store in Firebase Functions config (environment variables)
 - Never expose in client code
 - Rotate keys regularly
 
 ### Rate Limiting
+
 - Implement rate limiting for external API calls
 - Use Firebase Functions quotas
 - Monitor API usage
 
 ### Error Messages
+
 - Never expose internal errors to clients
 - Log detailed errors server-side
 - Return generic error messages to users
@@ -1356,11 +1351,13 @@ export function validateEntryId(entryId: string): boolean {
 ## Testing Strategy
 
 ### Unit Tests
+
 - Test service functions independently
 - Mock external API calls
 - Test error handling
 
 ### Integration Tests
+
 - Test Firebase Functions endpoints
 - Test Firestore operations
 - Test external API integrations
@@ -1438,6 +1435,7 @@ firebase functions:config:set claude.api_key="your-key"
 ## Implementation Checklist
 
 ### Phase 1: Firebase Setup ✓
+
 - [ ] Initialize Firebase project
 - [ ] Set up Firebase Functions
 - [ ] Configure Firestore database
@@ -1446,18 +1444,21 @@ firebase functions:config:set claude.api_key="your-key"
 - [ ] Set up environment variables
 
 ### Phase 2: Authentication ✓
+
 - [ ] Implement user creation trigger
 - [ ] Implement getUserProfile endpoint
 - [ ] Implement updateUserPreferences endpoint
 - [ ] Test authentication flows
 
 ### Phase 3: Voice Processing ✓
+
 - [ ] Set up Deepgram integration
 - [ ] Implement audio upload trigger
 - [ ] Implement transcription service
 - [ ] Test voice processing pipeline
 
 ### Phase 4: AI Integration ✓
+
 - [ ] Set up Claude API integration
 - [ ] Implement AI response generation
 - [ ] Implement mood analysis
@@ -1466,6 +1467,7 @@ firebase functions:config:set claude.api_key="your-key"
 - [ ] Test AI integrations
 
 ### Phase 5: Journal Management ✓
+
 - [ ] Implement createJournalEntry
 - [ ] Implement getJournalEntries (with pagination)
 - [ ] Implement getJournalEntry
@@ -1475,11 +1477,13 @@ firebase functions:config:set claude.api_key="your-key"
 - [ ] Test all journal operations
 
 ### Phase 6: Analytics ✓
+
 - [ ] Implement getMoodTrends
 - [ ] Implement getInsightsSummary
 - [ ] Test analytics endpoints
 
 ### Final Steps
+
 - [ ] Complete integration testing
 - [ ] Performance optimization
 - [ ] Security audit
@@ -1510,5 +1514,4 @@ Once backend is fully implemented and tested:
 
 ---
 
-*This document is a living specification and should be updated as the backend evolves.*
-
+_This document is a living specification and should be updated as the backend evolves._

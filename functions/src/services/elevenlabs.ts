@@ -28,10 +28,6 @@ export async function generateSpeech(text: string): Promise<Buffer> {
     return Buffer.from(response.data);
   } catch (error) {
     console.error('ElevenLabs TTS failed:', error);
-    throw new functions.https.HttpsError(
-      'internal',
-      'Failed to generate speech'
-    );
+    throw new functions.https.HttpsError('internal', 'Failed to generate speech');
   }
 }
-

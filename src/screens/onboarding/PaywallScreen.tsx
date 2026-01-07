@@ -58,9 +58,7 @@ export const PaywallScreen = ({ navigation }: OnboardingStackScreenProps<'Paywal
               <AppText variant="h2">{value.price}</AppText>
               <AppText style={styles.cardDescription}>{value.description}</AppText>
               {isSelected ? (
-                <AppText style={[styles.badge, { color: theme.colors.primary }]}>
-                  Selected
-                </AppText>
+                <AppText style={[styles.badge, { color: theme.colors.primary }]}>Selected</AppText>
               ) : null}
             </Pressable>
           );
@@ -92,5 +90,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-
-

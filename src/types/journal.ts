@@ -10,7 +10,13 @@ export interface EntryInsights {
 
 export type EntryStatus = 'pending' | 'processing' | 'completed' | 'failed';
 
-export type ProcessingStage = 'uploading' | 'transcribing' | 'analyzing' | 'synthesizing' | 'completed' | 'failed';
+export type ProcessingStage =
+  | 'uploading'
+  | 'transcribing'
+  | 'analyzing'
+  | 'synthesizing'
+  | 'completed'
+  | 'failed';
 
 export interface JournalEntry {
   id: string;
@@ -58,5 +64,3 @@ export interface MoodTrendPoint {
   date: string;
   moodScore: number;
 }
-
-

@@ -37,8 +37,8 @@ export const ValueSlidesScreen = ({ navigation }: OnboardingStackScreenProps<'Va
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         data={slides}
-        keyExtractor={(item) => item.title}
-        onMomentumScrollEnd={(event) => {
+        keyExtractor={item => item.title}
+        onMomentumScrollEnd={event => {
           const nextIndex = Math.round(event.nativeEvent.contentOffset.x / width);
           setIndex(nextIndex);
         }}
@@ -62,7 +62,7 @@ export const ValueSlidesScreen = ({ navigation }: OnboardingStackScreenProps<'Va
           label={index === slides.length - 1 ? 'Next' : 'Keep Going'}
           onPress={() => {
             if (index < slides.length - 1) {
-              setIndex((prev) => prev + 1);
+              setIndex(prev => prev + 1);
             } else {
               navigation.navigate('SignUp');
             }
@@ -95,5 +95,3 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
 });
-
-

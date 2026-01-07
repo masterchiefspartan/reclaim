@@ -15,5 +15,3 @@ export interface TTSOptions {
   stability?: number;
   similarityBoost?: number;
 }
-
-

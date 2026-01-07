@@ -156,5 +156,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 });
-
-

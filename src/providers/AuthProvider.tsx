@@ -54,28 +54,42 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [status, setStatus] = useState<AuthStatus>(firebaseAuth ? 'checking' : 'unauthenticated');
 
-  const hydrateProfile = useCallback(
-    async (currentUser: User | null) => {
-      if (!currentUser) {
-        setProfile(null);
-        setStatus('unauthenticated');
-        return;
-      }
+  const hydrateProfile = useCallback(async (currentUser: User | null) => {
+    console.log('[Auth] hydrateProfile called, user:', currentUser?.uid ?? 'null');
 
+    if (!currentUser) {
+      console.log('[Auth] No user, setting unauthenticated');
+      setProfile(null);
+      setStatus('unauthenticated');
+      return;
+    }
+
+    try {
+      console.log('[Auth] Fetching user profile...');
       const existingProfile = await fetchUserProfile(currentUser.uid);
+      console.log('[Auth] Existing profile:', existingProfile ? 'found' : 'not found');
+
       if (!existingProfile) {
+        console.log('[Auth] Creating new profile...');
         await upsertUserProfile(currentUser);
         const createdProfile = await fetchUserProfile(currentUser.uid);
         setProfile(createdProfile);
-        setStatus(deriveStatus(currentUser, createdProfile));
+        const newStatus = deriveStatus(currentUser, createdProfile);
+        console.log('[Auth] New user status:', newStatus);
+        setStatus(newStatus);
         return;
       }
 
       setProfile(existingProfile);
-      setStatus(deriveStatus(currentUser, existingProfile));
-    },
-    [],
-  );
+      const newStatus = deriveStatus(currentUser, existingProfile);
+      console.log('[Auth] Existing user status:', newStatus);
+      setStatus(newStatus);
+    } catch (error) {
+      console.error('[Auth] Error hydrating profile:', error);
+      // On error, still allow user to proceed as unauthenticated
+      setStatus('unauthenticated');
+    }
+  }, []);
 
   useEffect(() => {
     if (!firebaseAuth) {
@@ -83,12 +97,28 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       return;
     }
 
-    const unsubscribe = onAuthStateChanged(firebaseAuth, async (nextUser) => {
+    let didResolve = false;
+
+    console.log('[Auth] Setting up onAuthStateChanged listener...');
+    const unsubscribe = onAuthStateChanged(firebaseAuth, async nextUser => {
+      console.log('[Auth] onAuthStateChanged fired, user:', nextUser?.uid ?? 'null');
+      didResolve = true;
       setUser(nextUser);
       await hydrateProfile(nextUser);
     });
 
-    return unsubscribe;
+    // Timeout fallback - if auth doesn't resolve in 5 seconds, assume unauthenticated
+    const timeout = setTimeout(() => {
+      if (!didResolve) {
+        console.warn('[Auth] Timeout waiting for auth state, defaulting to unauthenticated');
+        setStatus('unauthenticated');
+      }
+    }, 5000);
+
+    return () => {
+      unsubscribe();
+      clearTimeout(timeout);
+    };
   }, [hydrateProfile]);
 
   const refreshProfile = useCallback(async () => {
@@ -114,7 +144,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       await updateUserPermissions(user.uid, permissions);
       await refreshProfile();
     },
-    [refreshProfile, user],
+    [refreshProfile, user]
   );
 
   const value = useMemo<AuthContextValue>(
@@ -126,10 +156,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       signOut: handleSignOut,
       updatePermissions: handleUpdatePermissions,
     }),
-    [handleSignOut, handleUpdatePermissions, profile, refreshProfile, status, user],
+    [handleSignOut, handleUpdatePermissions, profile, refreshProfile, status, user]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
-
-

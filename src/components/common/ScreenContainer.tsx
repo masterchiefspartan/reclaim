@@ -9,12 +9,18 @@ interface ScreenContainerProps {
   testID?: string;
 }
 
-export const ScreenContainer = ({ children, scrollable = false, testID }: PropsWithChildren<ScreenContainerProps>) => {
+export const ScreenContainer = ({
+  children,
+  scrollable = false,
+  testID,
+}: PropsWithChildren<ScreenContainerProps>) => {
   const { theme } = useAppTheme();
   const insets = useSafeAreaInsets();
 
   const content = (
-    <View style={[styles.content, { paddingBottom: insets.bottom + theme.spacing.lg }]}>{children}</View>
+    <View style={[styles.content, { paddingBottom: insets.bottom + theme.spacing.lg }]}>
+      {children}
+    </View>
   );
 
   if (scrollable) {
@@ -34,7 +40,10 @@ export const ScreenContainer = ({ children, scrollable = false, testID }: PropsW
   return (
     <View
       testID={testID}
-      style={[styles.container, { backgroundColor: theme.colors.background, paddingTop: insets.top }]}
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.background, paddingTop: insets.top },
+      ]}
     >
       {content}
     </View>
@@ -55,4 +64,3 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
 });
-

@@ -1,4 +1,5 @@
 # Complete Feature Template
+
 # How to Generate Complete Features with Cursor AI
 
 **Purpose:** Template for generating complete, production-ready features in one Cursor request  
@@ -495,31 +496,37 @@
 For faster development, use these condensed templates:
 
 ### Authentication
+
 ```
 "Create complete authentication feature (LoginScreen, SignUpScreen, ForgotPasswordScreen, EmailVerificationScreen, useAuth hook, authService) with Firebase Auth integration, error handling, loading states, validation. Follow @APP_PLAN.md Section 5 and @.cursorrules"
 ```
 
 ### Voice Recording
+
 ```
 "Create complete voice recording feature (VoiceRecorder component, useVoiceRecording hook, audioService) with expo-av, real-time transcription, Firebase Storage upload, error handling, loading states. Follow @APP_PLAN.md Section 5 and @BACKEND_PLAN.md API contracts"
 ```
 
 ### Journal List
+
 ```
 "Create complete journal entry list feature (JournalListScreen, JournalEntryCard, useJournalEntries hook, journalService) with pagination, search, filters, empty states, error handling. Use getJournalEntries from @BACKEND_PLAN.md, follow @APP_PLAN.md Section 5"
 ```
 
 ### Journal Detail
+
 ```
 "Create complete journal entry detail feature (JournalEntryDetailScreen, AudioPlayer, TranscriptSection, AIResponseSection) with audio playback, share, export, delete. Use getJournalEntry from @BACKEND_PLAN.md, follow @APP_PLAN.md Section 5"
 ```
 
 ### Dashboard
+
 ```
 "Create complete dashboard feature (DashboardScreen, StreakCounter, MoodTrendChart, ProgressIndicators, MilestonesList) with charts, statistics, pull-to-refresh. Use getMoodTrends and getInsightsSummary from @BACKEND_PLAN.md, follow @APP_PLAN.md Section 5"
 ```
 
 ### Settings
+
 ```
 "Create complete settings feature (SettingsScreen, EditProfileScreen, useSettings hook, userService) with profile editing, preferences, subscription management, sign out. Use getUserProfile and updateUserPreferences from @BACKEND_PLAN.md, follow @APP_PLAN.md Section 5"
 ```
@@ -531,12 +538,14 @@ For faster development, use these condensed templates:
 ### 1. Be Specific About What You Want
 
 **✅ GOOD:**
+
 - List all files you need
 - Specify exact functionality
 - Reference documentation
 - Include all states
 
 **❌ BAD:**
+
 - "Create journal feature"
 - Vague requirements
 - No file structure
@@ -545,6 +554,7 @@ For faster development, use these condensed templates:
 ### 2. Always Reference Documentation
 
 **Always Include:**
+
 - `@BACKEND_PLAN.md` - For API contracts
 - `@APP_PLAN.md` - For UI requirements
 - `@ARCHITECTURE_DECISIONS.md` - For patterns
@@ -554,6 +564,7 @@ For faster development, use these condensed templates:
 ### 3. Specify All States
 
 **Required States:**
+
 - Loading state
 - Error state
 - Success state
@@ -562,6 +573,7 @@ For faster development, use these condensed templates:
 ### 4. Include Error Handling
 
 **Specify:**
+
 - What errors to handle
 - How to display errors
 - Retry mechanisms
@@ -570,11 +582,13 @@ For faster development, use these condensed templates:
 ### 5. Request Related Files Together
 
 **Instead of:**
+
 - Creating screen
 - Then creating hook
 - Then creating service
 
 **Do:**
+
 - Create all related files in one request
 - They'll work together from the start
 - Less integration work later
@@ -720,16 +734,19 @@ Here's how to use the template for a real feature:
 ### 2. Build Features in Logical Order
 
 **Week 1-2:**
+
 - Authentication
 - Voice recording
 - Basic journal saving
 
 **Week 3-4:**
+
 - Journal list
 - Entry detail
 - Dashboard
 
 **Week 5-6:**
+
 - Settings
 - Advanced features
 - Polish
@@ -737,6 +754,7 @@ Here's how to use the template for a real feature:
 ### 3. Generate Related Features Together
 
 **Example:**
+
 ```
 "Create complete journal management feature:
 - Journal list screen
@@ -761,18 +779,21 @@ Here's how to use the template for a real feature:
 ## Feature Complexity Levels
 
 ### Simple Feature (1-2 files)
+
 - Single component
 - Basic functionality
 - Minimal state management
 - Example: Simple button component
 
 ### Medium Feature (3-5 files)
+
 - Screen + components
 - Hook for state management
 - Service for API calls
 - Example: Settings screen
 
 ### Complex Feature (6+ files)
+
 - Multiple screens
 - Multiple components
 - Multiple hooks
@@ -801,5 +822,3 @@ Before asking Cursor to generate a feature, ensure you have:
 ---
 
 **This template ensures Cursor generates complete, production-ready features in one request, dramatically reducing development time.**
-
-

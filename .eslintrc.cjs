@@ -6,7 +6,6 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:react-native/all',
     'plugin:react-hooks/recommended',
-    'plugin:security/recommended',
     'prettier',
   ],
   parser: '@typescript-eslint/parser',

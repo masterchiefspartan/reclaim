@@ -1,9 +1,11 @@
 # Project Architecture & Design Decisions
+
 # RecoverVoiceApp - Technical Discussions & Decisions
 
 **Purpose:** This document serves as the central location for discussing architectural decisions, design patterns, implementation approaches, and technical discussions about how the project should be built.
 
 **When to Use This Document:**
+
 - Before making significant architectural changes
 - When choosing between different implementation approaches
 - When discussing trade-offs between different solutions
@@ -67,6 +69,7 @@
 **Decision:** Use Firebase Functions (serverless) instead of dedicated Node.js server
 
 **Rationale:**
+
 - Seamless integration with Firebase ecosystem
 - Automatic scaling
 - Cost-effective for low to medium traffic
@@ -74,6 +77,7 @@
 - No server management required
 
 **Trade-offs:**
+
 - Cold start latency (acceptable for this use case)
 - Limited long-running processes (workaround: use background tasks)
 - Vendor lock-in (acceptable given Firebase is core to the project)
@@ -87,6 +91,7 @@
 **Decision:** Use Firestore (NoSQL) instead of SQL database
 
 **Rationale:**
+
 - Real-time updates capability
 - Seamless integration with Firebase
 - Scalable without configuration
@@ -94,6 +99,7 @@
 - Offline support built-in
 
 **Trade-offs:**
+
 - No complex joins (workaround: denormalize or multiple queries)
 - Less powerful querying (acceptable for current needs)
 - Cost structure different (pay per read/write)
@@ -107,6 +113,7 @@
 **Decision:** Use React Hooks (useState, useEffect, useContext) instead of Redux/MobX
 
 **Rationale:**
+
 - Simpler for this project size
 - Less boilerplate
 - Built into React
@@ -114,6 +121,7 @@
 - Easier for learning/maintenance
 
 **Trade-offs:**
+
 - May need to refactor if app grows significantly
 - Context can cause unnecessary re-renders (use carefully)
 - No time-travel debugging out of the box
@@ -127,6 +135,7 @@
 **Decision:** Use Deepgram for speech-to-text instead of native solutions
 
 **Rationale:**
+
 - Higher accuracy than native solutions
 - Better handling of natural speech
 - Real-time transcription capability
@@ -134,6 +143,7 @@
 - Advanced features (punctuation, formatting)
 
 **Trade-offs:**
+
 - Requires internet connection
 - API costs (acceptable for production)
 - Additional API dependency
@@ -147,6 +157,7 @@
 **Decision:** Use Claude API for conversational AI instead of OpenAI GPT
 
 **Rationale:**
+
 - Better instruction following
 - More natural conversation flow
 - Longer context windows
@@ -154,6 +165,7 @@
 - Competitive pricing
 
 **Trade-offs:**
+
 - Different API structure (easily handled)
 - May need to adjust prompts for optimal results
 
@@ -168,11 +180,13 @@
 **Decision Needed:** Choose navigation library for React Native
 
 **Options:**
+
 - React Navigation (most popular, well-documented)
 - Expo Router (file-based routing, simpler)
 - React Native Navigation (native performance, more complex)
 
 **Considerations:**
+
 - Need for deep linking
 - Authentication flow complexity
 - Performance requirements
@@ -189,11 +203,13 @@
 **Decision Needed:** Choose testing approach
 
 **Options:**
+
 - Jest + React Native Testing Library (standard)
 - Detox (E2E testing)
 - Both (comprehensive)
 
 **Considerations:**
+
 - Need for E2E tests
 - CI/CD requirements
 - Team experience
@@ -209,11 +225,13 @@
 **Decision Needed:** How to handle images and caching
 
 **Options:**
+
 - expo-image (Expo's image component)
 - react-native-fast-image (performance optimized)
 - Firebase Storage with CDN
 
 **Considerations:**
+
 - Need for caching
 - Performance requirements
 - Offline support
@@ -229,6 +247,7 @@
 **Pattern:** Atomic Design Approach
 
 **Structure:**
+
 ```
 components/
 ├── atoms/         # Basic building blocks (Button, Input, Text)
@@ -238,6 +257,7 @@ components/
 ```
 
 **Rationale:**
+
 - Clear component hierarchy
 - Easy to find components
 - Promotes reusability
@@ -252,6 +272,7 @@ components/
 **Pattern:** Service Layer for External APIs
 
 **Structure:**
+
 ```
 services/
 ├── claudeAI.ts       # Claude API client
@@ -261,6 +282,7 @@ services/
 ```
 
 **Principles:**
+
 - One service per external API
 - Centralized error handling
 - Type-safe interfaces
@@ -275,6 +297,7 @@ services/
 **Pattern:** Domain-specific hooks for reusable logic
 
 **Structure:**
+
 ```
 hooks/
 ├── useVoiceRecording.ts    # Voice recording logic
@@ -284,6 +307,7 @@ hooks/
 ```
 
 **Principles:**
+
 - One hook per domain concern
 - Encapsulate complex state logic
 - Return standardized interfaces
@@ -298,6 +322,7 @@ hooks/
 ### Adding New Features
 
 **Process:**
+
 1. **Discuss in this document** - Document the proposal and approach
 2. **Review existing patterns** - Follow established conventions
 3. **Plan the implementation** - Update relevant plan documents
@@ -309,6 +334,7 @@ hooks/
 ### Refactoring
 
 **Before Refactoring:**
+
 1. Document what needs to be refactored and why
 2. Identify all affected code
 3. Verify tests exist or create them first
@@ -316,6 +342,7 @@ hooks/
 5. Verify backward compatibility
 
 **During Refactoring:**
+
 1. Make small, verifiable changes
 2. Test after each change
 3. Update documentation
@@ -328,6 +355,7 @@ hooks/
 ### TypeScript
 
 **Standards:**
+
 - Strict mode enabled
 - No `any` types (use `unknown` if needed)
 - All functions typed
@@ -337,6 +365,7 @@ hooks/
 ### Error Handling
 
 **Standards:**
+
 - Always use try-catch for async operations
 - User-friendly error messages
 - Log errors for debugging
@@ -346,6 +375,7 @@ hooks/
 ### Performance
 
 **Standards:**
+
 - Use React.memo() for expensive components
 - Implement useMemo() for expensive computations
 - Use useCallback() for stable function references
@@ -361,6 +391,7 @@ hooks/
 **Current:** Single user app, moderate traffic expected
 
 **Future Considerations:**
+
 - May need to optimize Firestore queries
 - Consider caching strategies
 - May need Redis for session management
@@ -372,6 +403,7 @@ hooks/
 **Current:** Basic security implemented
 
 **Future Considerations:**
+
 - Implement rate limiting
 - Add request signing
 - Consider API versioning
@@ -381,6 +413,7 @@ hooks/
 ### Features
 
 **Potential Future Features:**
+
 - Social features (sharing entries)
 - Export functionality (PDF, text)
 - Multiple language support
@@ -429,4 +462,3 @@ hooks/
 - [Testing Plan](../TESTING_PLAN.md) - Testing strategy (to be created)
 - [Project Plan](../PROJECT_PLAN.md) - Overall project plan
 - [Cursor Rules](../.cursorrules) - Code standards and guidelines
-

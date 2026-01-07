@@ -9,11 +9,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Feather } from '@expo/vector-icons';
 
-import type {
-  MainTabParamList,
-  OnboardingStackParamList,
-  RootStackParamList,
-} from './types';
+import type { MainTabParamList, OnboardingStackParamList, RootStackParamList } from './types';
 import { LoadingScreen } from '@screens/LoadingScreen';
 import { useAppTheme } from '@hooks/useAppTheme';
 import { useAuth } from '@hooks/useAuth';
@@ -41,7 +37,10 @@ const OnboardingNavigator = ({
 }: {
   initialRouteName: keyof OnboardingStackParamList;
 }) => (
-  <OnboardingStack.Navigator screenOptions={{ headerShown: false }} initialRouteName={initialRouteName}>
+  <OnboardingStack.Navigator
+    screenOptions={{ headerShown: false }}
+    initialRouteName={initialRouteName}
+  >
     <OnboardingStack.Screen name="Welcome" component={WelcomeScreen} />
     <OnboardingStack.Screen name="ValueSlides" component={ValueSlidesScreen} />
     <OnboardingStack.Screen name="SignUp" component={SignUpScreen} />
@@ -78,7 +77,11 @@ const MainTabs = () => {
     >
       <Tabs.Screen name="HomeTab" component={HomeScreen} options={{ title: 'Home' }} />
       <Tabs.Screen name="JournalTab" component={JournalListScreen} options={{ title: 'Journal' }} />
-      <Tabs.Screen name="DashboardTab" component={DashboardScreen} options={{ title: 'Dashboard' }} />
+      <Tabs.Screen
+        name="DashboardTab"
+        component={DashboardScreen}
+        options={{ title: 'Dashboard' }}
+      />
       <Tabs.Screen name="SettingsTab" component={SettingsScreen} options={{ title: 'Settings' }} />
     </Tabs.Navigator>
   );
@@ -121,10 +124,10 @@ export const AppNavigator = () => {
                       status === 'email_verification'
                         ? 'EmailVerification'
                         : status === 'onboarding'
-                        ? 'Paywall'
-                        : status === 'permissions'
-                        ? 'Permissions'
-                        : 'Welcome'
+                          ? 'Paywall'
+                          : status === 'permissions'
+                            ? 'Permissions'
+                            : 'Welcome'
                     }
                   />
                 )}
@@ -147,4 +150,3 @@ export const AppNavigator = () => {
     </NavigationContainer>
   );
 };
-

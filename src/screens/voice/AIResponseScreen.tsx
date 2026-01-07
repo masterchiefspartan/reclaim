@@ -77,7 +77,11 @@ export const AIResponseScreen = () => {
   }
 
   // Still processing
-  if (entry.processingStage && entry.processingStage !== 'completed' && entry.processingStage !== 'failed') {
+  if (
+    entry.processingStage &&
+    entry.processingStage !== 'completed' &&
+    entry.processingStage !== 'failed'
+  ) {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" />
@@ -88,10 +92,16 @@ export const AIResponseScreen = () => {
   }
 
   // Failed state
-  if (entry.processingStage === 'failed' || entry.transcriptionStatus === 'failed' || entry.aiResponseStatus === 'failed') {
+  if (
+    entry.processingStage === 'failed' ||
+    entry.transcriptionStatus === 'failed' ||
+    entry.aiResponseStatus === 'failed'
+  ) {
     return (
       <View style={styles.center}>
-        <AppText variant="h3" style={styles.errorText}>Something went wrong</AppText>
+        <AppText variant="h3" style={styles.errorText}>
+          Something went wrong
+        </AppText>
         <AppText>We couldn't process your entry. You can still view it in your journal.</AppText>
         <PrimaryButton
           label="Go to Journal"
@@ -104,7 +114,7 @@ export const AIResponseScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <AppText variant="h2">Your AI Companion</AppText>
-      
+
       <View style={styles.responseCard}>
         <AppText>{entry.aiResponse}</AppText>
         {entry.aiResponseAudioUrl ? (

@@ -21,9 +21,7 @@ export const JournalEntryCard = ({ entry, onPress }: JournalEntryCardProps) => {
     >
       <View style={styles.header}>
         <AppText variant="h3">{createdAt.format('MMM D, h:mm A')}</AppText>
-        {entry.mood ? (
-          <AppText style={styles.moodLabel}>{entry.mood.toUpperCase()}</AppText>
-        ) : null}
+        {entry.mood ? <AppText style={styles.moodLabel}>{entry.mood.toUpperCase()}</AppText> : null}
       </View>
       <AppText numberOfLines={2} style={styles.preview}>
         {entry.transcript ?? 'Transcription in progress...'}
@@ -71,5 +69,3 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
 });
-
-

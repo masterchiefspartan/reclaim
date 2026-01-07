@@ -12,12 +12,12 @@ export const useColorSchemePreference = () => {
 
   useEffect(() => {
     AsyncStorage.getItem(STORAGE_KEY)
-      .then((storedMode) => {
+      .then(storedMode => {
         if (storedMode === 'light' || storedMode === 'dark') {
           setMode(storedMode);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.error('Failed to load theme preference', error);
       });
   }, []);
@@ -41,4 +41,3 @@ export const useColorSchemePreference = () => {
     toggleMode,
   };
 };
-

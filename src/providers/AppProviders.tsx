@@ -24,7 +24,7 @@ export const AppProviders = ({ children }: PropsWithChildren) => {
       setMode,
       toggleMode,
     }),
-    [theme, mode, setMode, toggleMode],
+    [theme, mode, setMode, toggleMode]
   );
 
   return (
@@ -40,4 +40,3 @@ export const AppProviders = ({ children }: PropsWithChildren) => {
     </GestureHandlerRootView>
   );
 };
-
