@@ -1,9 +1,13 @@
 import Anthropic from '@anthropic-ai/sdk';
 import * as functions from 'firebase-functions/v1';
 
-const anthropic = new Anthropic({
-  apiKey: functions.config().claude.api_key,
-});
+const getAnthropicClient = () => {
+  const apiKey = process.env.CLAUDE_API_KEY;
+  if (!apiKey) {
+    throw new Error('CLAUDE_API_KEY environment variable is not set');
+  }
+  return new Anthropic({ apiKey });
+};
 
 interface ConversationTurn {
   role: 'user' | 'assistant';
@@ -69,6 +73,7 @@ Requirements:
 - Sound natural and warm, like a friend checking in
 - Don't use any markdown or formatting`;
 
+    const anthropic = getAnthropicClient();
     const message = await anthropic.messages.create({
       model: 'claude-3-5-sonnet-20241022',
       max_tokens: 150,
@@ -131,6 +136,7 @@ export async function generateConversationResponse(
 USER CONTEXT:
 ${contextInfo}`;
 
+    const anthropic = getAnthropicClient();
     const message = await anthropic.messages.create({
       model: 'claude-3-5-sonnet-20241022',
       max_tokens: 200, // Keep responses concise for voice
@@ -185,6 +191,7 @@ Respond in this exact JSON format:
   "moodAssessment": 3
 }`;
 
+    const anthropic = getAnthropicClient();
     const message = await anthropic.messages.create({
       model: 'claude-3-5-sonnet-20241022',
       max_tokens: 300,

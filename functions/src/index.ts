@@ -194,12 +194,12 @@ export const getStreamingTokens = functions.https.onCall(async (data, context) =
   }
 
   try {
-    // Get API keys from Firebase config
-    const deepgramApiKey = functions.config().deepgram?.api_key;
-    const elevenLabsApiKey = functions.config().elevenlabs?.api_key;
+    // Get API keys from environment variables
+    const deepgramApiKey = process.env.DEEPGRAM_API_KEY;
+    const elevenLabsApiKey = process.env.ELEVENLABS_API_KEY;
 
     if (!deepgramApiKey || !elevenLabsApiKey) {
-      console.error('Missing API keys in Firebase config');
+      console.error('Missing API keys in environment variables');
       throw new functions.https.HttpsError('internal', 'Service configuration error');
     }
 

@@ -1,9 +1,13 @@
 import Anthropic from '@anthropic-ai/sdk';
 import * as functions from 'firebase-functions/v1';
 
-const anthropic = new Anthropic({
-  apiKey: functions.config().claude.api_key,
-});
+const getAnthropicClient = () => {
+  const apiKey = process.env.CLAUDE_API_KEY;
+  if (!apiKey) {
+    throw new Error('CLAUDE_API_KEY environment variable is not set');
+  }
+  return new Anthropic({ apiKey });
+};
 
 export async function generateAIResponse(
   transcript: string,
@@ -31,6 +35,7 @@ Provide a supportive, empathetic response that:
 3. Offers encouragement
 4. Is conversational and warm`;
 
+    const anthropic = getAnthropicClient();
     const message = await anthropic.messages.create({
       model: 'claude-3-5-sonnet-20241022',
       max_tokens: 500,

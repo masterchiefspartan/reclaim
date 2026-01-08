@@ -1,7 +1,13 @@
 import axios from 'axios';
 import * as functions from 'firebase-functions/v1';
 
-const ELEVENLABS_API_KEY = functions.config().elevenlabs.api_key;
+const getElevenLabsApiKey = (): string => {
+  const apiKey = process.env.ELEVENLABS_API_KEY;
+  if (!apiKey) {
+    throw new Error('ELEVENLABS_API_KEY environment variable is not set');
+  }
+  return apiKey;
+};
 const VOICE_ID = 'EXAVITQu4vr4xnSDxMaL'; // Sarah voice (warm, empathetic)
 
 export async function generateSpeech(text: string): Promise<Buffer> {
@@ -18,7 +24,7 @@ export async function generateSpeech(text: string): Promise<Buffer> {
       },
       {
         headers: {
-          'xi-api-key': ELEVENLABS_API_KEY,
+          'xi-api-key': getElevenLabsApiKey(),
           'Content-Type': 'application/json',
         },
         responseType: 'arraybuffer',

@@ -1,10 +1,17 @@
 import { createClient } from '@deepgram/sdk';
 import * as functions from 'firebase-functions/v1';
 
-const deepgram = createClient(functions.config().deepgram.api_key);
+const getDeepgramClient = () => {
+  const apiKey = process.env.DEEPGRAM_API_KEY;
+  if (!apiKey) {
+    throw new Error('DEEPGRAM_API_KEY environment variable is not set');
+  }
+  return createClient(apiKey);
+};
 
 export async function transcribeAudio(audioBuffer: Buffer): Promise<string> {
   try {
+    const deepgram = getDeepgramClient();
     const { result, error } = await deepgram.listen.prerecorded.transcribeFile(audioBuffer, {
       punctuate: true,
       utterances: true,
