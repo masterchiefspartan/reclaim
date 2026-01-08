@@ -58,19 +58,19 @@ export const JournalListScreen = (_props: Props) => {
 };
 
 const styles = StyleSheet.create({
+  emptyState: {
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 32,
+  },
   header: {
     marginBottom: 16,
   },
   list: {
     flexGrow: 1,
   },
-  emptyState: {
-    alignItems: 'center',
-    gap: 12,
-    paddingVertical: 32,
-  },
   listContent: {
-    paddingBottom: 120,
     gap: 16,
+    paddingBottom: 120,
   },
 });

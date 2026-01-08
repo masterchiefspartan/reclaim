@@ -25,6 +25,7 @@ import { JournalListScreen } from '@screens/journal/JournalListScreen';
 import { DashboardScreen } from '@screens/dashboard/DashboardScreen';
 import { SettingsScreen } from '@screens/settings/SettingsScreen';
 import { VoiceJournalScreen } from '@screens/voice/VoiceJournalScreen';
+import { VoiceConversationScreen } from '@screens/voice/VoiceConversationScreen';
 import { AIResponseScreen } from '@screens/voice/AIResponseScreen';
 import { EntryDetailScreen } from '@screens/journal/EntryDetailScreen';
 
@@ -137,6 +138,11 @@ export const AppNavigator = () => {
               name="VoiceJournal"
               component={VoiceJournalScreen}
               options={{ presentation: 'modal' }}
+            />
+            <RootStack.Screen
+              name="VoiceConversation"
+              component={VoiceConversationScreen}
+              options={{ presentation: 'fullScreenModal' }}
             />
             <RootStack.Screen
               name="AIResponse"

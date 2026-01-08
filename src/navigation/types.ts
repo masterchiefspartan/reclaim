@@ -9,6 +9,7 @@ export type RootStackParamList = {
   Onboarding: undefined;
   Main: NavigatorScreenParams<MainTabParamList>;
   VoiceJournal: { mode: 'free' | 'guided' } | undefined;
+  VoiceConversation: undefined;
   AIResponse: { entryId: string };
   EntryDetail: { entryId: string };
 };

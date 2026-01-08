@@ -31,21 +31,21 @@ export const OnboardingLayout = ({ title, subtitle, children }: OnboardingLayout
 };
 
 const styles = StyleSheet.create({
+  content: {
+    gap: 16,
+  },
   hero: {
     marginBottom: 16,
   },
   heroImage: {
     paddingVertical: 24,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: '700',
-  },
   subtitle: {
     marginTop: 8,
     opacity: 0.8,
   },
-  content: {
-    gap: 16,
+  title: {
+    fontSize: 28,
+    fontWeight: '700',
   },
 });

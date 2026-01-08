@@ -36,6 +36,7 @@ module.exports = {
     'react-native/split-platform-components': 'warn',
     'react-native/no-inline-styles': 'warn',
     'react-native/no-color-literals': 'warn',
+    'react-native/no-raw-text': ['error', { skip: ['AppText'] }],
     'security/detect-object-injection': 'warn',
     'security/detect-non-literal-fs-filename': 'warn',
     'security/detect-possible-timing-attacks': 'warn',

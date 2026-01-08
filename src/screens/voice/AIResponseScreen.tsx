@@ -150,38 +150,38 @@ export const AIResponseScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 24,
-    gap: 24,
-  },
   center: {
-    flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
+    flex: 1,
     gap: 16,
+    justifyContent: 'center',
+    padding: 24,
+  },
+  container: {
+    gap: 24,
+    padding: 24,
+  },
+  errorText: {
+    color: '#ef4444',
+  },
+  input: {
+    backgroundColor: '#fff',
+    borderColor: '#d1d5db',
+    borderRadius: 12,
+    borderWidth: 1,
+    padding: 12,
   },
   responseCard: {
-    borderRadius: 16,
-    padding: 16,
     backgroundColor: '#fff',
+    borderRadius: 16,
     gap: 12,
+    padding: 16,
   },
   section: {
     gap: 16,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 12,
-    padding: 12,
-    backgroundColor: '#fff',
-  },
   subtext: {
     opacity: 0.6,
     textAlign: 'center',
-  },
-  errorText: {
-    color: '#ef4444',
   },
 });

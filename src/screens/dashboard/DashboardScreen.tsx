@@ -107,24 +107,24 @@ export const DashboardScreen = (_props: Props) => {
 };
 
 const styles = StyleSheet.create({
+  metricCard: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    gap: 4,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    width: '47%',
+  },
   metrics: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 12,
     marginTop: 24,
   },
-  metricCard: {
-    width: '47%',
-    borderRadius: 16,
-    padding: 16,
-    backgroundColor: '#fff',
-    gap: 4,
-    shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 4 },
-  },
   section: {
-    marginTop: 24,
     gap: 8,
+    marginTop: 24,
   },
 });

@@ -74,19 +74,19 @@ export const PaywallScreen = ({ navigation }: OnboardingStackScreenProps<'Paywal
 };
 
 const styles = StyleSheet.create({
-  cards: {
-    gap: 16,
+  badge: {
+    fontWeight: '600',
   },
   card: {
-    borderWidth: 2,
     borderRadius: 16,
-    padding: 16,
+    borderWidth: 2,
     gap: 8,
+    padding: 16,
   },
   cardDescription: {
     opacity: 0.8,
   },
-  badge: {
-    fontWeight: '600',
+  cards: {
+    gap: 16,
   },
 });

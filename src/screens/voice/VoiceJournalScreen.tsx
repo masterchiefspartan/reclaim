@@ -112,35 +112,35 @@ export const VoiceJournalScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  actions: {
+    gap: 12,
+    marginTop: 'auto',
+  },
   container: {
     flex: 1,
-    padding: 24,
     gap: 24,
-  },
-  timer: {
-    fontSize: 32,
-    fontWeight: '600',
-  },
-  prompts: {
-    gap: 8,
-  },
-  actions: {
-    marginTop: 'auto',
-    gap: 12,
-  },
-  helper: {
-    textAlign: 'center',
-    opacity: 0.7,
+    padding: 24,
   },
   errorContainer: {
     backgroundColor: '#fef2f2',
-    borderRadius: 8,
-    padding: 12,
-    borderWidth: 1,
     borderColor: '#fecaca',
+    borderRadius: 8,
+    borderWidth: 1,
+    padding: 12,
   },
   errorText: {
     color: '#dc2626',
     textAlign: 'center',
+  },
+  helper: {
+    opacity: 0.7,
+    textAlign: 'center',
+  },
+  prompts: {
+    gap: 8,
+  },
+  timer: {
+    fontSize: 32,
+    fontWeight: '600',
   },
 });

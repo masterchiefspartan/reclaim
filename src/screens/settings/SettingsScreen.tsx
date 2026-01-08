@@ -73,20 +73,20 @@ export const SettingsScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  section: {
-    marginTop: 24,
-    gap: 12,
-  },
   input: {
-    borderWidth: 1,
+    backgroundColor: '#fff',
     borderColor: '#d1d5db',
     borderRadius: 12,
+    borderWidth: 1,
     padding: 12,
-    backgroundColor: '#fff',
   },
   row: {
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+  },
+  section: {
+    gap: 12,
+    marginTop: 24,
   },
 });

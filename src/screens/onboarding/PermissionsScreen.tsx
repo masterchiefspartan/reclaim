@@ -78,10 +78,10 @@ export const PermissionsScreen = (_props: OnboardingStackScreenProps<'Permission
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 16,
-    padding: 16,
-    gap: 12,
-    borderWidth: 1,
     borderColor: '#d1d5db',
+    borderRadius: 16,
+    borderWidth: 1,
+    gap: 12,
+    padding: 16,
   },
 });

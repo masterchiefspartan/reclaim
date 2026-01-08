@@ -127,32 +127,32 @@ export const EntryDetailScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  center: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
     padding: 24,
   },
-  center: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  section: {
-    marginBottom: 24,
-    gap: 12,
-  },
-  inputRow: {
-    flexDirection: 'row',
-    gap: 12,
+  input: {
+    backgroundColor: '#fff',
+    borderColor: '#d1d5db',
+    borderRadius: 12,
+    borderWidth: 1,
+    padding: 12,
   },
   inputGroup: {
     flex: 1,
     gap: 8,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 12,
-    padding: 12,
-    backgroundColor: '#fff',
+  inputRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  section: {
+    gap: 12,
+    marginBottom: 24,
   },
 });

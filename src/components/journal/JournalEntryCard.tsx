@@ -38,19 +38,27 @@ export const JournalEntryCard = ({ entry, onPress }: JournalEntryCardProps) => {
 
 const styles = StyleSheet.create({
   card: {
-    padding: 16,
     borderRadius: 16,
-    gap: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 8,
     elevation: 2,
+    gap: 8,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
   },
   header: {
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+  },
+  meta: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  metaText: {
+    fontSize: 12,
+    opacity: 0.7,
   },
   moodLabel: {
     fontSize: 12,
@@ -59,13 +67,5 @@ const styles = StyleSheet.create({
   },
   preview: {
     opacity: 0.9,
-  },
-  meta: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  metaText: {
-    opacity: 0.7,
-    fontSize: 12,
   },
 });

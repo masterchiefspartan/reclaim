@@ -74,24 +74,24 @@ export const ValueSlidesScreen = ({ navigation }: OnboardingStackScreenProps<'Va
 };
 
 const styles = StyleSheet.create({
+  progressFill: {
+    borderRadius: 999,
+    height: 6,
+  },
+  progressTrack: {
+    borderRadius: 999,
+    height: 6,
+  },
+  progressWrapper: {
+    gap: 16,
+    marginTop: 24,
+  },
   slide: {
-    paddingVertical: 24,
     gap: 12,
+    paddingVertical: 24,
   },
   slideDescription: {
     fontSize: 16,
     opacity: 0.85,
-  },
-  progressWrapper: {
-    marginTop: 24,
-    gap: 16,
-  },
-  progressTrack: {
-    height: 6,
-    borderRadius: 999,
-  },
-  progressFill: {
-    height: 6,
-    borderRadius: 999,
   },
 });

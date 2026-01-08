@@ -53,20 +53,20 @@ const styles = StyleSheet.create({
     gap: 12,
     justifyContent: 'space-between',
   },
-  mood: {
-    borderWidth: 2,
-    borderRadius: 12,
-    padding: 12,
-    alignItems: 'center',
-    width: '30%',
-    gap: 4,
-  },
   emoji: {
     fontSize: 24,
     textAlign: 'center',
   },
+  mood: {
+    alignItems: 'center',
+    borderRadius: 12,
+    borderWidth: 2,
+    gap: 4,
+    padding: 12,
+    width: '30%',
+  },
   moodLabel: {
-    textTransform: 'capitalize',
     fontSize: 12,
+    textTransform: 'capitalize',
   },
 });

@@ -3,6 +3,11 @@ import * as admin from 'firebase-admin';
 import { transcribeAudio } from './services/deepgram';
 import { generateAIResponse } from './services/claude';
 import { generateSpeech } from './services/elevenlabs';
+import {
+  generateOpeningMessage,
+  generateConversationResponse,
+  generateConversationSummary,
+} from './services/conversationClaude';
 import { JournalEntry, ProcessingStatus } from './types/shared';
 
 admin.initializeApp();
@@ -173,3 +178,161 @@ export const onAiResponseGenerated = functions.firestore
       await handleError(entryId, 'synthesizing', error);
     }
   });
+
+// ============================================
+// Voice Conversation Functions
+// ============================================
+
+/**
+ * Get streaming API tokens for voice conversation
+ * Returns Deepgram and ElevenLabs API keys for client-side streaming
+ */
+export const getStreamingTokens = functions.https.onCall(async (data, context) => {
+  // Verify authentication
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+  }
+
+  try {
+    // Get API keys from Firebase config
+    const deepgramApiKey = functions.config().deepgram?.api_key;
+    const elevenLabsApiKey = functions.config().elevenlabs?.api_key;
+
+    if (!deepgramApiKey || !elevenLabsApiKey) {
+      console.error('Missing API keys in Firebase config');
+      throw new functions.https.HttpsError('internal', 'Service configuration error');
+    }
+
+    // Return tokens with expiration (for client-side caching)
+    return {
+      deepgramApiKey,
+      elevenLabsApiKey,
+      expiresAt: Date.now() + 30 * 60 * 1000, // 30 minutes
+    };
+  } catch (error) {
+    console.error('Failed to get streaming tokens:', error);
+    throw new functions.https.HttpsError('internal', 'Failed to get streaming tokens');
+  }
+});
+
+/**
+ * Get opening message for a new voice conversation
+ */
+export const getConversationOpening = functions.https.onCall(async (data, context) => {
+  // Verify authentication
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+  }
+
+  const userId = context.auth.uid;
+
+  try {
+    // Fetch user context from Firestore
+    const userDoc = await db.collection('users').doc(userId).get();
+    const userData = userDoc.data();
+
+    const userContext = {
+      userName: userData?.displayName || undefined,
+      recoveryType: userData?.recoveryContext?.injuryDescription || undefined,
+      daysSinceStart: userData?.recoveryContext?.surgeryDate
+        ? Math.floor(
+            (Date.now() - new Date(userData.recoveryContext.surgeryDate).getTime()) /
+              (1000 * 60 * 60 * 24)
+          )
+        : undefined,
+    };
+
+    const openingMessage = await generateOpeningMessage(userContext);
+
+    return {
+      message: openingMessage,
+      userContext,
+    };
+  } catch (error) {
+    console.error('Failed to get conversation opening:', error);
+    throw new functions.https.HttpsError('internal', 'Failed to generate opening message');
+  }
+});
+
+interface ConversationTurn {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+interface ConversationResponseData {
+  currentMessage: string;
+  conversationHistory: ConversationTurn[];
+  userContext?: {
+    userName?: string;
+    recoveryType?: string;
+    daysSinceStart?: number;
+  };
+}
+
+/**
+ * Get AI response for ongoing voice conversation
+ */
+export const getConversationResponseFn = functions.https.onCall(
+  async (data: ConversationResponseData, context) => {
+    // Verify authentication
+    if (!context.auth) {
+      throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+    }
+
+    const { currentMessage, conversationHistory, userContext } = data;
+
+    if (!currentMessage || typeof currentMessage !== 'string') {
+      throw new functions.https.HttpsError('invalid-argument', 'currentMessage is required');
+    }
+
+    try {
+      const response = await generateConversationResponse(
+        currentMessage,
+        conversationHistory || [],
+        userContext || {}
+      );
+
+      return {
+        response,
+      };
+    } catch (error) {
+      console.error('Failed to get conversation response:', error);
+      throw new functions.https.HttpsError('internal', 'Failed to generate response');
+    }
+  }
+);
+
+interface SummaryRequestData {
+  conversationHistory: ConversationTurn[];
+  userContext?: {
+    userName?: string;
+    recoveryType?: string;
+  };
+}
+
+/**
+ * Generate summary of completed voice conversation
+ */
+export const getConversationSummaryFn = functions.https.onCall(
+  async (data: SummaryRequestData, context) => {
+    // Verify authentication
+    if (!context.auth) {
+      throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+    }
+
+    const { conversationHistory, userContext } = data;
+
+    if (!conversationHistory || !Array.isArray(conversationHistory)) {
+      throw new functions.https.HttpsError('invalid-argument', 'conversationHistory is required');
+    }
+
+    try {
+      const summary = await generateConversationSummary(conversationHistory, userContext || {});
+
+      return summary;
+    } catch (error) {
+      console.error('Failed to generate conversation summary:', error);
+      throw new functions.https.HttpsError('internal', 'Failed to generate summary');
+    }
+  }
+);

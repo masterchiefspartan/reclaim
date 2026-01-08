@@ -57,38 +57,38 @@ export const RecordingVisualizer = memo(({ isRecording }: RecordingVisualizerPro
 });
 
 const styles = StyleSheet.create({
+  bar: {
+    backgroundColor: '#ef4444',
+    borderRadius: 999,
+    width: 4,
+  },
+  centerButton: {
+    alignItems: 'center',
+    backgroundColor: '#fee2e2',
+    borderRadius: 36,
+    height: 72,
+    justifyContent: 'center',
+    width: 72,
+  },
   container: {
     alignItems: 'center',
     gap: 16,
   },
-  waveform: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  bar: {
-    width: 4,
-    backgroundColor: '#ef4444',
-    borderRadius: 999,
-  },
-  centerButton: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: '#fee2e2',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   idleDot: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
     backgroundColor: '#ef4444',
+    borderRadius: 12,
+    height: 24,
+    width: 24,
   },
   pulse: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
     backgroundColor: '#ef4444',
+    borderRadius: 16,
+    height: 32,
+    width: 32,
+  },
+  waveform: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 4,
   },
 });

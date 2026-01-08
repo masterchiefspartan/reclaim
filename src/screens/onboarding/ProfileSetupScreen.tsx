@@ -109,22 +109,22 @@ export const ProfileSetupScreen = ({
 };
 
 const styles = StyleSheet.create({
+  error: {
+    color: '#dc2626',
+  },
   field: {
     gap: 8,
   },
   input: {
-    borderWidth: 1,
+    backgroundColor: '#fff',
     borderColor: '#d1d5db',
     borderRadius: 12,
-    padding: 16,
+    borderWidth: 1,
     fontSize: 16,
-    backgroundColor: '#fff',
+    padding: 16,
   },
   multiline: {
     minHeight: 88,
     textAlignVertical: 'top',
-  },
-  error: {
-    color: '#dc2626',
   },
 });

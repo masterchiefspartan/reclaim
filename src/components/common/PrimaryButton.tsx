@@ -46,9 +46,9 @@ export const PrimaryButton = ({
 
 const styles = StyleSheet.create({
   button: {
-    height: 52,
-    borderRadius: 12,
     alignItems: 'center',
+    borderRadius: 12,
+    height: 52,
     justifyContent: 'center',
   },
   label: {

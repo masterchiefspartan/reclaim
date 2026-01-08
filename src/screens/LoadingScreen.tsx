@@ -16,10 +16,10 @@ export const LoadingScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    flex: 1,
     gap: 16,
+    justifyContent: 'center',
   },
   message: {
     opacity: 0.8,

@@ -124,26 +124,26 @@ export const SignUpScreen = ({ navigation }: OnboardingStackScreenProps<'SignUp'
 };
 
 const styles = StyleSheet.create({
+  error: {
+    color: '#dc2626',
+    textAlign: 'center',
+  },
+  errorContainer: {
+    backgroundColor: '#fef2f2',
+    borderColor: '#fecaca',
+    borderRadius: 8,
+    borderWidth: 1,
+    padding: 12,
+  },
   field: {
     gap: 8,
   },
   input: {
-    borderWidth: 1,
+    backgroundColor: '#fff',
     borderColor: '#d1d5db',
     borderRadius: 12,
-    padding: 16,
-    fontSize: 16,
-    backgroundColor: '#fff',
-  },
-  errorContainer: {
-    backgroundColor: '#fef2f2',
-    borderRadius: 8,
-    padding: 12,
     borderWidth: 1,
-    borderColor: '#fecaca',
-  },
-  error: {
-    color: '#dc2626',
-    textAlign: 'center',
+    fontSize: 16,
+    padding: 16,
   },
 });

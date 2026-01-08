@@ -7,6 +7,7 @@ import { ScreenContainer } from '@components/common/ScreenContainer';
 import { AppText } from '@components/common/AppText';
 import { PrimaryButton } from '@components/common/PrimaryButton';
 import { JournalEntryCard } from '@components/journal/JournalEntryCard';
+import { VoiceConversationButton } from '@components/voice-conversation/VoiceConversationButton';
 import { useAppTheme } from '@hooks/useAppTheme';
 import { useAuth } from '@hooks/useAuth';
 import { useJournalEntries } from '@hooks/useJournalEntries';
@@ -33,6 +34,10 @@ export const HomeScreen = () => {
     [navigation]
   );
 
+  const handleStartConversation = useCallback(() => {
+    navigation.navigate('VoiceConversation');
+  }, [navigation]);
+
   const recentEntries = useMemo(() => entries.slice(0, 3), [entries]);
 
   return (
@@ -58,6 +63,10 @@ export const HomeScreen = () => {
           <AppText variant="h1">{stats.totalMinutes}</AppText>
           <AppText>Voice mins</AppText>
         </View>
+      </View>
+
+      <View style={styles.conversationSection}>
+        <VoiceConversationButton onPress={handleStartConversation} isLoading={false} />
       </View>
 
       <View style={styles.ctaSection}>
@@ -94,39 +103,43 @@ export const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  header: {
-    marginTop: 16,
-    gap: 8,
-  },
-  subtitle: {
-    opacity: 0.8,
+  card: {
+    alignItems: 'center',
+    borderRadius: 16,
+    flex: 1,
+    gap: 4,
+    marginHorizontal: 4,
+    padding: 16,
   },
   cardsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 24,
   },
-  card: {
-    flex: 1,
-    borderRadius: 16,
-    padding: 16,
-    marginHorizontal: 4,
+  conversationSection: {
     alignItems: 'center',
-    gap: 4,
+    marginTop: 32,
   },
   ctaSection: {
-    marginTop: 32,
     gap: 12,
+    marginTop: 32,
+  },
+  header: {
+    gap: 8,
+    marginTop: 16,
   },
   helperText: {
     opacity: 0.7,
   },
   recentHeader: {
-    marginTop: 32,
     gap: 4,
+    marginTop: 32,
   },
   recentList: {
-    marginTop: 16,
     gap: 12,
+    marginTop: 16,
+  },
+  subtitle: {
+    opacity: 0.8,
   },
 });
