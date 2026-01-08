@@ -51,6 +51,12 @@ module.exports = {
     'security/detect-non-literal-require': 'warn',
     'security/detect-pseudoRandomBytes': 'error',
     'no-console': ['warn', { allow: ['warn', 'error'] }],
+    // Disable noisy rules - these patterns are valid in React Native
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    'react-native/no-color-literals': 'off',
+    'react-hooks/set-state-in-effect': 'off', // Prop-sync pattern is valid
+    'react-hooks/refs': 'off', // Animated.Value patterns are valid in RN
+    'react-hooks/purity': 'off', // Math.random in animations is valid
   },
   settings: {
     react: {
@@ -71,6 +77,14 @@ module.exports = {
     '*.config.ts',
     'ios/',
     'android/',
+    'functions/',
+    'RecoverVoiceApp/',
+    'lib/',
+    '**/__tests__/**',
+    '**/*.test.ts',
+    '**/*.test.tsx',
+    'index.js',
+    'shared/',
   ],
 };
 

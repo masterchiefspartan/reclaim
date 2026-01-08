@@ -119,6 +119,7 @@ export const AppNavigator = () => {
             ) : (
               <RootStack.Screen
                 name="Onboarding"
+                // eslint-disable-next-line react/no-children-prop
                 children={() => (
                   <OnboardingNavigator
                     initialRouteName={

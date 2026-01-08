@@ -19,7 +19,18 @@ export const AppText = ({ children, style, variant = 'body', color, ...rest }: A
         {
           color: color ?? theme.colors.text,
           fontSize: variantStyle.fontSize,
-          fontWeight: variantStyle.fontWeight as any,
+          fontWeight: variantStyle.fontWeight as
+            | '100'
+            | '200'
+            | '300'
+            | '400'
+            | '500'
+            | '600'
+            | '700'
+            | '800'
+            | '900'
+            | 'bold'
+            | 'normal',
           lineHeight: variantStyle.lineHeight,
         },
         style,

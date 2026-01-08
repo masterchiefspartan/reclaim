@@ -14,6 +14,7 @@ export const OnboardingLayout = ({ title, subtitle, children }: OnboardingLayout
     <ScreenContainer scrollable testID="onboarding-layout">
       <View style={styles.hero}>
         <ImageBackground
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
           source={require('../../../assets/splash-icon.png')}
           resizeMode="contain"
           style={styles.heroImage}

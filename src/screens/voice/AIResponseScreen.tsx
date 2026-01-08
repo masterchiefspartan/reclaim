@@ -102,7 +102,7 @@ export const AIResponseScreen = () => {
         <AppText variant="h3" style={styles.errorText}>
           Something went wrong
         </AppText>
-        <AppText>We couldn't process your entry. You can still view it in your journal.</AppText>
+        <AppText>We could not process your entry. You can still view it in your journal.</AppText>
         <PrimaryButton
           label="Go to Journal"
           onPress={() => navigation.navigate('Main', { screen: 'JournalTab' })}

@@ -34,8 +34,8 @@ export interface JournalEntry {
   error?: ProcessingError;
 
   // Metadata
-  createdAt: any; // Firestore Timestamp or Date
-  updatedAt: any;
+  createdAt: Date | { toDate: () => Date }; // Firestore Timestamp or Date
+  updatedAt: Date | { toDate: () => Date };
 
   // Context
   checkInType: 'free' | 'guided';

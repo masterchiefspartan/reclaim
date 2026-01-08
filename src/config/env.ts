@@ -18,8 +18,9 @@ export interface AppEnv {
 }
 
 const getExtra = (): Record<string, string | undefined> => {
-  const expoConfig = Constants.expoConfig ?? (Constants.manifest as any);
-  return expoConfig?.extra ?? {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const expoConfig = Constants.expoConfig ?? (Constants.manifest as Record<string, unknown>);
+  return (expoConfig?.extra as Record<string, string | undefined>) ?? {};
 };
 
 const extra = getExtra();

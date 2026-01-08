@@ -32,7 +32,7 @@ const AnimatedPulse = () => {
   return <Animated.View style={[styles.pulse, { transform: [{ scale }] }]} />;
 };
 
-export const RecordingVisualizer = memo(({ isRecording }: RecordingVisualizerProps) => {
+const RecordingVisualizerComponent = ({ isRecording }: RecordingVisualizerProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.waveform}>
@@ -54,7 +54,10 @@ export const RecordingVisualizer = memo(({ isRecording }: RecordingVisualizerPro
       </View>
     </View>
   );
-});
+};
+
+RecordingVisualizerComponent.displayName = 'RecordingVisualizer';
+export const RecordingVisualizer = memo(RecordingVisualizerComponent);
 
 const styles = StyleSheet.create({
   bar: {
