@@ -15,12 +15,13 @@ Just like a pilot uses a pre-flight checklist, you'll use these prompts at speci
 ### **The Three Questions to Ask Yourself:**
 
 1. **"What am I about to do?"** → Use "Before You Start" prompts
-2. **"What did I just do?"** → Use "After You Code" prompts  
+2. **"What did I just do?"** → Use "After You Code" prompts
 3. **"Is something wrong?"** → Use "When Things Break" prompts
 
 ### **Quick Start (If You're New):**
 
 Start with just these 3 prompts for your first week:
+
 1. **Daily:** Prompt #1 (Dead Code Detection) before you start coding
 2. **Before Committing:** Prompt #9 (Error Handling Audit)
 3. **Before PR:** Prompt #13 (Documentation Generator)
@@ -62,6 +63,7 @@ START HERE
 ## 🗓️ YOUR CODING ROUTINE WITH PROMPTS
 
 ### **Morning (Before You Code) - 5 minutes**
+
 ```
 ☐ Run Prompt #1 on files you'll touch today
 ☐ Run Prompt #27 to understand dependencies
@@ -69,6 +71,7 @@ START HERE
 ```
 
 ### **After Writing Code - 3 minutes**
+
 ```
 ☐ Run Prompt #9 on your new code
 ☐ Run Prompt #3 on your new code
@@ -76,6 +79,7 @@ START HERE
 ```
 
 ### **Before Committing - 10 minutes**
+
 ```
 ☐ Run Prompt #35 (Ultimate Combo) on changed files
 ☐ Run Prompt #11 to ensure tests exist
@@ -83,6 +87,7 @@ START HERE
 ```
 
 ### **End of Day - 5 minutes**
+
 ```
 ☐ Run Prompt #2 on today's work
 ☐ Run Prompt #13 to document what you built
@@ -90,6 +95,7 @@ START HERE
 ```
 
 ### **Friday Afternoon - 30 minutes**
+
 ```
 ☐ Run Prompt #4 on the week's code
 ☐ Run Prompt #15 to check dependencies
@@ -101,6 +107,7 @@ START HERE
 ## 📚 THE COMPLETE PROMPT LIBRARY
 
 Below are all prompts organized by use case. Each prompt includes:
+
 - 🎯 **When to use it** (the scenario)
 - 📥 **What you'll get** (the output)
 - ⚡ **Copy-paste ready prompt** (use as-is)
@@ -114,19 +121,23 @@ These prompts help you understand what you're about to touch BEFORE you break so
 ---
 
 ### Prompt #27: Dependency Mapper
+
 **File:** `prompt-dependency-mapper.md`
 
 🎯 **When to use:**
+
 - You're about to refactor a function/component
 - You want to know what will break if you change something
 - You're inheriting someone else's code
 
 📥 **What you'll get:**
+
 - Visual map of what depends on this code
 - List of files that import/use this code
 - Potential breaking changes if you modify it
 
 ⚡ **The Prompt:**
+
 ```
 I'm about to modify [function/component/module name].
 
@@ -145,6 +156,7 @@ Format as:
 ```
 
 **Example Usage:**
+
 ```
 I'm about to modify the `calculateTotalCost` function in utils/pricing.js.
 
@@ -155,20 +167,24 @@ Before I make changes, show me:
 ---
 
 ### Prompt #28: Context Builder
+
 **File:** `prompt-context-builder.md`
 
 🎯 **When to use:**
+
 - Starting work on a new feature
 - Coming back to code after a break
 - Trying to understand unfamiliar code
 
 📥 **What you'll get:**
+
 - Summary of what this code does
 - Key functions/components explained
 - Data flow diagram (text-based)
 - Where to start making changes
 
 ⚡ **The Prompt:**
+
 ```
 Help me understand this codebase/module/feature before I start working on it.
 
@@ -185,6 +201,7 @@ Format this as a briefing I can read in 2 minutes.
 ```
 
 **Example Usage:**
+
 ```
 Help me understand the bartender authentication module before I start working on it.
 [rest of prompt above]
@@ -194,19 +211,23 @@ Starting point: If I want to add fingerprint authentication, where should I star
 ---
 
 ### Prompt #29: Task Breakdown
+
 **File:** `prompt-task-breakdown.md`
 
 🎯 **When to use:**
+
 - You have a vague feature request
 - You don't know where to start
 - You want to estimate time accurately
 
 📥 **What you'll get:**
+
 - Step-by-step implementation plan
 - Estimated time for each step
 - Potential blockers identified upfront
 
 ⚡ **The Prompt:**
+
 ```
 I need to implement: [describe feature/task]
 
@@ -237,6 +258,7 @@ Order steps by dependency (what must happen first).
 ```
 
 **Example Usage:**
+
 ```
 I need to implement: Add real-time theft alerts when bartender pours without POS transaction
 
@@ -253,19 +275,23 @@ You just wrote some code. Use these prompts to make sure it's clean before you m
 ---
 
 ### Prompt #1: Dead Code Detection
+
 **File:** `prompt-dead-code.md`
 
 🎯 **When to use:**
+
 - After you finish a feature
 - Before you commit
 - When you've deleted/refactored code
 
 📥 **What you'll get:**
+
 - List of unused imports, functions, variables
 - Commented-out code to remove
 - Duplicate code to consolidate
 
 ⚡ **The Prompt:**
+
 ```
 Analyze this codebase and identify:
 
@@ -304,6 +330,7 @@ For each category, list items with:
 ```
 
 **Example Usage:**
+
 ```
 Analyze this codebase and identify:
 [run on current file, or use @workspace for entire project]
@@ -312,19 +339,23 @@ Analyze this codebase and identify:
 ---
 
 ### Prompt #2: Code Smell Detector
+
 **File:** `prompt-code-smells.md`
 
 🎯 **When to use:**
+
 - After writing a complex function
 - Code review before submitting PR
 - When code feels "messy" but you can't pinpoint why
 
 📥 **What you'll get:**
+
 - Specific refactoring suggestions
 - Complexity scores
 - Before/after code examples
 
 ⚡ **The Prompt:**
+
 ```
 Review this code for common code smells and suggest specific refactorings:
 
@@ -372,6 +403,7 @@ Rank issues by:
 ```
 
 **Example Usage:**
+
 ```
 Review this code for common code smells and suggest specific refactorings:
 [paste your code or use current file]
@@ -380,19 +412,23 @@ Review this code for common code smells and suggest specific refactorings:
 ---
 
 ### Prompt #3: Naming Consistency
+
 **File:** `prompt-naming-consistency.md`
 
 🎯 **When to use:**
+
 - After adding new variables/functions
 - During code review
 - When onboarding to a new team (learn their conventions)
 
 📥 **What you'll get:**
+
 - List of naming violations
 - Suggested renames
 - Project naming conventions documented
 
 ⚡ **The Prompt:**
+
 ```
 Audit naming conventions across this codebase and suggest improvements:
 
@@ -450,6 +486,7 @@ Old Name → New Name
 ```
 
 **Example Usage:**
+
 ```
 Audit naming conventions across this codebase and suggest improvements:
 [run on @workspace or specific files]
@@ -458,20 +495,24 @@ Audit naming conventions across this codebase and suggest improvements:
 ---
 
 ### Prompt #9: Error Handling Audit
+
 **File:** `prompt-error-handling.md`
 
 🎯 **When to use:**
+
 - After writing any code that could fail
 - Before deploying to production
 - When debugging production errors
 
 📥 **What you'll get:**
+
 - Missing try/catch blocks identified
 - Better error messages suggested
 - Logging improvements
 
 ⚡ **The Prompt:**
-```
+
+````
 Review error handling patterns in this code:
 
 1. MISSING ERROR HANDLING:
@@ -485,7 +526,7 @@ Review error handling patterns in this code:
    } catch (error) {
      // suggested error handling
    }
-   ```
+````
 
 2. SILENT FAILURES:
    Location: [file:line]
@@ -511,6 +552,7 @@ Review error handling patterns in this code:
    Pattern 2: [describe approach in file B]
    Recommendation: Standardize to [preferred pattern]
    Example implementation:
+
    ```[language]
    // show standardized error handling
    ```
@@ -530,6 +572,7 @@ Review error handling patterns in this code:
 
 CRITICAL OPERATIONS TO PROTECT:
 List all operations that MUST have error handling:
+
 1. [Database operations]
 2. [API calls]
 3. [File I/O]
@@ -537,12 +580,15 @@ List all operations that MUST have error handling:
 5. [Payment processing]
 
 Show current status: ✓ Protected / ✗ Missing
+
 ```
 
 **Example Usage:**
 ```
+
 Review error handling patterns in this code:
 [paste code or use current file]
+
 ```
 
 ---
@@ -562,38 +608,40 @@ Review error handling patterns in this code:
 
 ⚡ **The Prompt:**
 ```
+
 Generate comprehensive documentation for this code:
 
 For EACH PUBLIC FUNCTION/METHOD:
 
 1. FUNCTION SIGNATURE DOCUMENTATION:
+
 ```[language]
 /**
  * [One-sentence description of what it does]
- * 
+ *
  * [Longer explanation if complex - 2-3 sentences about:
  *  - What problem it solves
  *  - How it works (high-level)
  *  - When to use it vs alternatives]
- * 
+ *
  * @param {type} paramName - [Description of parameter, including:
  *                             - What it represents
  *                             - Valid values/range
  *                             - Default if optional]
  * @param {type} param2 - [Description]
- * 
+ *
  * @returns {type} [Description of return value, including:
  *                   - What it represents
  *                   - Possible values
  *                   - What null/undefined means if applicable]
- * 
+ *
  * @throws {ErrorType} [When this error is thrown and why]
- * 
+ *
  * @example
  * // [Describe the use case]
  * const result = functionName(param1, param2);
  * // result = [example output]
- * 
+ *
  * @example
  * // [Edge case or advanced use]
  * const result = functionName(specialCase);
@@ -604,17 +652,20 @@ function functionName(param1, param2) {
 ```
 
 2. INLINE COMMENTS FOR COMPLEX LOGIC:
-Identify code blocks that need explanation:
+   Identify code blocks that need explanation:
+
 - Location: [line numbers]
 - Current: No comment
 - Add:
+
 ```[language]
 // Explanation of why we do this (not what - code shows what)
 // Edge case: [describe scenario this handles]
 ```
 
 3. EDGE CASES & GOTCHAS:
-Document non-obvious behavior:
+   Document non-obvious behavior:
+
 ```
 // GOTCHA: This function modifies the input array in place
 // If you need the original, clone it first: [...array]
@@ -627,7 +678,8 @@ Document non-obvious behavior:
 ```
 
 4. USAGE EXAMPLES:
-For each function, provide 2-3 examples:
+   For each function, provide 2-3 examples:
+
 - Basic usage (most common case)
 - Advanced usage (with all options)
 - Error handling (how to handle failures)
@@ -653,55 +705,64 @@ try {
 ```
 
 5. TYPE DEFINITIONS (if TypeScript/typed):
-Ensure all functions have proper type annotations:
+   Ensure all functions have proper type annotations:
+
 ```typescript
 interface UserOptions {
   includePermissions?: boolean;
   includeHistory?: boolean;
 }
 
-function getUserById(
-  id: string, 
-  options?: UserOptions
-): Promise<User | null>
+function getUserById(id: string, options?: UserOptions): Promise<User | null>;
 ```
 
 6. README/MODULE DOCUMENTATION:
-If this is a module/package, create overview documentation:
+   If this is a module/package, create overview documentation:
+
 ```markdown
 ## [Module Name]
 
 ### Purpose
+
 [What problem this module solves]
 
 ### Installation
+
 [How to add to project]
 
 ### Quick Start
+
 [Minimal example to get started]
 
 ### API Reference
+
 [Link to generated docs or list key functions]
 
 ### Common Patterns
+
 [Show 2-3 real-world usage patterns]
 
 ### Troubleshooting
+
 [Common issues and solutions]
 ```
 
 STYLE GUIDE:
+
 - Use active voice ("Returns user object" not "User object is returned")
 - Focus on WHY not WHAT (code shows what)
 - Include examples for anything non-obvious
 - Document failure modes and how to handle them
 - Keep descriptions under 80 characters per line
+
 ```
 
 **Example Usage:**
 ```
+
 Generate comprehensive documentation for this code:
 [paste your new function]
+
 ```
 
 ---
@@ -727,6 +788,7 @@ These prompts are your "pre-flight checklist" before pushing code.
 
 ⚡ **The Prompt:**
 ```
+
 Perform a comprehensive pre-commit audit on the files I've changed:
 
 RUN ALL CHECKS:
@@ -736,34 +798,28 @@ RUN ALL CHECKS:
    - Commented-out code to remove
    - Inconsistent naming
    - Code smells (long functions, deep nesting)
-   
 2. ✓ PERFORMANCE:
    - Obvious bottlenecks (nested loops, N+1 queries)
    - Missing async where needed
    - Large data structures that should paginate
-   
 3. ✓ SECURITY:
    - Hardcoded secrets or API keys
    - SQL injection risks
    - XSS vulnerabilities
    - Unvalidated user input
-   
 4. ✓ ERROR HANDLING:
    - Missing try/catch blocks
    - Silent failures (empty catch)
    - Poor error messages
    - Unhandled promise rejections
-   
 5. ✓ TESTING:
    - New code without tests
    - Edge cases not covered
    - Breaking changes without test updates
-   
 6. ✓ DOCUMENTATION:
    - New functions without JSDoc/docstrings
    - Missing parameter descriptions
    - No usage examples for complex functions
-   
 7. ✓ TYPE SAFETY:
    - Functions missing return types
    - Use of 'any' that should be specific
@@ -783,25 +839,25 @@ Low: [count]
 
 CRITICAL ISSUES (Fix before commit):
 🔴 [Issue 1]
-   File: [file:line]
-   Problem: [description]
-   Fix: [suggested solution]
-   Est. time: [X minutes]
+File: [file:line]
+Problem: [description]
+Fix: [suggested solution]
+Est. time: [X minutes]
 
 🔴 [Issue 2]
-   [same format]
+[same format]
 
 HIGH PRIORITY (Strongly recommended):
 🟠 [Issue 3]
-   [same format]
+[same format]
 
 MEDIUM PRIORITY (Should fix soon):
 🟡 [Issue 4]
-   [same format]
+[same format]
 
 LOW PRIORITY (Nice to have):
 🔵 [Issue 5]
-   [same format]
+[same format]
 
 COMMIT DECISION:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -811,17 +867,21 @@ OR
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 RECOMMENDED ACTION PLAN:
+
 1. [First thing to fix - 5 min]
 2. [Second thing - 10 min]
 3. [Third thing - 3 min]
-   
+
 Total time to make commit-ready: [X minutes]
+
 ```
 
 **Example Usage:**
 ```
+
 Perform a comprehensive pre-commit audit on the files I've changed:
 [Cursor will automatically detect changed files, or you can specify]
+
 ```
 
 ---
@@ -841,37 +901,41 @@ Perform a comprehensive pre-commit audit on the files I've changed:
 
 ⚡ **The Prompt:**
 ```
+
 Identify untested or under-tested code and suggest specific test cases:
 
 1. FUNCTIONS WITHOUT TESTS:
    Function: [name] (file:line)
    Complexity: [High/Medium/Low]
    Why it needs tests: [reason]
-   
+
    Suggested test cases:
-   
+
    TEST 1: Happy path
+
    ```[language]
    test('should [expected behavior] when [condition]', () => {
      // Arrange
      const input = [example];
-     
+
      // Act
      const result = functionName(input);
-     
+
      // Assert
      expect(result).toBe([expected]);
    });
    ```
-   
+
    TEST 2: Edge case
+
    ```[language]
    test('should [handle edge case] when [condition]', () => {
      // test code
    });
    ```
-   
+
    TEST 3: Error case
+
    ```[language]
    test('should throw error when [invalid input]', () => {
      // test code
@@ -888,7 +952,7 @@ Identify untested or under-tested code and suggest specific test cases:
    - Negative numbers
    - Special characters in string
    - [other specific edge cases]
-   
+
    Test code for each: [provide]
 
 3. ERROR PATHS NOT TESTED:
@@ -899,7 +963,7 @@ Identify untested or under-tested code and suggest specific test cases:
    - Invalid permissions
    - Database connection lost
    - [other error scenarios]
-   
+
    Test code: [provide]
 
 4. INTEGRATION POINTS NOT TESTED:
@@ -908,11 +972,11 @@ Identify untested or under-tested code and suggest specific test cases:
    - API call to [service]
    - Database query to [table]
    - External service [name]
-   
+
    Need integration tests for:
    - [Scenario 1]
    - [Scenario 2]
-   
+
    Mock/stub strategy: [describe]
    Test code: [provide]
 
@@ -921,7 +985,7 @@ Identify untested or under-tested code and suggest specific test cases:
    Code complexity: [cyclomatic complexity score if available]
    Current coverage: [X%]
    Target coverage: [90%+]
-   
+
    Break down into test cases:
    - Case 1: [condition] → [expected result]
    - Case 2: [condition] → [expected result]
@@ -934,16 +998,20 @@ Remaining gaps: [describe what will still be untested]
 
 PRIORITY:
 Order tests to write by:
+
 1. [Test name] - Critical (High risk if broken)
 2. [Test name] - High (Common use case)
 3. [Test name] - Medium (Edge case but important)
 4. [Test name] - Low (Rare scenario)
+
 ```
 
 **Example Usage:**
 ```
+
 Identify untested or under-tested code and suggest specific test cases:
 [run on new functions or entire changed files]
+
 ```
 
 ---
@@ -963,23 +1031,26 @@ Identify untested or under-tested code and suggest specific test cases:
 
 ⚡ **The Prompt:**
 ```
+
 Perform a security audit of this code. Find vulnerabilities and provide fixes:
 
 1. SQL INJECTION VULNERABILITIES:
    Location: [file:line]
    Vulnerable code:
+
    ```[language]
    [show vulnerable code]
    ```
-   
+
    Exploit scenario:
    User could input: `[example malicious input]`
    Resulting query: `[show dangerous query]`
    Impact: [data breach / data deletion / unauthorized access]
-   
+
    Severity: 🔴 CRITICAL
-   
+
    Fix:
+
    ```[language]
    [show parameterized query / ORM usage / prepared statement]
    ```
@@ -987,17 +1058,19 @@ Perform a security audit of this code. Find vulnerabilities and provide fixes:
 2. XSS (Cross-Site Scripting):
    Location: [file:line]
    Vulnerable code:
+
    ```[language]
    innerHTML = userInput;
    ```
-   
+
    Exploit scenario:
    User inputs: `<script>alert('XSS')</script>`
    Impact: [steal cookies / redirect user / keylogger]
-   
+
    Severity: 🔴 CRITICAL
-   
+
    Fix:
+
    ```[language]
    textContent = userInput; // or use DOMPurify
    ```
@@ -1008,17 +1081,19 @@ Perform a security audit of this code. Find vulnerabilities and provide fixes:
    - API key: `[first 4 chars]***` (NEVER COMMIT THIS)
    - Password: `***` (NEVER COMMIT THIS)
    - Token: `***` (NEVER COMMIT THIS)
-   
+
    Severity: 🔴 CRITICAL
-   
+
    Fix:
    1. Remove from code immediately
    2. Rotate the secret (generate new one)
    3. Store in environment variable:
+
    ```[language]
    const apiKey = process.env.API_KEY;
    if (!apiKey) throw new Error('API_KEY not set');
    ```
+
    4. Add to .gitignore: .env
    5. Document in .env.example
 
@@ -1027,17 +1102,18 @@ Perform a security audit of this code. Find vulnerabilities and provide fixes:
    Input: [parameter name]
    Used in: [operation]
    Risk: [injection / DoS / data corruption]
-   
+
    Severity: 🟠 HIGH
-   
+
    Fix - Add validation:
+
    ```[language]
    const schema = {
      email: z.string().email(),
      age: z.number().min(0).max(120),
      username: z.string().regex(/^[a-zA-Z0-9_]+$/)
    };
-   
+
    const validated = schema.parse(userInput);
    ```
 
@@ -1045,19 +1121,20 @@ Perform a security audit of this code. Find vulnerabilities and provide fixes:
    Location: [file:line]
    Problem: [no auth check / weak password policy / session fixation]
    Impact: [unauthorized access]
-   
+
    Severity: 🔴 CRITICAL / 🟠 HIGH
-   
+
    Fix: [specific code]
 
 6. SENSITIVE DATA EXPOSURE:
    Location: [file:line]
    Data exposed: [password / SSN / credit card / token]
    How: [logs / error messages / API response]
-   
+
    Severity: 🔴 CRITICAL
-   
+
    Fix:
+
    ```[language]
    // Don't log sensitive fields
    const sanitized = { ...user };
@@ -1070,10 +1147,11 @@ Perform a security audit of this code. Find vulnerabilities and provide fixes:
    Package: [package name]
    Version: [current]
    Vulnerability: [CVE number or description]
-   
+
    Severity: [based on CVSS score]
-   
+
    Fix:
+
    ```bash
    npm update [package] --save
    # or
@@ -1084,18 +1162,19 @@ Perform a security audit of this code. Find vulnerabilities and provide fixes:
    Route: [endpoint]
    Method: POST/PUT/DELETE
    Risk: Cross-site request forgery
-   
+
    Severity: 🟠 HIGH
-   
+
    Fix: [add CSRF token / SameSite cookie / etc]
 
 9. CORS MISCONFIGURATION:
    Current: `Access-Control-Allow-Origin: *`
    Problem: Allows any origin
-   
+
    Severity: 🟡 MEDIUM
-   
+
    Fix:
+
    ```[language]
    cors({
      origin: process.env.ALLOWED_ORIGINS.split(','),
@@ -1107,10 +1186,11 @@ Perform a security audit of this code. Find vulnerabilities and provide fixes:
     Location: [file:line - password comparison]
     Problem: Using `===` for password compare
     Risk: Attacker can time responses to guess password
-    
+
     Severity: 🟡 MEDIUM
-    
+
     Fix:
+
     ```[language]
     const crypto = require('crypto');
     const isValid = crypto.timingSafeEqual(
@@ -1130,14 +1210,17 @@ Total vulnerabilities: [X]
 
 COMMIT DECISION:
 ⛔ DO NOT COMMIT if any Critical vulnerabilities
-⚠️  OK to commit but FIX BEFORE DEPLOY if High
+⚠️ OK to commit but FIX BEFORE DEPLOY if High
 ✅ Safe to commit if only Medium/Low
+
 ```
 
 **Example Usage:**
 ```
+
 Perform a security audit of this code. Find vulnerabilities and provide fixes:
 [run on any code that handles user input, auth, or sensitive data]
+
 ```
 
 ---
@@ -1164,33 +1247,37 @@ Your code is slow, buggy, or not working. These prompts help you debug.
 
 ⚡ **The Prompt:**
 ```
+
 Analyze this code for performance bottlenecks and provide optimizations:
 
 1. NESTED LOOPS (O(n²) or worse):
    Location: [file:line]
    Current code:
+
    ```[language]
    [show nested loop]
    ```
-   
+
    Complexity: O([n², n³, etc])
    Data size: [typical array size]
    Estimated time: [X ms/seconds]
-   
+
    Severity: 🔴 HIGH (if n > 1000) / 🟡 MEDIUM (if n < 1000)
-   
+
    Optimization:
+
    ```[language]
    // Use Map/Set for O(n) lookup instead of nested loop
    [show optimized code]
    ```
-   
+
    New complexity: O(n)
    Expected speedup: [Xx faster]
 
 2. DATABASE N+1 QUERIES:
    Location: [file:line]
    Problem:
+
    ```[language]
    // Loading users
    for (const user of users) {
@@ -1198,40 +1285,43 @@ Analyze this code for performance bottlenecks and provide optimizations:
      // ^ This runs 1 query PER USER
    }
    ```
-   
+
    Impact: If 100 users → 101 queries (1 for users + 100 for posts)
-   
+
    Severity: 🔴 CRITICAL (if common query) / 🟠 HIGH
-   
+
    Optimization:
+
    ```[language]
    // Single query with JOIN
    const usersWithPosts = await db.query(`
-     SELECT u.*, p.* 
-     FROM users u 
+     SELECT u.*, p.*
+     FROM users u
      LEFT JOIN posts p ON p.user_id = u.id
    `);
    // Or use eager loading in ORM
    ```
-   
+
    Expected speedup: [Xx faster, Y fewer queries]
 
 3. UNNECESSARY RE-RENDERS (React/Vue):
    Component: [ComponentName]
    Problem: Re-renders [X] times on each user action
    Cause: [props/state changing / missing memoization / etc]
-   
+
    Current:
+
    ```jsx
    function Component({ items }) {
      const sorted = items.sort(); // Runs on every render!
      return <List items={sorted} />;
    }
    ```
-   
+
    Severity: 🟡 MEDIUM
-   
+
    Optimization:
+
    ```jsx
    function Component({ items }) {
      const sorted = useMemo(() => items.sort(), [items]);
@@ -1242,18 +1332,20 @@ Analyze this code for performance bottlenecks and provide optimizations:
 4. MEMORY LEAKS:
    Location: [file:line]
    Leak type: [Event listener / Timer / Subscription]
-   
+
    Problem:
+
    ```[language]
    useEffect(() => {
      window.addEventListener('scroll', handleScroll);
      // No cleanup! Listener stays forever
    }, []);
    ```
-   
+
    Severity: 🔴 HIGH
-   
+
    Fix:
+
    ```[language]
    useEffect(() => {
      window.addEventListener('scroll', handleScroll);
@@ -1267,15 +1359,17 @@ Analyze this code for performance bottlenecks and provide optimizations:
    Location: [file:line]
    Operation: [synchronous file read / heavy computation / etc]
    Blocks UI for: [X ms]
-   
+
    Problem:
+
    ```[language]
    const data = fs.readFileSync('large-file.json'); // Blocks!
    ```
-   
+
    Severity: 🟠 HIGH
-   
+
    Fix:
+
    ```[language]
    const data = await fs.promises.readFile('large-file.json');
    // Or use worker thread for heavy computation
@@ -1286,17 +1380,19 @@ Analyze this code for performance bottlenecks and provide optimizations:
    Data: [describe - e.g., "all user records"]
    Size: [X MB / Y records]
    Actually needed: [small subset]
-   
+
    Problem:
+
    ```[language]
    const allUsers = await db.query('SELECT * FROM users');
    // Then filter in JavaScript
    const activeUsers = allUsers.filter(u => u.active);
    ```
-   
+
    Severity: 🟠 HIGH
-   
+
    Fix:
+
    ```[language]
    const activeUsers = await db.query(
      'SELECT * FROM users WHERE active = true'
@@ -1308,28 +1404,29 @@ Analyze this code for performance bottlenecks and provide optimizations:
    Table: [table name]
    Filter on: [column]
    Index exists: ❌ NO
-   
+
    Impact: Full table scan on [X] rows
    Query time: [Y ms]
-   
+
    Severity: 🔴 CRITICAL (if > 10k rows)
-   
+
    Fix:
+
    ```sql
    CREATE INDEX idx_users_email ON users(email);
    ```
-   
+
    Expected speedup: [Xms → Yms]
 
 8. INEFFICIENT RENDERING:
    Component: [name]
    Issue: Rendering [large list / complex SVG / heavy calculation]
-   
+
    Optimizations:
    - Use virtualization for lists (react-window)
    - Lazy load offscreen content
    - Memoize expensive calculations
-   
+
    Code: [show implementation]
 
 PERFORMANCE SUMMARY:
@@ -1346,15 +1443,19 @@ After optimizations: [Y ms/seconds]
 Speedup: [Zx faster]
 
 PRIORITY ORDER:
+
 1. [Fix #1] - Biggest impact (saves X ms)
 2. [Fix #2] - Second biggest (saves Y ms)
 3. [Fix #3] - Easiest fix (5 min effort)
+
 ```
 
 **Example Usage:**
 ```
+
 Analyze this code for performance bottlenecks and provide optimizations:
 [paste slow code or run on slow file]
+
 ```
 
 ---
@@ -1374,6 +1475,7 @@ Analyze this code for performance bottlenecks and provide optimizations:
 
 ⚡ **The Prompt:**
 ```
+
 Help me debug this issue:
 
 PROBLEM DESCRIPTION:
@@ -1386,11 +1488,13 @@ ACTUAL BEHAVIOR:
 [What's actually happening]
 
 ERROR MESSAGE (if any):
+
 ```
 [paste full error message and stack trace]
 ```
 
 RELEVANT CODE:
+
 ```[language]
 [paste the code that's not working]
 ```
@@ -1406,11 +1510,11 @@ NOW HELP ME DEBUG:
    Step 1: Check [specific thing]
    How: [exact console.log or breakpoint to add]
    What to look for: [expected vs actual values]
-   
+
    Step 2: Verify [another thing]
    How: [debugging technique]
    What to look for: [indicators of problem]
-   
+
    Step 3: Test [hypothesis]
    How: [test to run]
    Expected result if correct: [describe]
@@ -1418,7 +1522,7 @@ NOW HELP ME DEBUG:
 
 3. CONSOLE.LOG STRATEGY:
    Add these console.logs in this order:
-   
+
    ```[language]
    console.log('🔍 Step 1: Input received:', input);
    console.log('🔍 Step 2: After processing:', processed);
@@ -1426,7 +1530,7 @@ NOW HELP ME DEBUG:
    console.log('🔍 Step 4: API response:', response);
    console.log('🔍 Step 5: Final result:', result);
    ```
-   
+
    Look for:
    - Where does the value become wrong?
    - Is it undefined when it should have a value?
@@ -1436,25 +1540,29 @@ NOW HELP ME DEBUG:
 4. COMMON CAUSES FOR THIS TYPE OF ERROR:
    Cause 1: [common mistake]
    Check: [what to verify]
-   
+
    Cause 2: [another common mistake]
    Check: [what to verify]
-   
+
    Cause 3: [third common mistake]
    Check: [what to verify]
 
 5. POTENTIAL FIXES:
-   
+
    Fix Option A: [most likely]
+
    ```[language]
    [show code change]
    ```
+
    When this works: [scenario]
-   
+
    Fix Option B: [alternative]
+
    ```[language]
    [show code change]
    ```
+
    When this works: [scenario]
 
 6. IF STILL BROKEN:
@@ -1462,7 +1570,7 @@ NOW HELP ME DEBUG:
    - [Step 1]
    - [Step 2]
    - [Step 3]
-   
+
    Questions to ask:
    - Does it fail consistently or intermittently?
    - Does it work in dev but not prod?
@@ -1470,17 +1578,20 @@ NOW HELP ME DEBUG:
 
 7. MINIMAL REPRODUCTION:
    Create this simple test case:
+
    ```[language]
    [minimal code that reproduces the issue]
    ```
-   
+
    Run it in isolation.
    If it works → problem is elsewhere
    If it fails → problem is in this code
+
 ```
 
 **Example Usage:**
 ```
+
 Help me debug this issue:
 
 PROBLEM DESCRIPTION:
@@ -1497,6 +1608,7 @@ Error: Invalid credentials at validatePassword (auth.js:42)
 
 RELEVANT CODE:
 [paste code]
+
 ```
 
 ---
@@ -1516,6 +1628,7 @@ RELEVANT CODE:
 
 ⚡ **The Prompt:**
 ```
+
 This operation is slow. Help me understand why and how to fix it:
 
 SLOW OPERATION:
@@ -1526,6 +1639,7 @@ Time taken: [X seconds/ms]
 Acceptable time: [Y seconds/ms]
 
 CODE INVOLVED:
+
 ```[language]
 [paste the code path from start to finish]
 ```
@@ -1534,17 +1648,17 @@ ANALYZE:
 
 1. TIME BREAKDOWN:
    Estimate time spent in each part:
-   
+
    Step 1: [Description]
    Estimated time: [X ms]
    % of total: [Y%]
-   
+
    Step 2: [Description]
    Estimated time: [X ms]
    % of total: [Y%]
-   
+
    [Continue for all steps]
-   
+
    BOTTLENECK: [which step is slowest]
 
 2. ROOT CAUSE ANALYSIS:
@@ -1554,41 +1668,46 @@ ANALYZE:
    - [Reason 3 - e.g., "No caching, always fresh data"]
 
 3. OPTIMIZATION STRATEGY:
-   
+
    Quick Win #1: [easiest fix]
+
    ```[language]
    [show code change]
    ```
+
    Expected improvement: [X ms faster]
    Effort: [Low/Medium/High]
-   
+
    Quick Win #2: [second easiest]
+
    ```[language]
    [show code change]
    ```
+
    Expected improvement: [Y ms faster]
    Effort: [Low/Medium/High]
-   
+
    Bigger Change: [more involved fix]
+
    ```[language]
    [show code change]
    ```
+
    Expected improvement: [Z ms faster]
    Effort: [Medium/High]
-   
+
 4. TOTAL EXPECTED IMPROVEMENT:
    Current: [X ms]
    After quick wins: [Y ms] (Z% faster)
    After all changes: [W ms] (Q% faster)
-   
 5. ALTERNATIVE APPROACHES:
    Instead of optimizing current approach, consider:
-   
+
    Approach A: [different strategy]
    Pros: [list]
    Cons: [list]
    Estimated time: [X ms]
-   
+
    Approach B: [another strategy]
    Pros: [list]
    Cons: [list]
@@ -1596,21 +1715,24 @@ ANALYZE:
 
 6. MONITORING:
    Add performance logging:
+
    ```[language]
    console.time('operation-name');
    // ... code ...
    console.timeEnd('operation-name');
-   
+
    // Or more detailed:
    const start = performance.now();
    // ... code ...
    const duration = performance.now() - start;
    console.log(`Operation took ${duration}ms`);
    ```
+
 ```
 
 **Example Usage:**
 ```
+
 This operation is slow. Help me understand why and how to fix it:
 
 SLOW OPERATION:
@@ -1622,6 +1744,7 @@ Acceptable time: <1000ms
 
 CODE INVOLVED:
 [paste code]
+
 ```
 
 ---
@@ -1647,36 +1770,39 @@ These are deeper dives you do periodically, not on every commit.
 
 ⚡ **The Prompt:**
 ```
+
 Analyze package.json (or requirements.txt / composer.json) dependencies:
 
 1. UNUSED DEPENDENCIES:
    Check each dependency to see if it's actually imported/used
-   
+
    Package: [package-name]
    Version: [current version]
    Used in files: ❌ NEVER IMPORTED
    Safe to remove: ✅ YES
-   
+
    Removal command:
+
    ```bash
    npm uninstall [package-name]
    ```
 
 2. OUTDATED DEPENDENCIES:
    For each package, check latest version
-   
+
    Package: [package-name]
    Current: [version]
    Latest: [latest version]
    Type of change: [major / minor / patch]
    Breaking changes: [Yes/No - describe if yes]
-   
+
    Update strategy:
    - Patch updates (1.2.3 → 1.2.4): ✅ Safe to update immediately
    - Minor updates (1.2.0 → 1.3.0): ⚠️ Review changelog, likely safe
    - Major updates (1.0.0 → 2.0.0): ❌ Breaking changes - test carefully
-   
+
    Update command:
+
    ```bash
    npm update [package-name]
    # or for major updates
@@ -1685,14 +1811,15 @@ Analyze package.json (or requirements.txt / composer.json) dependencies:
 
 3. SECURITY VULNERABILITIES:
    Run: `npm audit` or equivalent
-   
+
    Vulnerability: [CVE number]
    Package: [affected package]
    Severity: [Critical/High/Medium/Low]
    Description: [what's vulnerable]
    Fixed in: [version]
-   
+
    Fix command:
+
    ```bash
    npm audit fix
    # or manually
@@ -1701,7 +1828,7 @@ Analyze package.json (or requirements.txt / composer.json) dependencies:
 
 4. DUPLICATE DEPENDENCIES:
    Check for same functionality from multiple packages
-   
+
    Duplication detected:
    - [package-1] and [package-2] both do [same thing]
    - Recommendation: Keep [package-1], remove [package-2]
@@ -1709,13 +1836,14 @@ Analyze package.json (or requirements.txt / composer.json) dependencies:
 
 5. DEV VS PRODUCTION SEPARATION:
    Packages in dependencies that should be in devDependencies:
-   
+
    Package: [package-name]
    Current: dependencies
    Should be: devDependencies
    Reason: [only used in dev/testing, not in production code]
-   
+
    Fix:
+
    ```bash
    npm uninstall [package-name]
    npm install --save-dev [package-name]
@@ -1723,19 +1851,19 @@ Analyze package.json (or requirements.txt / composer.json) dependencies:
 
 6. BUNDLE SIZE IMPACT:
    Heavy packages that could be replaced with lighter alternatives:
-   
+
    Package: [heavy-package]
    Size: [X MB]
    Usage: [how it's used]
    Alternative: [lighter-alternative]
    Alternative size: [Y MB]
    Savings: [X-Y MB]
-   
+
    Migration effort: [Low/Medium/High]
 
 7. DEPRECATED PACKAGES:
    Packages no longer maintained:
-   
+
    Package: [deprecated-package]
    Status: [deprecated / unmaintained / archived]
    Last update: [date]
@@ -1744,7 +1872,7 @@ Analyze package.json (or requirements.txt / composer.json) dependencies:
 
 8. LICENSE COMPLIANCE:
    Check licenses for compatibility with your project:
-   
+
    Package: [package-name]
    License: [license type]
    Compatible: [✅ Yes / ❌ No]
@@ -1760,17 +1888,21 @@ Can optimize: [X] - Replace with lighter alternatives
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ACTION PLAN:
+
 1. Fix security vulnerabilities (NOW)
+
    ```bash
    npm audit fix
    ```
 
 2. Remove unused dependencies (5 min)
+
    ```bash
    npm uninstall [package1] [package2] [package3]
    ```
 
 3. Update safe packages (10 min)
+
    ```bash
    npm update
    ```
@@ -1780,12 +1912,15 @@ ACTION PLAN:
 
 5. Consider replacements (future work)
    [list heavy packages to eventually replace]
+
 ```
 
 **Example Usage:**
 ```
+
 Analyze package.json dependencies:
 [Cursor will read your package.json automatically]
+
 ```
 
 ---
@@ -1805,23 +1940,24 @@ Analyze package.json dependencies:
 
 ⚡ **The Prompt:**
 ```
+
 Evaluate architectural consistency and suggest improvements:
 
 1. FOLDER STRUCTURE ANALYSIS:
    Current structure:
    [show directory tree]
-   
+
    Issues found:
    - [File X] is in wrong folder
      Current: `/components/utils/BusinessLogic.js`
      Should be: `/business-logic/...` or `/services/...`
      Reason: Utils should be generic, this is domain-specific
-   
    - [Files Y, Z] should be grouped
      Current: Scattered across folders
      Should be: `/features/user-management/` (group by feature)
-   
+
    Recommended structure:
+
    ```
    src/
    ├── features/           # Group by feature, not by type
@@ -1841,29 +1977,31 @@ Evaluate architectural consistency and suggest improvements:
 
 2. SEPARATION OF CONCERNS:
    Violations found:
-   
+
    File: [ComponentName.jsx]
    Problem: UI component contains business logic
    Specifically:
+
    ```jsx
    // BAD: Business logic in component
    function UserProfile() {
-     const calculateUserTier = (points) => {
+     const calculateUserTier = points => {
        if (points > 1000) return 'gold';
        // ...
      };
      // ...
    }
    ```
-   
+
    Fix: Extract to service/hook
+
    ```jsx
    // GOOD: Separate concerns
    function UserProfile() {
      const tier = useUserTier(user.points);
      // Component only handles UI
    }
-   
+
    // services/userTier.js
    export function calculateUserTier(points) {
      // Business logic here
@@ -1872,25 +2010,25 @@ Evaluate architectural consistency and suggest improvements:
 
 3. CIRCULAR DEPENDENCIES:
    Detected cycles:
-   
+
    Cycle 1:
    `ModuleA.js` imports `ModuleB.js`
    `ModuleB.js` imports `ModuleC.js`
    `ModuleC.js` imports `ModuleA.js` ← CIRCULAR!
-   
+
    Impact: [bundling issues / hard to test / coupling]
-   
+
    Fix strategy:
    - Extract shared code to `ModuleD.js`
    - Both A, B, C import from D (no cycle)
 
 4. COMPONENT/MODULE SIZE:
    Oversized files:
-   
+
    File: [ComponentName]
    Lines: [X] (target: <300)
    Methods: [Y] (target: <10)
-   
+
    Suggested split:
    - Extract: [SubComponent1] (lines 50-150)
    - Extract: [SubComponent2] (lines 160-250)
@@ -1899,13 +2037,14 @@ Evaluate architectural consistency and suggest improvements:
 5. DATA FLOW CLARITY:
    Current data flow:
    [diagram of how data moves]
-   
+
    Issues:
    - [Component] fetches data directly (should use hook/service)
    - [Component] mutates props (should use state management)
    - Global state used for local concerns
-   
+
    Recommended:
+
    ```
    API → Service → Hook → Component
          ↓
@@ -1914,38 +2053,40 @@ Evaluate architectural consistency and suggest improvements:
 
 6. INCONSISTENT PATTERNS:
    Pattern confusion:
-   
+
    API Calls:
    - `/features/auth/` uses axios directly
    - `/features/dashboard/` uses custom apiClient
    - `/features/settings/` uses fetch
-   
+
    Standardize to: [chosen approach]
    Migration: [step-by-step plan]
-   
+
    State Management:
    - Some components use useState
    - Some use Context
    - Some use Redux
-   
+
    When to use what: [decision guide]
 
 7. MISSING ABSTRACTIONS:
    Repeated code that should be abstracted:
-   
+
    Pattern: [describe repeated pattern]
    Found in: [list 5+ files]
-   
+
    Abstraction:
+
    ```[language]
    // Create shared function/component/hook
    [show implementation]
    ```
-   
+
    Update all files to use it
 
 8. LAYERING VIOLATIONS:
    Architectural layers:
+
    ```
    Presentation (UI)
         ↓
@@ -1955,11 +2096,11 @@ Evaluate architectural consistency and suggest improvements:
         ↓
    Infrastructure (API, DB)
    ```
-   
+
    Violations:
    - [UI component] directly calls [Database]
    - [Business logic] imports [React components]
-   
+
    Fix: Respect layer boundaries
 
 ARCHITECTURE SCORE:
@@ -1978,12 +2119,15 @@ REFACTORING PLAN:
 Phase 1 (This week): [easiest fixes]
 Phase 2 (This month): [medium complexity]
 Phase 3 (Next quarter): [major restructure]
+
 ```
 
 **Example Usage:**
 ```
+
 Evaluate architectural consistency and suggest improvements:
 [run on @workspace to analyze entire codebase]
+
 ```
 
 ---
@@ -2003,6 +2147,7 @@ Evaluate architectural consistency and suggest improvements:
 
 ⚡ **The Prompt:**
 ```
+
 Create a comprehensive technical debt inventory:
 
 Scan the codebase for:
@@ -2027,10 +2172,12 @@ Scan the codebase for:
 3. WORKAROUNDS/HACKS:
    Location: [file:line]
    Code:
+
    ```[language]
    // HACK: This is a temporary fix for...
    [show hacky code]
    ```
+
    Problem it works around: [original issue]
    Proper fix would be: [describe]
    Why not fixed yet: [reason]
@@ -2048,8 +2195,8 @@ Scan the codebase for:
    - Original: [file:line]
    - Copy 1: [file:line]
    - Copy 2: [file:line]
-   - [X] total copies
-   
+   - [x] total copies
+
    Refactor to: [shared function/component]
    Effort: [1-2 hours]
    Benefit: [easier to maintain / fewer bugs]
@@ -2101,45 +2248,55 @@ By effort:
 
 PRIORITIZATION MATRIX:
 High Impact + Low Effort:
+
 1. [Debt item] - 30 min effort, fixes critical bug
 2. [Debt item] - 1 hr effort, improves performance 50%
 
 High Impact + High Effort:
+
 1. [Debt item] - 8 hrs effort, eliminates whole class of bugs
    (Schedule for next sprint)
 
 Low Impact + Low Effort:
+
 1. [Debt item] - 20 min effort, clean code
    (Do when you have spare time)
 
 Low Impact + High Effort:
+
 1. [Debt item] - 6 hrs effort, marginal benefit
    (Probably skip)
 
 RECOMMENDED CLEANUP SPRINTS:
 Week 1: Focus on [theme - e.g., "Error handling"]
+
 - [Item 1] - 2 hrs
 - [Item 2] - 3 hrs
 - [Item 3] - 1 hr
-Total: 6 hrs
+  Total: 6 hrs
 
 Week 2: Focus on [theme - e.g., "Performance"]
+
 - [Item 4] - 4 hrs
 - [Item 5] - 2 hrs
-Total: 6 hrs
+  Total: 6 hrs
 
 ROI CALCULATION:
 If we fix top 5 items:
+
 - Time saved per week: [X hours]
 - Bugs prevented: [Y estimated]
 - Performance improvement: [Z%]
 - Developer happiness: [improved morale]
+
 ```
 
 **Example Usage:**
 ```
+
 Create a comprehensive technical debt inventory:
 [run on @workspace for full codebase audit]
+
 ```
 
 ---
@@ -2165,38 +2322,44 @@ These are for specific technologies or scenarios.
 
 ⚡ **The Prompt:**
 ```
+
 Optimize this React code for performance:
 
 1. UNNECESSARY RE-RENDERS:
    Component: [ComponentName]
    Re-renders: [X] times per user action
-   
+
    Cause analysis:
    - Props changing: [which props, why]
    - State changing: [which state, why]
    - Parent re-rendering: [yes/no]
    - Context changing: [which context]
-   
+
    Fix:
+
    ```jsx
    // Before
    function Component({ items }) {
      return <List items={items} />;
    }
-   
+
    // After
-   const Component = memo(function Component({ items }) {
-     return <List items={items} />;
-   }, (prevProps, nextProps) => {
-     // Custom comparison
-     return prevProps.items.length === nextProps.items.length;
-   });
+   const Component = memo(
+     function Component({ items }) {
+       return <List items={items} />;
+     },
+     (prevProps, nextProps) => {
+       // Custom comparison
+       return prevProps.items.length === nextProps.items.length;
+     }
+   );
    ```
 
 2. MISSING MEMOIZATION:
    Location: [Component]
-   
+
    Expensive calculation running on every render:
+
    ```jsx
    function Component({ items }) {
      const sorted = items.sort(); // Runs every render!
@@ -2204,16 +2367,15 @@ Optimize this React code for performance:
      return <List items={filtered} />;
    }
    ```
-   
+
    Fix with useMemo:
+
    ```jsx
    function Component({ items }) {
      const filtered = useMemo(() => {
-       return items
-         .sort()
-         .filter(x => x.active);
+       return items.sort().filter(x => x.active);
      }, [items]); // Only recalculate when items change
-     
+
      return <List items={filtered} />;
    }
    ```
@@ -2221,14 +2383,14 @@ Optimize this React code for performance:
 3. MISSING useCallback:
    Component: [Parent]
    Problem: Passing new function to child on every render
-   
+
    ```jsx
    // Bad
    function Parent() {
      const handleClick = () => console.log('clicked');
      return <Child onClick={handleClick} />; // New function every render
    }
-   
+
    // Good
    function Parent() {
      const handleClick = useCallback(() => {
@@ -2242,8 +2404,9 @@ Optimize this React code for performance:
    Component: [ComponentName]
    Lines: [X]
    Renders: [Y elements]
-   
+
    Split into:
+
    ```jsx
    function LargeComponent() {
      return (
@@ -2256,14 +2419,15 @@ Optimize this React code for performance:
      );
    }
    ```
-   
+
    Benefit: Each section can re-render independently
 
 5. PROPS DRILLING - USE CONTEXT:
    Data: [data being drilled]
    Depth: [X components deep]
-   
+
    Current (props drilling):
+
    ```jsx
    <GrandParent user={user}>
      <Parent user={user}>
@@ -2273,11 +2437,12 @@ Optimize this React code for performance:
      </Parent>
    </GrandParent>
    ```
-   
+
    Better (Context):
+
    ```jsx
    const UserContext = createContext();
-   
+
    function GrandParent() {
      const [user] = useState(...);
      return (
@@ -2286,7 +2451,7 @@ Optimize this React code for performance:
        </UserContext.Provider>
      );
    }
-   
+
    function GrandChild() {
      const user = useContext(UserContext); // Direct access
    }
@@ -2295,47 +2460,52 @@ Optimize this React code for performance:
 6. CONTROLLED VS UNCONTROLLED:
    Component: [FormComponent]
    Issue: Re-renders on every keystroke
-   
+
    If you don't need real-time value:
+
    ```jsx
    // Instead of controlled:
    const [value, setValue] = useState('');
-   <input value={value} onChange={e => setValue(e.target.value)} />
-   
+   <input value={value} onChange={e => setValue(e.target.value)} />;
+
    // Use uncontrolled:
    const inputRef = useRef();
-   <input ref={inputRef} defaultValue="" />
+   <input ref={inputRef} defaultValue="" />;
    // Get value on submit: inputRef.current.value
    ```
 
 7. KEY PROP ISSUES IN LISTS:
    Component: [ListComponent]
    Problem: Using index as key
-   
+
    ```jsx
    // Bad
-   {items.map((item, index) => (
-     <Item key={index} {...item} /> // Index as key is bad!
-   ))}
-   
+   {
+     items.map((item, index) => (
+       <Item key={index} {...item} /> // Index as key is bad!
+     ));
+   }
+
    // Good
-   {items.map(item => (
-     <Item key={item.id} {...item} /> // Stable unique ID
-   ))}
+   {
+     items.map(item => (
+       <Item key={item.id} {...item} /> // Stable unique ID
+     ));
+   }
    ```
-   
+
    Why: Index as key causes React to re-render unnecessarily
 
 8. LAZY LOADING OPPORTUNITIES:
    Components that could be lazy loaded:
-   
+
    ```jsx
    // Instead of
    import HeavyComponent from './HeavyComponent';
-   
+
    // Use lazy loading
    const HeavyComponent = lazy(() => import('./HeavyComponent'));
-   
+
    function App() {
      return (
        <Suspense fallback={<Loading />}>
@@ -2358,12 +2528,15 @@ EXPECTED IMPROVEMENT:
 Current render count: [X]
 After optimizations: [Y]
 Reduction: [Z%]
+
 ```
 
 **Example Usage:**
 ```
+
 Optimize this React code for performance:
 [paste component or run on React files]
+
 ```
 
 ---
@@ -2383,49 +2556,54 @@ Optimize this React code for performance:
 
 ⚡ **The Prompt:**
 ```
+
 Review and optimize database queries:
 
 1. QUERY ANALYSIS:
    Original query:
+
    ```sql
    [paste query]
    ```
-   
+
    Issues:
-   - SELECT *: Fetching [X] unnecessary columns
+   - SELECT \*: Fetching [X] unnecessary columns
    - Missing WHERE clause: Scanning [Y] rows
    - Missing INDEX: Full table scan
    - JOIN without index: Cartesian product
-   
+
    Estimated time: [X ms]
    Rows scanned: [Y]
    Rows returned: [Z]
-   
+
    Optimized query:
+
    ```sql
    [show optimized version]
    ```
-   
+
    Improvements:
    - Specific columns: Only fetch what's needed
    - WHERE clause: Filter early
    - Proper JOINs: Use indexed columns
-   
+
    Estimated time: [X ms] → [Y ms] (Z% faster)
 
 2. N+1 QUERY PROBLEM:
    Code:
+
    ```[language]
    [show code causing N+1]
    ```
-   
+
    Current: [X] queries for [Y] items
-   
+
    Solution - Use JOIN or eager loading:
+
    ```[language]
    [show fixed code]
    ```
-   
+
    New: [1] query for [Y] items
    Improvement: [X]x fewer queries
 
@@ -2433,39 +2611,43 @@ Review and optimize database queries:
    Table: [table_name]
    Query filters on: [column]
    Index exists: ❌ NO
-   
+
    Impact:
    - Full table scan
    - Rows scanned: [X]
    - Time: [Y ms]
-   
+
    Recommended index:
+
    ```sql
-   CREATE INDEX idx_[table]_[column] 
+   CREATE INDEX idx_[table]_[column]
    ON [table]([column]);
    ```
-   
+
    Expected improvement: [X ms] → [Y ms]
 
 4. INEFFICIENT JOINS:
    Current:
+
    ```sql
    SELECT *
    FROM users u
    LEFT JOIN posts p ON u.id = p.user_id
    WHERE p.published = true;
    ```
-   
+
    Problem: LEFT JOIN then filter = inefficient
-   
+
    Better:
+
    ```sql
    SELECT u.*, p.*
    FROM users u
    INNER JOIN posts p ON u.id = p.user_id AND p.published = true;
    ```
-   
+
    Or even better - filter published posts first:
+
    ```sql
    WITH published_posts AS (
      SELECT * FROM posts WHERE published = true
@@ -2475,14 +2657,15 @@ Review and optimize database queries:
    INNER JOIN published_posts pp ON u.id = pp.user_id;
    ```
 
-5. SELECT * ISSUES:
-   Query: `SELECT * FROM users`
+5. SELECT _ ISSUES:
+   Query: `SELECT _ FROM users`
    Columns in table: [X]
    Actually needed: [Y columns]
-   
+
    Wasted bandwidth: [Z KB per row]
-   
+
    Fix:
+
    ```sql
    SELECT id, name, email FROM users;
    ```
@@ -2490,16 +2673,18 @@ Review and optimize database queries:
 6. MISSING PAGINATION:
    Query: `SELECT * FROM large_table`
    Rows: [100,000+]
-   
+
    Problem: Loading all data at once
-   
+
    Add pagination:
+
    ```sql
    SELECT * FROM large_table
    LIMIT 50 OFFSET 0;
    ```
-   
+
    Or cursor-based:
+
    ```sql
    SELECT * FROM large_table
    WHERE id > :last_id
@@ -2509,13 +2694,14 @@ Review and optimize database queries:
 
 7. CACHING OPPORTUNITIES:
    Query:
+
    ```sql
    [frequently run query that rarely changes]
    ```
-   
+
    Execution frequency: [X] times/minute
    Data changes: [Y] times/day
-   
+
    Cache strategy:
    - Cache for: [Z] minutes
    - Invalidate when: [condition]
@@ -2523,15 +2709,16 @@ Review and optimize database queries:
 
 8. QUERY PLAN ANALYSIS:
    Run EXPLAIN on query:
+
    ```sql
    EXPLAIN [query];
    ```
-   
+
    Key indicators:
    - Seq Scan → Need index
    - High cost number → Needs optimization
    - Nested Loop → Consider hash join
-   
+
    Interpretation: [explain what plan shows]
 
 OPTIMIZATION SUMMARY:
@@ -2544,12 +2731,15 @@ Can cache: [X]
 ━━━━━━━━━━━━━━━━━━━━━━
 
 MIGRATION PLAN:
+
 1. Add indexes (low risk)
+
    ```sql
    [index creation statements]
    ```
 
 2. Update queries (test in staging)
+
    ```sql
    [optimized queries]
    ```
@@ -2562,12 +2752,15 @@ Current avg query time: [X ms]
 After optimization: [Y ms]
 Reduction: [Z%]
 Database CPU: -[%]
+
 ```
 
 **Example Usage:**
 ```
+
 Review and optimize database queries:
 [paste slow SQL or ORM code]
+
 ```
 
 ---
@@ -2591,6 +2784,7 @@ These help you work smarter, not just write better code.
 
 ⚡ **The Prompt:**
 ```
+
 Generate a code review checklist for this PR:
 
 PR DESCRIPTION:
@@ -2606,7 +2800,7 @@ GENERATE CHECKLIST:
    ☐ Are edge cases handled?
    ☐ Are error cases handled?
    ☐ Is the logic correct?
-   
+
    Specific checks for this PR:
    ☐ [PR-specific check based on changes]
    ☐ [Another PR-specific check]
@@ -2616,7 +2810,7 @@ GENERATE CHECKLIST:
    ☐ Are functions appropriately sized?
    ☐ Is there unnecessary complexity?
    ☐ Are there code smells?
-   
+
    Red flags to watch for:
    - [Based on PR, what could go wrong]
 
@@ -2631,7 +2825,7 @@ GENERATE CHECKLIST:
    ☐ Any SQL injection risks?
    ☐ Any XSS risks?
    ☐ Secrets properly handled?
-   
+
    Pay extra attention to:
    - [Based on PR changes]
 
@@ -2658,12 +2852,14 @@ Reason: [explanation]
 
 RECOMMENDATION:
 ✅ Approve if checklist passes
-⚠️  Approve with comments if minor issues
+⚠️ Approve with comments if minor issues
 ❌ Request changes if critical issues
+
 ```
 
 **Example Usage:**
 ```
+
 Generate a code review checklist for this PR:
 
 PR DESCRIPTION:
@@ -2671,6 +2867,7 @@ Add user authentication with JWT tokens
 
 FILES CHANGED:
 auth.js, middleware.js, user.model.js, auth.test.js
+
 ```
 
 ---
@@ -2689,9 +2886,11 @@ auth.js, middleware.js, user.model.js, auth.test.js
 
 ⚡ **The Prompt:**
 ```
+
 Create a safe refactoring plan for this code:
 
 CURRENT CODE:
+
 ```[language]
 [paste code to refactor]
 ```
@@ -2702,72 +2901,75 @@ GOAL:
 GENERATE REFACTORING PLAN:
 
 1. PRE-REFACTORING SETUP:
-   
+
    a) Write characterization tests:
+
    ```[language]
    // Test current behavior BEFORE changing anything
    test('existing behavior - case 1', () => {
      // Document what it currently does
    });
-   
+
    test('existing behavior - case 2', () => {
      // Document edge cases
    });
    ```
-   
+
    Why: Safety net to ensure refactoring doesn't break anything
-   
+
    b) Document current behavior:
    - Input: [what goes in]
    - Output: [what comes out]
    - Side effects: [what changes]
 
 2. REFACTORING STEPS (in order):
-   
+
    Step 1: [First safe change]
+
    ```[language]
    [show code change]
    ```
-   
+
    Why this first: [reason]
    Tests to run: [which tests]
    Rollback if: [what indicates failure]
    Estimated time: [X min]
-   
+
    Step 2: [Next safe change]
+
    ```[language]
    [show code change]
    ```
-   
+
    Why this second: [builds on step 1]
    Tests to run: [which tests]
    Rollback if: [what indicates failure]
    Estimated time: [Y min]
-   
+
    Step 3: [Continue...]
-   
+
    [Continue for all steps]
 
 3. POST-REFACTORING:
-   
+
    a) Verify all tests pass
    b) Run performance comparison
    c) Update documentation
    d) Code review before merging
 
 4. ROLLBACK STRATEGY:
-   
+
    If something breaks:
    - Revert to commit: [hash]
    - Tests that would catch issue: [list]
    - Alternative approach if this fails: [describe]
 
 5. RISK MITIGATION:
-   
+
    Highest risks:
    - [Risk 1]: [how to mitigate]
    - [Risk 2]: [how to mitigate]
-   
+
    Safe because:
    - Small steps
    - Tests at each step
@@ -2787,13 +2989,16 @@ REFACTORING CHECKLIST:
 TIME ESTIMATE:
 Total refactoring time: [X] hours
 Broken down:
+
 - Writing tests: [Y] hours
 - Refactoring steps: [Z] hours
 - Verification: [W] hours
+
 ```
 
 **Example Usage:**
 ```
+
 Create a safe refactoring plan for this code:
 
 CURRENT CODE:
@@ -2801,6 +3006,7 @@ CURRENT CODE:
 
 GOAL:
 Extract authentication logic into separate service
+
 ```
 
 ---
@@ -2809,44 +3015,50 @@ Extract authentication logic into separate service
 
 ### **Daily Prompts (Run These Every Day)**
 ```
+
 Morning:
+
 1. Prompt #1 (Dead Code) on today's files
 2. Prompt #28 (Context Builder) for today's tasks
 
-After Coding:
-3. Prompt #3 (Naming Consistency)
-4. Prompt #9 (Error Handling)
+After Coding: 3. Prompt #3 (Naming Consistency) 4. Prompt #9 (Error Handling)
 
-Before Commit:
-5. Prompt #35 (Ultimate Combo)
+Before Commit: 5. Prompt #35 (Ultimate Combo)
+
 ```
 
 ---
 
 ### **Weekly Prompts (Run These Every Monday)**
 ```
+
 1. Prompt #15 (Dependency Audit)
 2. Prompt #7 (Security Scan)
 3. Prompt #32 (Tech Debt Inventory)
+
 ```
 
 ---
 
 ### **When Something Breaks**
 ```
+
 1. Prompt #30 (Debug Helper)
 2. Prompt #31 (Why Is This Slow)
 3. Prompt #4 (Performance Bottleneck)
+
 ```
 
 ---
 
 ### **Before Major Changes**
 ```
+
 1. Prompt #27 (Dependency Mapper)
 2. Prompt #34 (Refactoring Plan)
 3. Prompt #29 (Task Breakdown)
-```
+
+````
 
 ---
 
@@ -2867,14 +3079,19 @@ Use this template to create project-specific prompts:
 [Describe the output]
 
 ⚡ **The Prompt:**
-```
+````
+
 [Your custom prompt text]
+
 ```
 
 **Example Usage:**
 ```
+
 [Show example]
+
 ```
+
 ```
 
 ---
@@ -2902,21 +3119,25 @@ Monthly:
 ## 🎓 LEARNING PATH
 
 **Week 1:** Start with these 3 prompts
+
 - #1 (Dead Code)
 - #9 (Error Handling)
 - #13 (Documentation)
 
 **Week 2:** Add these 3
+
 - #3 (Naming)
 - #7 (Security)
 - #35 (Pre-Commit Combo)
 
 **Week 3:** Add these 3
+
 - #4 (Performance)
 - #11 (Test Coverage)
 - #30 (Debug Helper)
 
 **Week 4:** Add weekly/monthly prompts
+
 - #15 (Dependencies)
 - #19 (Architecture)
 - #32 (Tech Debt)
@@ -2972,12 +3193,15 @@ A: AI is probabilistic - provide more constraints in prompt for consistency
 ## 📚 ADDITIONAL RESOURCES
 
 **Cursor Documentation:**
+
 - https://docs.cursor.sh
 
 **Prompt Engineering:**
+
 - https://www.promptingguide.ai
 
 **Code Quality:**
+
 - Clean Code by Robert C. Martin
 - Refactoring by Martin Fowler
 

@@ -538,8 +538,8 @@ Recovery-specific achievements that celebrate progress and maintain motivation.
 
 **Screen 5: Create Account**
 
-- Email: ******\_\_\_\_******
-- Password: ******\_******
+- Email: **\*\***\_\_\_\_**\*\***
+- Password: **\*\***\_**\*\***
 - [Sign Up]
 
 **Screen 6: Email Verification**
@@ -590,10 +590,10 @@ Without support, most people:
 
 **Screen 8: Profile Setup (Post-Payment)**
 
-- What's your name? ******\_\_\_\_******
-- What are you recovering from? ******\_\_\_\_******
+- What's your name? **\*\***\_\_\_\_**\*\***
+- What are you recovering from? **\*\***\_\_\_\_**\*\***
 - When did your surgery happen? [Date Picker]
-- What's your biggest struggle? ******\_\_\_\_******
+- What's your biggest struggle? **\*\***\_\_\_\_**\*\***
 - [Continue]
 
 **Screen 9: Permissions**

@@ -259,4 +259,3 @@ function buildContextString(userContext: UserContext): string {
 
   return parts.length > 0 ? parts.join('\n') : 'No specific context available.';
 }
-
