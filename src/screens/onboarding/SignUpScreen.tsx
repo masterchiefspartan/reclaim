@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 
 import { OnboardingLayout } from '@components/onboarding/OnboardingLayout';
@@ -8,14 +8,34 @@ import type { OnboardingStackScreenProps } from '@navigation/types';
 import { signUpWithEmail } from '@services/auth/authService';
 import { useAuth } from '@hooks/useAuth';
 import { getUserFriendlyMessage } from '@utils/errors';
+import { useAppTheme } from '@hooks/useAppTheme';
 
 export const SignUpScreen = ({ navigation }: OnboardingStackScreenProps<'SignUp'>) => {
+  const { theme } = useAppTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { refreshProfile } = useAuth();
+  const themedStyles = useMemo(
+    () =>
+      StyleSheet.create({
+        errorContainer: {
+          backgroundColor: theme.colors.muted,
+          borderColor: theme.colors.border,
+        },
+        errorText: {
+          color: theme.colors.error,
+        },
+        input: {
+          backgroundColor: theme.colors.surface,
+          borderColor: theme.colors.border,
+          color: theme.colors.text,
+        },
+      }),
+    [theme]
+  );
 
   const validateInputs = (): string | null => {
     if (!email.trim()) {
@@ -64,11 +84,15 @@ export const SignUpScreen = ({ navigation }: OnboardingStackScreenProps<'SignUp'
   }, [confirmPassword, email, navigation, password, refreshProfile]);
 
   return (
-    <OnboardingLayout title="Create your account">
+    <OnboardingLayout
+      eyebrow="Create account"
+      title="Create your account"
+      subtitle="A few details to personalize your recovery experience."
+    >
       <View style={styles.field}>
         <AppText>Email</AppText>
         <TextInput
-          style={styles.input}
+          style={[styles.input, themedStyles.input]}
           autoCapitalize="none"
           keyboardType="email-address"
           placeholder="you@example.com"
@@ -84,7 +108,7 @@ export const SignUpScreen = ({ navigation }: OnboardingStackScreenProps<'SignUp'
       <View style={styles.field}>
         <AppText>Password</AppText>
         <TextInput
-          style={styles.input}
+          style={[styles.input, themedStyles.input]}
           secureTextEntry
           placeholder="At least 6 characters"
           value={password}
@@ -99,7 +123,7 @@ export const SignUpScreen = ({ navigation }: OnboardingStackScreenProps<'SignUp'
       <View style={styles.field}>
         <AppText>Confirm Password</AppText>
         <TextInput
-          style={styles.input}
+          style={[styles.input, themedStyles.input]}
           secureTextEntry
           placeholder="Repeat password"
           value={confirmPassword}
@@ -113,8 +137,8 @@ export const SignUpScreen = ({ navigation }: OnboardingStackScreenProps<'SignUp'
       </View>
 
       {error ? (
-        <View style={styles.errorContainer}>
-          <AppText style={styles.error}>{error}</AppText>
+        <View style={[styles.errorContainer, themedStyles.errorContainer]}>
+          <AppText style={[styles.error, themedStyles.errorText]}>{error}</AppText>
         </View>
       ) : null}
 
@@ -125,12 +149,9 @@ export const SignUpScreen = ({ navigation }: OnboardingStackScreenProps<'SignUp'
 
 const styles = StyleSheet.create({
   error: {
-    color: '#dc2626',
     textAlign: 'center',
   },
   errorContainer: {
-    backgroundColor: '#fef2f2',
-    borderColor: '#fecaca',
     borderRadius: 8,
     borderWidth: 1,
     padding: 12,
@@ -139,8 +160,6 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   input: {
-    backgroundColor: '#fff',
-    borderColor: '#d1d5db',
     borderRadius: 12,
     borderWidth: 1,
     fontSize: 16,

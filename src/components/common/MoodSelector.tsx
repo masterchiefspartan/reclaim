@@ -34,11 +34,14 @@ export const MoodSelector = ({ value, onChange }: MoodSelectorProps) => {
               styles.mood,
               {
                 borderColor: isActive ? theme.colors.primary : theme.colors.border,
+                backgroundColor: isActive ? theme.colors.muted : theme.colors.surface,
               },
             ]}
           >
             <AppText style={styles.emoji}>{emoji}</AppText>
-            <AppText style={styles.moodLabel}>{typedMood}</AppText>
+            <AppText style={styles.moodLabel} color={theme.colors.textSecondary}>
+              {typedMood}
+            </AppText>
           </Pressable>
         );
       })}

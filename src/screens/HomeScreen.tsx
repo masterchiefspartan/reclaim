@@ -48,17 +48,32 @@ export const HomeScreen = () => {
       </View>
 
       <View style={styles.cardsRow}>
-        <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
+        <View
+          style={[
+            styles.card,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <Feather name="activity" size={20} color={theme.colors.primary} />
           <AppText variant="h1">{stats.streak}</AppText>
           <AppText>Day streak</AppText>
         </View>
-        <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
+        <View
+          style={[
+            styles.card,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <Feather name="mic" size={20} color={theme.colors.primary} />
           <AppText variant="h1">{stats.totalEntries}</AppText>
           <AppText>Entries</AppText>
         </View>
-        <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
+        <View
+          style={[
+            styles.card,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <Feather name="clock" size={20} color={theme.colors.primary} />
           <AppText variant="h1">{stats.totalMinutes}</AppText>
           <AppText>Voice mins</AppText>
@@ -105,11 +120,16 @@ export const HomeScreen = () => {
 const styles = StyleSheet.create({
   card: {
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: 18,
+    borderWidth: 1,
     flex: 1,
     gap: 4,
     marginHorizontal: 4,
     padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
   },
   cardsRow: {
     flexDirection: 'row',

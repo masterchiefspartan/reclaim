@@ -131,6 +131,8 @@ export const createJournalEntry = async (payload: CreateEntryPayload): Promise<s
         duration: payload.duration,
         checkInType: payload.checkInType,
         structuredAnswers: payload.structuredAnswers ?? null,
+        // Include client-side transcript if available (will be overwritten by server)
+        transcript: payload.transcript ?? null,
         transcriptionStatus: 'pending',
         aiResponseStatus: 'pending',
         createdAt: serverTimestamp(),

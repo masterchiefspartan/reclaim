@@ -52,6 +52,8 @@ export interface CreateEntryPayload {
   localAudioUri: string;
   duration: number;
   checkInType: 'free' | 'guided';
+  /** Optional client-side transcript (will be overwritten by server transcription) */
+  transcript?: string;
   structuredAnswers?: {
     physicalProgress?: string;
     painLevel?: number;

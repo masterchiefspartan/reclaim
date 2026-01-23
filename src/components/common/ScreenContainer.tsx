@@ -16,9 +16,10 @@ export const ScreenContainer = ({
 }: PropsWithChildren<ScreenContainerProps>) => {
   const { theme } = useAppTheme();
   const insets = useSafeAreaInsets();
+  const horizontalPadding = theme.spacing.lg;
 
   const content = (
-    <View style={[styles.content, { paddingBottom: insets.bottom + theme.spacing.lg }]}>
+    <View style={[styles.content, { paddingBottom: insets.bottom + theme.spacing.xl }]}>
       {children}
     </View>
   );
@@ -29,7 +30,11 @@ export const ScreenContainer = ({
         testID={testID}
         contentContainerStyle={[
           styles.scrollContent,
-          { backgroundColor: theme.colors.background, paddingTop: insets.top + theme.spacing.lg },
+          {
+            backgroundColor: theme.colors.background,
+            paddingTop: insets.top + theme.spacing.lg,
+            paddingHorizontal: horizontalPadding,
+          },
         ]}
       >
         {content}
@@ -42,7 +47,11 @@ export const ScreenContainer = ({
       testID={testID}
       style={[
         styles.container,
-        { backgroundColor: theme.colors.background, paddingTop: insets.top },
+        {
+          backgroundColor: theme.colors.background,
+          paddingTop: insets.top,
+          paddingHorizontal: horizontalPadding,
+        },
       ]}
     >
       {content}
@@ -53,7 +62,6 @@ export const ScreenContainer = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 24,
   },
   content: {
     flexGrow: 1,
@@ -61,6 +69,5 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingHorizontal: 24,
   },
 });

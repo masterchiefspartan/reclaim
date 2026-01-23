@@ -8,8 +8,10 @@ import { AppText } from '@components/common/AppText';
 import { PrimaryButton } from '@components/common/PrimaryButton';
 import { MoodSelector } from '@components/common/MoodSelector';
 import { useJournalEntry } from '@hooks/useJournalEntries';
+import { useAppTheme } from '@hooks/useAppTheme';
 import type { MoodLevel, ProcessingStage } from '@/types/journal';
 import { updateEntryMood } from '@services/journal/journalService';
+import { getUserFriendlyMessage } from '@utils/errors';
 import type { RootStackParamList } from '@navigation/types';
 
 type RouteProps = RouteProp<RootStackParamList, 'AIResponse'>;
@@ -18,9 +20,11 @@ export const AIResponseScreen = () => {
   const route = useRoute<RouteProps>();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { entry, loading } = useJournalEntry(route.params?.entryId);
+  const { theme } = useAppTheme();
   const [mood, setMood] = useState<MoodLevel>('neutral');
   const [moodScore, setMoodScore] = useState('5');
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const soundRef = useRef<Audio.Sound | null>(null);
 
   useEffect(() => {
@@ -50,8 +54,15 @@ export const AIResponseScreen = () => {
   const handleSaveMood = async () => {
     if (!entry) return;
     setSaving(true);
-    await updateEntryMood(entry.id, mood, Number(moodScore) || 5);
-    setSaving(false);
+    try {
+      setSaveError(null);
+      await updateEntryMood(entry.id, mood, Number(moodScore) || 5);
+      navigation.replace('Celebration', { entryId: entry.id });
+    } catch (error) {
+      setSaveError(getUserFriendlyMessage(error));
+    } finally {
+      setSaving(false);
+    }
   };
 
   const statusMessage = useMemo(() => {
@@ -115,7 +126,12 @@ export const AIResponseScreen = () => {
     <ScrollView contentContainerStyle={styles.container}>
       <AppText variant="h2">Your AI Companion</AppText>
 
-      <View style={styles.responseCard}>
+      <View
+        style={[
+          styles.responseCard,
+          { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+        ]}
+      >
         <AppText>{entry.aiResponse}</AppText>
         {entry.aiResponseAudioUrl ? (
           <PrimaryButton label="Listen to response" onPress={handlePlayResponse} />
@@ -126,12 +142,16 @@ export const AIResponseScreen = () => {
         <AppText variant="h3">How do you feel now?</AppText>
         <MoodSelector value={mood} onChange={setMood} />
         <TextInput
-          style={styles.input}
+          style={[
+            styles.input,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
           keyboardType="numeric"
           value={moodScore}
           onChangeText={setMoodScore}
           placeholder="Mood score (1-10)"
         />
+        {saveError ? <AppText style={styles.errorText}>{saveError}</AppText> : null}
         <PrimaryButton label="Save mood" onPress={handleSaveMood} isLoading={saving} />
       </View>
 
@@ -165,15 +185,13 @@ const styles = StyleSheet.create({
     color: '#ef4444',
   },
   input: {
-    backgroundColor: '#fff',
-    borderColor: '#d1d5db',
     borderRadius: 12,
     borderWidth: 1,
     padding: 12,
   },
   responseCard: {
-    backgroundColor: '#fff',
     borderRadius: 16,
+    borderWidth: 1,
     gap: 12,
     padding: 16,
   },

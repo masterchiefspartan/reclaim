@@ -8,7 +8,26 @@ import {
   generateConversationResponse,
   generateConversationSummary,
 } from './services/conversationClaude';
+import {
+  fetchEntriesForPeriod,
+  buildMoodDataPoints,
+  calculateMoodDistribution,
+  calculateAverageMoodScore,
+  calculateTrend,
+  calculateSentimentDistribution,
+  extractTopTopics,
+  collectSuggestedActions,
+  calculateTotalVoiceMinutes,
+  calculateStreakDays,
+  validateDays,
+} from './services/analytics';
 import { JournalEntry, ProcessingStatus } from './types/shared';
+import {
+  MoodTrendsRequest,
+  MoodTrendsResponse,
+  InsightsSummaryRequest,
+  InsightsSummaryResponse,
+} from './types/analytics';
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -333,6 +352,111 @@ export const getConversationSummaryFn = functions.https.onCall(
     } catch (error) {
       console.error('Failed to generate conversation summary:', error);
       throw new functions.https.HttpsError('internal', 'Failed to generate summary');
+    }
+  }
+);
+
+// ============================================
+// Analytics Functions
+// ============================================
+
+/**
+ * Get mood trends for a user over a specified time period
+ * Used by the Dashboard to display mood charts and progress
+ */
+export const getMoodTrends = functions.https.onCall(
+  async (data: MoodTrendsRequest, context): Promise<MoodTrendsResponse> => {
+    // Verify authentication
+    if (!context.auth) {
+      throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+    }
+
+    const userId = context.auth.uid;
+    const days = validateDays(data?.days);
+
+    try {
+      // Fetch entries for the period
+      const entries = await fetchEntriesForPeriod(userId, days);
+
+      // Calculate period boundaries
+      const periodEnd = new Date();
+      const periodStart = new Date();
+      periodStart.setDate(periodStart.getDate() - days);
+
+      // Check for insufficient data
+      const insufficientData = entries.length < 3;
+
+      // Build mood data points
+      const moodData = buildMoodDataPoints(entries);
+
+      // Calculate statistics
+      const moodDistribution = calculateMoodDistribution(entries);
+      const averageMoodScore = calculateAverageMoodScore(entries);
+      const trend = calculateTrend(entries);
+
+      return {
+        moodData,
+        averages: {
+          moodDistribution,
+          averageMoodScore,
+          totalEntries: entries.length,
+        },
+        trend,
+        insufficientData,
+        periodStart: periodStart.toISOString().split('T')[0],
+        periodEnd: periodEnd.toISOString().split('T')[0],
+      };
+    } catch (error) {
+      console.error('Failed to get mood trends:', error);
+      throw new functions.https.HttpsError('internal', 'Failed to retrieve mood trends');
+    }
+  }
+);
+
+/**
+ * Get insights summary for a user
+ * Used by the Dashboard to display topics, sentiment, and stats
+ */
+export const getInsightsSummary = functions.https.onCall(
+  async (data: InsightsSummaryRequest, context): Promise<InsightsSummaryResponse> => {
+    // Verify authentication
+    if (!context.auth) {
+      throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+    }
+
+    const userId = context.auth.uid;
+    const days = validateDays(data?.days);
+
+    try {
+      // Fetch entries for the period
+      const entries = await fetchEntriesForPeriod(userId, days);
+
+      // Check for insufficient data
+      const insufficientData = entries.length < 3;
+
+      // Extract insights
+      const topTopics = extractTopTopics(entries, 5);
+      const sentimentDistribution = calculateSentimentDistribution(entries);
+      const suggestedActions = collectSuggestedActions(entries, 5);
+
+      // Calculate stats
+      const totalVoiceMinutes = calculateTotalVoiceMinutes(entries);
+      const averageMoodScore = calculateAverageMoodScore(entries);
+      const streakDays = await calculateStreakDays(userId);
+
+      return {
+        topTopics,
+        sentimentDistribution,
+        suggestedActions,
+        totalEntries: entries.length,
+        streakDays,
+        totalVoiceMinutes,
+        averageMoodScore,
+        insufficientData,
+      };
+    } catch (error) {
+      console.error('Failed to get insights summary:', error);
+      throw new functions.https.HttpsError('internal', 'Failed to retrieve insights');
     }
   }
 );

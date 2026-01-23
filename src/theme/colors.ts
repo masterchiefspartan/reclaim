@@ -1,22 +1,22 @@
 export const palette = {
-  recoveryBlue: '#4A90E2',
-  progressGreen: '#52C41A',
-  warmOrange: '#FF8C42',
-  moodSad: '#FF6B6B',
-  moodNeutral: '#FFD93D',
-  moodHappy: '#6BCF7F',
-  background: '#F8F9FA',
+  recoveryBlue: '#C85A8C',
+  progressGreen: '#4F9D9D',
+  warmOrange: '#F4A07A',
+  moodSad: '#E46C86',
+  moodNeutral: '#F4C86B',
+  moodHappy: '#6FBF9C',
+  background: '#FFF7FA',
   surface: '#FFFFFF',
-  textPrimary: '#2C3E50',
-  textSecondary: '#7F8C8D',
-  success: '#52C41A',
-  warning: '#FAAD14',
-  error: '#FF4D4F',
-  info: '#1890FF',
-  darkBackground: '#0F172A',
-  darkSurface: '#1E293B',
-  darkTextPrimary: '#E2E8F0',
-  darkTextSecondary: '#94A3B8',
+  textPrimary: '#2B1F2A',
+  textSecondary: '#6F5B68',
+  success: '#6FBF9C',
+  warning: '#F4C86B',
+  error: '#E15A6B',
+  info: '#6B8CE5',
+  darkBackground: '#1A1218',
+  darkSurface: '#241A22',
+  darkTextPrimary: '#F6EEF2',
+  darkTextSecondary: '#C9B5C1',
 } as const;
 
 export type ThemeColorSet = {
@@ -25,6 +25,7 @@ export type ThemeColorSet = {
   primary: string;
   secondary: string;
   accent: string;
+  error: string;
   text: string;
   textSecondary: string;
   border: string;
@@ -37,10 +38,11 @@ export const lightThemeColors: ThemeColorSet = {
   primary: palette.recoveryBlue,
   secondary: palette.progressGreen,
   accent: palette.warmOrange,
+  error: palette.error,
   text: palette.textPrimary,
   textSecondary: palette.textSecondary,
-  border: '#E2E8F0',
-  muted: '#CBD5F5',
+  border: '#E9D6E0',
+  muted: '#F2E8EE',
 };
 
 export const darkThemeColors: ThemeColorSet = {
@@ -49,8 +51,9 @@ export const darkThemeColors: ThemeColorSet = {
   primary: palette.recoveryBlue,
   secondary: palette.progressGreen,
   accent: palette.warmOrange,
+  error: palette.error,
   text: palette.darkTextPrimary,
   textSecondary: palette.darkTextSecondary,
-  border: '#1F2937',
-  muted: '#334155',
+  border: '#2F2530',
+  muted: '#3B2E3A',
 };

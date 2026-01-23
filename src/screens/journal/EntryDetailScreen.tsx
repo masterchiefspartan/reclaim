@@ -102,7 +102,10 @@ export const EntryDetailScreen = () => {
           <View style={styles.inputGroup}>
             <AppText>Mood Score (1-10)</AppText>
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+              ]}
               keyboardType="numeric"
               maxLength={2}
               value={moodScore}
@@ -112,7 +115,10 @@ export const EntryDetailScreen = () => {
           <View style={styles.inputGroup}>
             <AppText>Pain (1-10)</AppText>
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+              ]}
               keyboardType="numeric"
               maxLength={2}
               value={painLevel}
@@ -137,8 +143,6 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   input: {
-    backgroundColor: '#fff',
-    borderColor: '#d1d5db',
     borderRadius: 12,
     borderWidth: 1,
     padding: 12,

@@ -17,7 +17,13 @@ export const JournalEntryCard = ({ entry, onPress }: JournalEntryCardProps) => {
   return (
     <Pressable
       onPress={() => onPress?.(entry)}
-      style={[styles.card, { backgroundColor: theme.colors.surface }]}
+      style={[
+        styles.card,
+        {
+          backgroundColor: theme.colors.surface,
+          borderColor: theme.colors.border,
+        },
+      ]}
     >
       <View style={styles.header}>
         <AppText variant="h3">{createdAt.format('MMM D, h:mm A')}</AppText>
@@ -39,6 +45,7 @@ export const JournalEntryCard = ({ entry, onPress }: JournalEntryCardProps) => {
 const styles = StyleSheet.create({
   card: {
     borderRadius: 16,
+    borderWidth: 1,
     elevation: 2,
     gap: 8,
     padding: 16,

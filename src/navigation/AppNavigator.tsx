@@ -27,6 +27,8 @@ import { SettingsScreen } from '@screens/settings/SettingsScreen';
 import { VoiceJournalScreen } from '@screens/voice/VoiceJournalScreen';
 import { VoiceConversationScreen } from '@screens/voice/VoiceConversationScreen';
 import { AIResponseScreen } from '@screens/voice/AIResponseScreen';
+import { ProcessingScreen } from '@screens/voice/ProcessingScreen';
+import { CelebrationScreen } from '@screens/voice/CelebrationScreen';
 import { EntryDetailScreen } from '@screens/journal/EntryDetailScreen';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -145,9 +147,15 @@ export const AppNavigator = () => {
               component={VoiceConversationScreen}
               options={{ presentation: 'fullScreenModal' }}
             />
+            <RootStack.Screen name="Processing" component={ProcessingScreen} />
             <RootStack.Screen
               name="AIResponse"
               component={AIResponseScreen}
+              options={{ presentation: 'modal' }}
+            />
+            <RootStack.Screen
+              name="Celebration"
+              component={CelebrationScreen}
               options={{ presentation: 'modal' }}
             />
             <RootStack.Screen name="EntryDetail" component={EntryDetailScreen} />

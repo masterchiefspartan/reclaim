@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Audio } from 'expo-av';
 import * as Notifications from 'expo-notifications';
@@ -8,12 +8,24 @@ import { AppText } from '@components/common/AppText';
 import { PrimaryButton } from '@components/common/PrimaryButton';
 import type { OnboardingStackScreenProps } from '@navigation/types';
 import { useAuth } from '@hooks/useAuth';
+import { useAppTheme } from '@hooks/useAppTheme';
 
 export const PermissionsScreen = (_props: OnboardingStackScreenProps<'Permissions'>) => {
   const { updatePermissions, refreshProfile } = useAuth();
   const [microphoneGranted, setMicrophoneGranted] = useState(false);
   const [notificationGranted, setNotificationGranted] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const { theme } = useAppTheme();
+  const themedStyles = useMemo(
+    () =>
+      StyleSheet.create({
+        card: {
+          backgroundColor: theme.colors.surface,
+          borderColor: theme.colors.border,
+        },
+      }),
+    [theme]
+  );
 
   const requestMicrophone = useCallback(async () => {
     const { status } = await Audio.requestPermissionsAsync();
@@ -43,10 +55,11 @@ export const PermissionsScreen = (_props: OnboardingStackScreenProps<'Permission
 
   return (
     <OnboardingLayout
+      eyebrow="Permissions"
       title="Stay connected"
       subtitle="We need a few permissions to power voice journaling and reminders."
     >
-      <View style={styles.card}>
+      <View style={[styles.card, themedStyles.card]}>
         <AppText variant="h3">🎙️ Microphone</AppText>
         <AppText>Record voice journals with high-quality audio.</AppText>
         <PrimaryButton
@@ -56,7 +69,7 @@ export const PermissionsScreen = (_props: OnboardingStackScreenProps<'Permission
         />
       </View>
 
-      <View style={styles.card}>
+      <View style={[styles.card, themedStyles.card]}>
         <AppText variant="h3">🔔 Notifications</AppText>
         <AppText>Daily check-in reminders and progress nudges.</AppText>
         <PrimaryButton
@@ -78,10 +91,13 @@ export const PermissionsScreen = (_props: OnboardingStackScreenProps<'Permission
 
 const styles = StyleSheet.create({
   card: {
-    borderColor: '#d1d5db',
     borderRadius: 16,
     borderWidth: 1,
     gap: 12,
     padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.06,
+    shadowRadius: 18,
   },
 });

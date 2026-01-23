@@ -2,6 +2,7 @@ import { Text, TextProps, StyleSheet } from 'react-native';
 
 import { useAppTheme } from '@hooks/useAppTheme';
 import type { TypographyVariant } from '@theme/typography';
+import { baseTextStyle } from '@theme/typography';
 
 interface AppTextProps extends TextProps {
   variant?: TypographyVariant;
@@ -16,23 +17,8 @@ export const AppText = ({ children, style, variant = 'body', color, ...rest }: A
     <Text
       style={StyleSheet.flatten([
         styles.base,
-        {
-          color: color ?? theme.colors.text,
-          fontSize: variantStyle.fontSize,
-          fontWeight: variantStyle.fontWeight as
-            | '100'
-            | '200'
-            | '300'
-            | '400'
-            | '500'
-            | '600'
-            | '700'
-            | '800'
-            | '900'
-            | 'bold'
-            | 'normal',
-          lineHeight: variantStyle.lineHeight,
-        },
+        { color: color ?? theme.colors.text },
+        variantStyle,
         style,
       ])}
       {...rest}
@@ -44,6 +30,6 @@ export const AppText = ({ children, style, variant = 'body', color, ...rest }: A
 
 const styles = StyleSheet.create({
   base: {
-    fontFamily: 'System',
+    ...baseTextStyle,
   },
 });

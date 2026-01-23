@@ -12,9 +12,9 @@ type FirebaseConfig = {
 
 export interface AppEnv {
   firebase: FirebaseConfig;
-  deepgramApiKey?: string;
-  claudeApiKey?: string;
-  elevenLabsApiKey?: string;
+  // Note: AI service keys (Deepgram, Claude, ElevenLabs) are intentionally
+  // NOT exposed client-side. They are only available in Firebase Functions.
+  // Use getStreamingTokens() callable function to get temporary tokens.
 }
 
 const getExtra = (): Record<string, string | undefined> => {
@@ -46,9 +46,6 @@ export const env: AppEnv = {
     appId: requireValue('EXPO_PUBLIC_FIREBASE_APP_ID'),
     measurementId: envValue('EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID'),
   },
-  deepgramApiKey: envValue('EXPO_PUBLIC_DEEPGRAM_API_KEY'),
-  claudeApiKey: envValue('EXPO_PUBLIC_CLAUDE_API_KEY'),
-  elevenLabsApiKey: envValue('EXPO_PUBLIC_ELEVENLABS_API_KEY'),
 };
 
 export const assertFirebaseConfig = () => {

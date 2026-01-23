@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 
 import { OnboardingLayout } from '@components/onboarding/OnboardingLayout';
@@ -7,6 +7,7 @@ import { PrimaryButton } from '@components/common/PrimaryButton';
 import type { OnboardingStackScreenProps } from '@navigation/types';
 import { saveOnboardingProfile } from '@services/auth/authService';
 import { useAuth } from '@hooks/useAuth';
+import { useAppTheme } from '@hooks/useAppTheme';
 
 export const ProfileSetupScreen = ({
   route,
@@ -20,6 +21,21 @@ export const ProfileSetupScreen = ({
   const [biggestStruggle, setBiggestStruggle] = useState('');
   const [error, setError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const { theme } = useAppTheme();
+  const themedStyles = useMemo(
+    () =>
+      StyleSheet.create({
+        errorText: {
+          color: theme.colors.error,
+        },
+        input: {
+          backgroundColor: theme.colors.surface,
+          borderColor: theme.colors.border,
+          color: theme.colors.text,
+        },
+      }),
+    [theme]
+  );
 
   const handleContinue = useCallback(async () => {
     if (!user) return;
@@ -60,13 +76,14 @@ export const ProfileSetupScreen = ({
 
   return (
     <OnboardingLayout
+      eyebrow="Personalize"
       title="Tell us about your recovery"
       subtitle="We’ll personalize prompts and AI support."
     >
       <View style={styles.field}>
         <AppText>Preferred Name</AppText>
         <TextInput
-          style={styles.input}
+          style={[styles.input, themedStyles.input]}
           placeholder="Sarah"
           value={displayName}
           onChangeText={setDisplayName}
@@ -75,7 +92,7 @@ export const ProfileSetupScreen = ({
       <View style={styles.field}>
         <AppText>What are you recovering from?</AppText>
         <TextInput
-          style={styles.input}
+          style={[styles.input, themedStyles.input]}
           placeholder="ACL reconstruction, hip replacement..."
           value={injuryDescription}
           onChangeText={setInjuryDescription}
@@ -84,7 +101,7 @@ export const ProfileSetupScreen = ({
       <View style={styles.field}>
         <AppText>Surgery date (optional)</AppText>
         <TextInput
-          style={styles.input}
+          style={[styles.input, themedStyles.input]}
           placeholder="YYYY-MM-DD"
           value={surgeryDate}
           onChangeText={setSurgeryDate}
@@ -93,7 +110,7 @@ export const ProfileSetupScreen = ({
       <View style={styles.field}>
         <AppText>Biggest struggle right now?</AppText>
         <TextInput
-          style={[styles.input, styles.multiline]}
+          style={[styles.input, styles.multiline, themedStyles.input]}
           placeholder="Staying motivated, pain at night..."
           multiline
           value={biggestStruggle}
@@ -101,7 +118,7 @@ export const ProfileSetupScreen = ({
         />
       </View>
 
-      {error ? <AppText style={styles.error}>{error}</AppText> : null}
+      {error ? <AppText style={[styles.error, themedStyles.errorText]}>{error}</AppText> : null}
 
       <PrimaryButton label="Continue" onPress={handleContinue} isLoading={isSaving} />
     </OnboardingLayout>
@@ -109,15 +126,11 @@ export const ProfileSetupScreen = ({
 };
 
 const styles = StyleSheet.create({
-  error: {
-    color: '#dc2626',
-  },
+  error: {},
   field: {
     gap: 8,
   },
   input: {
-    backgroundColor: '#fff',
-    borderColor: '#d1d5db',
     borderRadius: 12,
     borderWidth: 1,
     fontSize: 16,

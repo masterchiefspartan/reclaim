@@ -8,6 +8,7 @@ import { buildTheme } from '@theme/index';
 import type { ThemeContextValue } from '@/types/theme';
 import { useColorSchemePreference } from '@hooks/useColorSchemePreference';
 import { AuthProvider } from './AuthProvider';
+import { RevenueCatProvider } from './RevenueCatProvider';
 
 enableScreens();
 
@@ -32,8 +33,10 @@ export const AppProviders = ({ children }: PropsWithChildren) => {
       <SafeAreaProvider>
         <AppThemeContext.Provider value={value}>
           <AuthProvider>
-            <StatusBar style={theme.isDark ? 'light' : 'dark'} />
-            {children}
+            <RevenueCatProvider>
+              <StatusBar style={theme.isDark ? 'light' : 'dark'} />
+              {children}
+            </RevenueCatProvider>
           </AuthProvider>
         </AppThemeContext.Provider>
       </SafeAreaProvider>

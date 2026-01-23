@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import { ScreenContainer } from '@components/common/ScreenContainer';
 import { AppText } from '@components/common/AppText';
 import { useJournalEntries } from '@hooks/useJournalEntries';
+import { useAppTheme } from '@hooks/useAppTheme';
 import type { MainTabScreenProps } from '@navigation/types';
 import type { MoodLevel } from '@/types/journal';
 
@@ -28,6 +29,7 @@ const calculateStreak = (dates: dayjs.Dayjs[]) => {
 
 export const DashboardScreen = (_props: Props) => {
   const { entries } = useJournalEntries();
+  const { theme } = useAppTheme();
 
   const stats = useMemo(() => {
     const orderedEntries = [...entries].sort(
@@ -71,19 +73,39 @@ export const DashboardScreen = (_props: Props) => {
     <ScreenContainer scrollable testID="dashboard-screen">
       <AppText variant="h2">Progress Dashboard</AppText>
       <View style={styles.metrics}>
-        <View style={styles.metricCard}>
+        <View
+          style={[
+            styles.metricCard,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <AppText variant="h1">{stats.streak}</AppText>
           <AppText>Day Streak</AppText>
         </View>
-        <View style={styles.metricCard}>
+        <View
+          style={[
+            styles.metricCard,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <AppText variant="h1">{stats.entriesCount}</AppText>
           <AppText>Entries</AppText>
         </View>
-        <View style={styles.metricCard}>
+        <View
+          style={[
+            styles.metricCard,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <AppText variant="h1">{stats.totalMinutes}</AppText>
           <AppText>Voice Minutes</AppText>
         </View>
-        <View style={styles.metricCard}>
+        <View
+          style={[
+            styles.metricCard,
+            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+          ]}
+        >
           <AppText variant="h1">{stats.favoriteMood}</AppText>
           <AppText>Most common mood</AppText>
         </View>
@@ -108,8 +130,8 @@ export const DashboardScreen = (_props: Props) => {
 
 const styles = StyleSheet.create({
   metricCard: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
+    borderRadius: 18,
+    borderWidth: 1,
     gap: 4,
     padding: 16,
     shadowColor: '#000',

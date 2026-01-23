@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { ScreenContainer } from '@components/common/ScreenContainer';
 import { AppText } from '@components/common/AppText';
 import { PrimaryButton } from '@components/common/PrimaryButton';
+import { StateContainer } from '@components/common/StateContainer';
 import { JournalEntryCard } from '@components/journal/JournalEntryCard';
 import { useJournalEntries } from '@hooks/useJournalEntries';
 import { useAuth } from '@hooks/useAuth';
@@ -13,7 +14,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 type Props = MainTabScreenProps<'JournalTab'>;
 
 export const JournalListScreen = (_props: Props) => {
-  const { entries, loading } = useJournalEntries();
+  const { entries, loading, error, retry } = useJournalEntries();
   const { user } = useAuth();
   const rootNavigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -32,15 +33,17 @@ export const JournalListScreen = (_props: Props) => {
         <AppText>{user?.email}</AppText>
       </View>
 
-      {loading ? (
-        <AppText>Loading entries...</AppText>
-      ) : entries.length === 0 ? (
-        <View style={styles.emptyState}>
-          <AppText variant="h3">No entries yet</AppText>
-          <AppText>Start your first voice journal to begin tracking recovery.</AppText>
-          <PrimaryButton label="Start New Entry" onPress={handleNewEntry} />
-        </View>
-      ) : (
+      <StateContainer
+        loading={loading}
+        error={error}
+        data={entries}
+        onRetry={retry}
+        loadingMessage="Loading your journal..."
+        emptyTitle="No entries yet"
+        emptyMessage="Start your first voice journal to begin tracking your recovery journey."
+        emptyActionLabel="Record First Entry"
+        onEmptyAction={handleNewEntry}
+      >
         <FlatList
           style={styles.list}
           data={entries}
@@ -52,17 +55,12 @@ export const JournalListScreen = (_props: Props) => {
           ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
           ListHeaderComponent={<PrimaryButton label="Start New Entry" onPress={handleNewEntry} />}
         />
-      )}
+      </StateContainer>
     </ScreenContainer>
   );
 };
 
 const styles = StyleSheet.create({
-  emptyState: {
-    alignItems: 'center',
-    gap: 12,
-    paddingVertical: 32,
-  },
   header: {
     marginBottom: 16,
   },
