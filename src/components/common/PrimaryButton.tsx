@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, ActivityIndicator } from 'react-native';
+import { TouchableOpacity, StyleSheet, ActivityIndicator, View } from 'react-native';
 
 import { useAppTheme } from '@hooks/useAppTheme';
 import { AppText } from './AppText';
@@ -22,46 +22,55 @@ export const PrimaryButton = ({
   const isDisabled = disabled || isLoading;
 
   return (
-    <Pressable
+    <TouchableOpacity
       accessibilityRole="button"
       accessibilityLabel={label}
       testID={testID}
       onPress={onPress}
-      style={({ pressed }) => [
+      activeOpacity={0.8}
+      disabled={isDisabled}
+      style={[
         styles.button,
         {
           backgroundColor: theme.colors.primary,
-          opacity: isDisabled ? 0.5 : pressed ? 0.9 : 1,
+          opacity: isDisabled ? 0.5 : 1,
         },
       ]}
-      disabled={isDisabled}
     >
       {isLoading ? (
-        <ActivityIndicator color={theme.colors.surface} />
+        <ActivityIndicator color="#FFFFFF" />
       ) : (
-        <AppText variant="body" style={styles.label} color={theme.colors.surface}>
-          {label}
-        </AppText>
+        <View style={styles.labelContainer}>
+          <AppText variant="body" style={styles.label} color="#FFFFFF">
+            {label}
+          </AppText>
+        </View>
       )}
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
-    borderRadius: 12,
-    height: 54,
+    borderRadius: 14,
+    elevation: 4,
+    height: 56,
     justifyContent: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
   },
   label: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '600',
-    letterSpacing: 0.2,
+    letterSpacing: 0.3,
+    textAlign: 'center',
+  },
+  labelContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

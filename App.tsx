@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler';
+import './global.css';
 import { useEffect } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Notifications from 'expo-notifications';

@@ -13,8 +13,7 @@ import type { MainTabParamList, OnboardingStackParamList, RootStackParamList } f
 import { LoadingScreen } from '@screens/LoadingScreen';
 import { useAppTheme } from '@hooks/useAppTheme';
 import { useAuth } from '@hooks/useAuth';
-import { WelcomeScreen } from '@screens/onboarding/WelcomeScreen';
-import { ValueSlidesScreen } from '@screens/onboarding/ValueSlidesScreen';
+import { OnboardingFlowScreen } from '@screens/onboarding/OnboardingFlowScreen';
 import { SignUpScreen } from '@screens/onboarding/SignUpScreen';
 import { EmailVerificationScreen } from '@screens/onboarding/EmailVerificationScreen';
 import { PaywallScreen } from '@screens/onboarding/PaywallScreen';
@@ -44,8 +43,7 @@ const OnboardingNavigator = ({
     screenOptions={{ headerShown: false }}
     initialRouteName={initialRouteName}
   >
-    <OnboardingStack.Screen name="Welcome" component={WelcomeScreen} />
-    <OnboardingStack.Screen name="ValueSlides" component={ValueSlidesScreen} />
+    <OnboardingStack.Screen name="Welcome" component={OnboardingFlowScreen} />
     <OnboardingStack.Screen name="SignUp" component={SignUpScreen} />
     <OnboardingStack.Screen name="EmailVerification" component={EmailVerificationScreen} />
     <OnboardingStack.Screen name="Paywall" component={PaywallScreen} />

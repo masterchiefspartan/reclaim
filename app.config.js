@@ -1,21 +1,46 @@
 export default {
   expo: {
-    name: 'RecoverVoiceApp',
+    name: 'Re:Claim',
     slug: 'RecoverVoiceApp',
     version: '1.0.0',
     orientation: 'portrait',
     icon: './assets/icon.png',
-    userInterfaceStyle: 'light',
+    userInterfaceStyle: 'automatic',
     newArchEnabled: true,
-    plugins: ['expo-secure-store'],
+    plugins: [
+      'expo-secure-store',
+      [
+        'expo-av',
+        {
+          microphonePermission:
+            'Re:Claim needs microphone access to record your voice journal entries.',
+        },
+      ],
+      [
+        'expo-notifications',
+        {
+          icon: './assets/icon.png',
+          color: '#C85A8C',
+        },
+      ],
+    ],
     splash: {
       image: './assets/splash-icon.png',
       resizeMode: 'contain',
-      backgroundColor: '#ffffff',
+      backgroundColor: '#FFF7FA',
     },
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'com.masterchiefspartan.recovervoice',
+      buildNumber: '1',
+      infoPlist: {
+        NSMicrophoneUsageDescription:
+          'Re:Claim needs microphone access to record your voice journal entries.',
+        UIBackgroundModes: ['audio'],
+      },
+      config: {
+        usesNonExemptEncryption: false,
+      },
     },
     android: {
       adaptiveIcon: {

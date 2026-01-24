@@ -18,7 +18,6 @@ export type RootStackParamList = {
 
 export type OnboardingStackParamList = {
   Welcome: undefined;
-  ValueSlides: undefined;
   SignUp: undefined;
   EmailVerification: undefined;
   Paywall: undefined;

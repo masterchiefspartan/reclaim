@@ -1,5 +1,5 @@
 export const palette = {
-  recoveryBlue: '#C85A8C',
+  recoveryBlue: '#B84A7C', // Darker pink for better contrast with white text
   progressGreen: '#4F9D9D',
   warmOrange: '#F4A07A',
   moodSad: '#E46C86',

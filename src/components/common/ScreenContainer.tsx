@@ -28,14 +28,16 @@ export const ScreenContainer = ({
     return (
       <ScrollView
         testID={testID}
+        style={[styles.container, { backgroundColor: theme.colors.background }]}
         contentContainerStyle={[
           styles.scrollContent,
           {
-            backgroundColor: theme.colors.background,
             paddingTop: insets.top + theme.spacing.lg,
             paddingHorizontal: horizontalPadding,
           },
         ]}
+        showsVerticalScrollIndicator={false}
+        bounces={true}
       >
         {content}
       </ScrollView>

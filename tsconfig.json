@@ -40,6 +40,6 @@
       "@navigation/*": ["src/navigation/*"]
     }
   },
-  "include": ["src/**/*", "App.tsx"],
+  "include": ["src/**/*", "App.tsx", "nativewind-env.d.ts"],
   "exclude": ["node_modules", ".expo", "dist", "build", "**/*.test.ts", "**/*.test.tsx"]
 }
