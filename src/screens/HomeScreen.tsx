@@ -27,6 +27,11 @@ export const HomeScreen = () => {
     return { streak, totalEntries, totalMinutes };
   }, [entries, profile?.stats?.streakDays]);
 
+  // Navigate to framework selection for guided journaling
+  const handleStartFrameworkJournal = useCallback(() => {
+    navigation.navigate('FrameworkSelection');
+  }, [navigation]);
+
   const handleStartRecording = useCallback(
     (mode: 'free' | 'guided' = 'free') => {
       navigation.navigate('VoiceJournal', { mode });
@@ -43,8 +48,10 @@ export const HomeScreen = () => {
   return (
     <ScreenContainer scrollable testID="home-screen">
       <View style={styles.header}>
-        <AppText variant="h2">Hi {profile?.displayName ?? 'friend'} 👋</AppText>
-        <AppText style={styles.subtitle}>Ready for your next recovery check-in?</AppText>
+        <AppText variant="h2">
+          Welcome back{profile?.displayName ? `, ${profile.displayName}` : ''}
+        </AppText>
+        <AppText style={styles.subtitle}>Ready to journal?</AppText>
       </View>
 
       <View style={styles.cardsRow}>
@@ -86,23 +93,25 @@ export const HomeScreen = () => {
 
       <View style={styles.ctaSection}>
         <PrimaryButton
-          label="Start Voice Journal"
-          onPress={() => handleStartRecording('free')}
+          label="Start Guided Journal"
+          onPress={handleStartFrameworkJournal}
           testID="start-recording-button"
         />
-        <PrimaryButton label="Guided Check-In" onPress={() => handleStartRecording('guided')} />
+        <PrimaryButton label="Quick Free Talk" onPress={() => handleStartRecording('free')} />
         <AppText style={styles.helperText}>
-          Real-time transcription and AI responses will appear after each recording.
+          Choose a framework for guided reflection, or just talk freely.
         </AppText>
       </View>
 
       <View style={styles.recentHeader}>
-        <AppText variant="h3">Recent Entries</AppText>
-        <AppText>See how you’re progressing this week.</AppText>
+        <AppText variant="h3">Your Recovery Journey</AppText>
+        <AppText style={styles.subtitle}>Track your progress over time</AppText>
       </View>
       <View style={styles.recentList}>
         {recentEntries.length === 0 ? (
-          <AppText>No entries yet. Start recording to see your history here.</AppText>
+          <AppText style={styles.emptyText}>
+            You have not started journaling yet. Tap a button above to record your first entry!
+          </AppText>
         ) : (
           recentEntries.map(entry => (
             <JournalEntryCard
@@ -144,12 +153,18 @@ const styles = StyleSheet.create({
     gap: 12,
     marginTop: 32,
   },
+  emptyText: {
+    lineHeight: 22,
+    opacity: 0.7,
+    textAlign: 'center',
+  },
   header: {
     gap: 8,
     marginTop: 16,
   },
   helperText: {
     opacity: 0.7,
+    textAlign: 'center',
   },
   recentHeader: {
     gap: 4,
@@ -158,8 +173,9 @@ const styles = StyleSheet.create({
   recentList: {
     gap: 12,
     marginTop: 16,
+    paddingBottom: 32,
   },
   subtitle: {
-    opacity: 0.8,
+    opacity: 0.7,
   },
 });

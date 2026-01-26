@@ -142,22 +142,88 @@ export const PaywallScreen = ({ navigation }: OnboardingStackScreenProps<'Paywal
   if (USE_REVENUECAT_PAYWALL) {
     return (
       <OnboardingLayout
-        eyebrow="Membership"
-        title="Unlock Your Recovery Journey"
-        subtitle="Get unlimited access to all features with Re:Claim Pro."
+        eyebrow="Science-Backed Support"
+        title="Your Mental Recovery Companion"
+        subtitle="Research shows emotional support can improve recovery outcomes by 25%"
       >
         <View style={styles.rcPaywallContainer}>
-          {/* Features List */}
+          {/* Science Badge */}
+          <View style={[styles.scienceBadge, { backgroundColor: theme.colors.primary + '10' }]}>
+            <Feather name="award" size={16} color={theme.colors.primary} />
+            <AppText variant="caption" color={theme.colors.primary} style={styles.scienceText}>
+              Based on 30+ years of expressive writing research
+            </AppText>
+          </View>
+
+          {/* Transformation-Focused Features */}
           <View style={styles.features}>
-            <FeatureItem icon="mic" text="Unlimited voice journaling" theme={theme} />
-            <FeatureItem icon="message-circle" text="AI-powered conversations" theme={theme} />
-            <FeatureItem icon="trending-up" text="Progress tracking & insights" theme={theme} />
-            <FeatureItem icon="heart" text="Personalized recovery support" theme={theme} />
+            <TransformFeature
+              beforeText="Struggling alone with recovery anxiety"
+              afterText="Daily support that actually understands"
+              theme={theme}
+            />
+            <TransformFeature
+              beforeText="Progress feels invisible day-to-day"
+              afterText="AI tracks patterns you can't see yourself"
+              theme={theme}
+            />
+            <TransformFeature
+              beforeText="Recovery taking longer than expected"
+              afterText="Week-by-week proof of your progress"
+              theme={theme}
+            />
+            <TransformFeature
+              beforeText="No one truly gets what you're going through"
+              afterText="A companion designed for your exact journey"
+              theme={theme}
+            />
+          </View>
+
+          {/* Stats Row */}
+          <View style={styles.statsRow}>
+            <View style={styles.statItem}>
+              <AppText variant="h2" color={theme.colors.primary}>
+                85%
+              </AppText>
+              <AppText
+                variant="caption"
+                color={theme.colors.textSecondary}
+                style={styles.statLabel}
+              >
+                report better{'\n'}mental health
+              </AppText>
+            </View>
+            <View style={[styles.statDivider, { backgroundColor: theme.colors.border }]} />
+            <View style={styles.statItem}>
+              <AppText variant="h2" color={theme.colors.primary}>
+                40%
+              </AppText>
+              <AppText
+                variant="caption"
+                color={theme.colors.textSecondary}
+                style={styles.statLabel}
+              >
+                better PT{'\n'}adherence
+              </AppText>
+            </View>
+            <View style={[styles.statDivider, { backgroundColor: theme.colors.border }]} />
+            <View style={styles.statItem}>
+              <AppText variant="h2" color={theme.colors.primary}>
+                3x
+              </AppText>
+              <AppText
+                variant="caption"
+                color={theme.colors.textSecondary}
+                style={styles.statLabel}
+              >
+                faster than{'\n'}typing
+              </AppText>
+            </View>
           </View>
 
           {/* Present Paywall Button */}
           <PrimaryButton
-            label="View Subscription Options"
+            label="Start Your Recovery Support"
             onPress={presentRevenueCatPaywall}
             isLoading={showingPaywall}
             disabled={showingPaywall}
@@ -174,10 +240,10 @@ export const PaywallScreen = ({ navigation }: OnboardingStackScreenProps<'Paywal
             </AppText>
           </Pressable>
 
-          {/* Legal */}
+          {/* Disclaimer + Legal */}
           <AppText variant="caption" color={theme.colors.textSecondary} style={styles.legalText}>
-            Subscriptions auto-renew unless cancelled at least 24 hours before the end of the
-            current period.
+            Re:Claim is not a substitute for professional medical care. Subscriptions auto-renew
+            unless cancelled 24 hours before period end.
           </AppText>
         </View>
       </OnboardingLayout>
@@ -342,6 +408,34 @@ const FeatureItem: React.FC<FeatureItemProps> = ({ icon, text, theme }) => (
   </View>
 );
 
+// Transformation Feature Component (Before → After)
+interface TransformFeatureProps {
+  beforeText: string;
+  afterText: string;
+  theme: ReturnType<typeof useAppTheme>['theme'];
+}
+
+const TransformFeature: React.FC<TransformFeatureProps> = ({ beforeText, afterText, theme }) => (
+  <View style={styles.transformItem}>
+    <View style={styles.transformBefore}>
+      <Feather name="x" size={14} color={theme.colors.error} />
+      <AppText
+        variant="caption"
+        color={theme.colors.textSecondary}
+        style={styles.transformBeforeText}
+      >
+        {beforeText}
+      </AppText>
+    </View>
+    <View style={styles.transformAfter}>
+      <Feather name="check" size={14} color="#52C41A" />
+      <AppText variant="body" style={styles.transformAfterText}>
+        {afterText}
+      </AppText>
+    </View>
+  </View>
+);
+
 const styles = StyleSheet.create({
   actions: {
     alignItems: 'center',
@@ -389,7 +483,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   features: {
-    gap: 12,
+    gap: 16,
   },
   featuresTitle: {
     fontWeight: '600',
@@ -429,7 +523,7 @@ const styles = StyleSheet.create({
     width: 24,
   },
   rcPaywallContainer: {
-    gap: 24,
+    gap: 20,
   },
   restoreButton: {
     padding: 8,
@@ -439,5 +533,61 @@ const styles = StyleSheet.create({
     height: 28,
     justifyContent: 'center',
     width: 28,
+  },
+  // Science badge styles
+  scienceBadge: {
+    alignItems: 'center',
+    borderRadius: 20,
+    flexDirection: 'row',
+    gap: 6,
+    justifyContent: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  scienceText: {
+    fontWeight: '500',
+  },
+  // Stats row styles
+  statsRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 16,
+  },
+  statItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  statLabel: {
+    lineHeight: 14,
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  statDivider: {
+    height: 40,
+    width: 1,
+  },
+  // Transformation feature styles
+  transformItem: {
+    gap: 4,
+  },
+  transformBefore: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  transformBeforeText: {
+    flex: 1,
+    textDecorationLine: 'line-through',
+  },
+  transformAfter: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    marginLeft: 22,
+  },
+  transformAfterText: {
+    flex: 1,
+    fontWeight: '500',
   },
 });

@@ -36,6 +36,9 @@ This document outlines the complete roadmap for launching Re:Claim on the Apple 
 
 ## Phase 2: Apple Developer Setup
 
+> **⏸️ PAUSED** - Return to this phase when core features are complete.
+> Reminder: Need to fill in `eas.json` with appleId, ascAppId, appleTeamId
+
 ### 2.1 Apple Developer Account
 
 - [ ] Apple Developer Program membership ($99/year)

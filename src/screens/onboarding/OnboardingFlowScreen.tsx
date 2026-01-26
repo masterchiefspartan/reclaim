@@ -5,7 +5,7 @@
  */
 
 import { useState } from 'react';
-import { View, StyleSheet, TextInput, ScrollView } from 'react-native';
+import { View, StyleSheet, TextInput, ScrollView, Alert } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 
@@ -13,7 +13,9 @@ import { AppText } from '@components/common/AppText';
 import { PrimaryButton } from '@components/common/PrimaryButton';
 import { OnboardingCard } from '@components/onboarding/OnboardingCard';
 import { useAppTheme } from '@hooks/useAppTheme';
+import { useAuth } from '@hooks/useAuth';
 import { useOnboarding } from '@hooks/useOnboarding';
+import { saveNewOnboardingProfile } from '@services/auth/authService';
 import {
   SITUATION_OPTIONS,
   WHAT_YOU_MISS_OPTIONS,
@@ -26,6 +28,7 @@ import type { OnboardingStackScreenProps } from '@navigation/types';
 export const OnboardingFlowScreen = ({ navigation }: OnboardingStackScreenProps<'Welcome'>) => {
   const { theme } = useAppTheme();
   const insets = useSafeAreaInsets();
+  const { user, refreshProfile } = useAuth();
   const {
     currentStep,
     profile,
@@ -42,8 +45,9 @@ export const OnboardingFlowScreen = ({ navigation }: OnboardingStackScreenProps<
     completeOnboarding,
   } = useOnboarding();
 
-  // Local state for multi-select
+  // Local state for multi-select and saving
   const [selectedMissItems, setSelectedMissItems] = useState<WhatTheyMiss[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleMissItemToggle = (item: WhatTheyMiss) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -54,13 +58,48 @@ export const OnboardingFlowScreen = ({ navigation }: OnboardingStackScreenProps<
     });
   };
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
     const completedProfile = completeOnboarding();
-    if (completedProfile) {
+    if (!completedProfile) {
+      Alert.alert('Missing Information', 'Please complete all steps before continuing.');
+      return;
+    }
+
+    if (!user) {
+      // Navigate to sign up screen instead of showing alert
+      navigation.navigate('SignUp');
+      return;
+    }
+
+    setIsSaving(true);
+
+    try {
+      // Save profile to Firestore
+      await saveNewOnboardingProfile(user.uid, {
+        displayName: completedProfile.name,
+        situation: completedProfile.situation,
+        situationDetail: completedProfile.situationDetail,
+        whatTheyMiss: completedProfile.whatTheyMiss,
+        customWhatTheyMiss: completedProfile.customWhatTheyMiss,
+        emotionalState: completedProfile.emotionalState,
+        supportNeed: completedProfile.supportNeed,
+      });
+
+      // Refresh the auth profile so status updates
+      await refreshProfile();
+
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      // TODO: Save profile to Firestore
-      // TODO: Navigate to first journal entry
+
+      // Navigate to paywall (subscription selection)
       navigation.navigate('Paywall');
+    } catch (error) {
+      console.error('[Onboarding] Failed to save profile:', error);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      Alert.alert('Something went wrong', "We couldn't save your profile. Please try again.", [
+        { text: 'OK' },
+      ]);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -219,6 +258,9 @@ export const OnboardingFlowScreen = ({ navigation }: OnboardingStackScreenProps<
   };
 
   const getButtonLabel = () => {
+    if (currentStep === 'ready' && isSaving) {
+      return 'Saving...';
+    }
     switch (currentStep) {
       case 'welcome':
         return "I'm Ready";
@@ -236,6 +278,8 @@ export const OnboardingFlowScreen = ({ navigation }: OnboardingStackScreenProps<
       goNext();
     }
   };
+
+  const isButtonDisabled = !canGoNext || isSaving;
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -289,7 +333,7 @@ export const OnboardingFlowScreen = ({ navigation }: OnboardingStackScreenProps<
           <PrimaryButton
             label={getButtonLabel()}
             onPress={handleButtonPress}
-            disabled={!canGoNext}
+            disabled={isButtonDisabled}
           />
         </View>
       </View>

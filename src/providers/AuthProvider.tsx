@@ -8,6 +8,7 @@ import {
   updateUserPermissions,
   upsertUserProfile,
 } from '@services/auth/authService';
+import { env } from '@/config/env';
 import type { UserPermissions, UserProfile } from '@/types/user';
 
 type AuthStatus =
@@ -32,6 +33,14 @@ export const AuthContext = createContext<AuthContextValue | undefined>(undefined
 const deriveStatus = (user: User | null, profile: UserProfile | null): AuthStatus => {
   if (!user) {
     return 'unauthenticated';
+  }
+
+  // DEV ONLY: Bypass ALL checks (email, onboarding, permissions) for testing
+  if (env.devBypassPaywall) {
+    console.log(
+      '[Auth] DEV BYPASS: Skipping email verification, onboarding, and permissions checks'
+    );
+    return 'authenticated';
   }
 
   if (!user.emailVerified) {

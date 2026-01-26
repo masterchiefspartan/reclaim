@@ -3,12 +3,21 @@ import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import type { NavigatorScreenParams } from '@react-navigation/native';
 
 import type { SubscriptionPlan } from '@/types/user';
+import type { FrameworkId, PerspectiveId } from '@/types/frameworks';
 
 export type RootStackParamList = {
   Loading: undefined;
   Onboarding: undefined;
   Main: NavigatorScreenParams<MainTabParamList>;
-  VoiceJournal: { mode: 'free' | 'guided' } | undefined;
+  FrameworkSelection: undefined;
+  VoiceJournal:
+    | {
+        mode: 'free' | 'guided';
+        frameworkId?: FrameworkId;
+        perspectiveId?: PerspectiveId;
+      }
+    | undefined;
+  ChatJournal: undefined;
   VoiceConversation: undefined;
   Processing: { entryId: string };
   AIResponse: { entryId: string };

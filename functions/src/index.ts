@@ -1,7 +1,11 @@
 import * as functions from 'firebase-functions/v1';
 import * as admin from 'firebase-admin';
 import { transcribeAudio } from './services/deepgram';
-import { generateAIResponse } from './services/claude';
+import {
+  generateAIResponse,
+  extractEnhancedInsights,
+  estimateRecoveryMetrics,
+} from './services/claude';
 import { generateSpeech } from './services/elevenlabs';
 import {
   generateOpeningMessage,
@@ -10,6 +14,7 @@ import {
 } from './services/conversationClaude';
 import {
   fetchEntriesForPeriod,
+  fetchEntriesForWeek,
   buildMoodDataPoints,
   calculateMoodDistribution,
   calculateAverageMoodScore,
@@ -19,7 +24,9 @@ import {
   collectSuggestedActions,
   calculateTotalVoiceMinutes,
   calculateStreakDays,
-  validateDays,
+  buildRecoveryProgress,
+  buildPatternInsights,
+  buildWeeklySummary,
 } from './services/analytics';
 import { JournalEntry, ProcessingStatus } from './types/shared';
 import {
@@ -27,11 +34,36 @@ import {
   MoodTrendsResponse,
   InsightsSummaryRequest,
   InsightsSummaryResponse,
+  RecoveryProgressRequest,
+  RecoveryProgressResponse,
+  PatternInsightsRequest,
+  PatternInsightsResponse,
+  WeeklySummaryRequest,
+  WeeklySummaryResponse,
 } from './types/analytics';
+import { RateLimiters, cleanupRateLimits } from './utils/rateLimiter';
+import {
+  requireAuth,
+  requireAppCheck,
+  validateString,
+  validateNumber,
+  validateArray,
+  validateConversationTurn,
+  sanitizeUserContext,
+  withSecureErrorHandling,
+  ValidatedConversationTurn,
+} from './utils/security';
 
 admin.initializeApp();
 const db = admin.firestore();
 const storage = admin.storage();
+
+// ============================================
+// Security Constants
+// ============================================
+
+const MAX_MESSAGE_LENGTH = 10000;
+const MAX_CONVERSATION_HISTORY = 50;
 
 // Helper to update status safely
 const updateStatus = async (entryId: string, updates: Partial<JournalEntry>) => {
@@ -96,8 +128,11 @@ export const onAudioUpload = functions.storage.object().onFinalize(async object 
 });
 
 /**
- * Trigger 2: AI Analysis
- * Listens for completed transcription -> Calls Claude -> Updates Firestore
+ * Trigger 2: AI Analysis (Enhanced)
+ * Listens for completed transcription -> Extracts insights + Generates response -> Updates Firestore
+ *
+ * This is where the magic happens for Re:Claim's value proposition.
+ * We extract rich recovery-focused insights from the transcript.
  */
 export const onEntryTranscribed = functions.firestore
   .document('journalEntries/{entryId}')
@@ -107,7 +142,6 @@ export const onEntryTranscribed = functions.firestore
     const entryId = context.params.entryId;
 
     // Idempotency check: Only run if status CHANGED to 'analyzing' (or transcription just completed)
-    // We use processingStage as the main orchestrator
     const shouldRun =
       (before.processingStage !== 'analyzing' && after.processingStage === 'analyzing') ||
       (before.transcriptionStatus !== 'completed' &&
@@ -124,17 +158,41 @@ export const onEntryTranscribed = functions.firestore
       const userDoc = await db.collection('users').doc(after.userId).get();
       const userData = userDoc.data();
 
-      const aiResponse = await generateAIResponse(after.transcript, {
-        recoveryType: userData?.recoveryContext?.injuryType,
+      const userContext = {
+        recoveryType: userData?.recoveryContext?.injuryDescription || userData?.recoveryContext?.injuryType,
         weeksIntoRecovery: userData?.recoveryContext?.weeksIntoRecovery,
-      });
+        userName: userData?.displayName,
+      };
 
-      await updateStatus(entryId, {
+      // Run all AI operations in parallel for speed
+      const [aiResponse, enhancedInsights, recoveryMetrics] = await Promise.all([
+        generateAIResponse(after.transcript, userContext),
+        extractEnhancedInsights(after.transcript, userContext),
+        estimateRecoveryMetrics(after.transcript, userContext),
+      ]);
+
+      // Prepare update with all extracted data
+      const updateData: Partial<JournalEntry> = {
         aiResponse,
         aiResponseStatus: 'completed',
-        processingStage: 'synthesizing', // Trigger next stage
-      });
-      console.log(`[2/3] Analysis complete for: ${entryId}`);
+        processingStage: 'synthesizing',
+        // Enhanced insights (new)
+        enhancedInsights,
+        // Recovery metrics (new) - merge with any user-provided metrics
+        recoveryMetrics: {
+          ...recoveryMetrics,
+          ...(after.recoveryMetrics || {}), // User-provided values take precedence
+        },
+        // Legacy insights for backward compatibility
+        insights: {
+          keyTopics: enhancedInsights.keyTopics,
+          sentiment: enhancedInsights.sentiment,
+          suggestedActions: enhancedInsights.suggestedActions,
+        },
+      };
+
+      await updateStatus(entryId, updateData);
+      console.log(`[2/3] Analysis complete for: ${entryId} (enhanced insights extracted)`);
     } catch (error) {
       await handleError(entryId, 'analyzing', error);
       await updateStatus(entryId, { aiResponseStatus: 'failed' });
@@ -204,15 +262,33 @@ export const onAiResponseGenerated = functions.firestore
 
 /**
  * Get streaming API tokens for voice conversation
- * Returns Deepgram and ElevenLabs API keys for client-side streaming
+ *
+ * SECURITY NOTES:
+ * - Rate limited to prevent abuse (5 requests per minute)
+ * - Tokens have short expiration (30 minutes)
+ * - Ideally, use Deepgram's temporary key API for production
+ * - Consider proxying requests through your backend for maximum security
+ *
+ * TODO for production: Replace with Deepgram temporary keys API
+ * https://developers.deepgram.com/docs/create-project-key
  */
-export const getStreamingTokens = functions.https.onCall(async (data, context) => {
-  // Verify authentication
-  if (!context.auth) {
-    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
-  }
+export const getStreamingTokens = functions.https.onCall(
+  withSecureErrorHandling(async (data, context) => {
+    // Verify authentication
+    const userId = requireAuth(context);
 
-  try {
+    // Optional: Verify App Check
+    requireAppCheck(context);
+
+    // Rate limit: 5 requests per minute (tokens should be cached client-side)
+    const rateLimitResult = await RateLimiters.veryStrict(userId);
+    if (!rateLimitResult.allowed) {
+      throw new functions.https.HttpsError(
+        'resource-exhausted',
+        'Too many token requests. Please wait before trying again.'
+      );
+    }
+
     // Get API keys from environment variables
     const deepgramApiKey = process.env.DEEPGRAM_API_KEY;
     const elevenLabsApiKey = process.env.ELEVENLABS_API_KEY;
@@ -222,30 +298,37 @@ export const getStreamingTokens = functions.https.onCall(async (data, context) =
       throw new functions.https.HttpsError('internal', 'Service configuration error');
     }
 
+    // Log token request for audit trail (without exposing keys)
+    console.log(`Streaming tokens requested by user: ${userId}`);
+
     // Return tokens with expiration (for client-side caching)
+    // Client should cache and reuse until expiration
     return {
       deepgramApiKey,
       elevenLabsApiKey,
       expiresAt: Date.now() + 30 * 60 * 1000, // 30 minutes
     };
-  } catch (error) {
-    console.error('Failed to get streaming tokens:', error);
-    throw new functions.https.HttpsError('internal', 'Failed to get streaming tokens');
-  }
-});
+  })
+);
 
 /**
  * Get opening message for a new voice conversation
  */
-export const getConversationOpening = functions.https.onCall(async (data, context) => {
-  // Verify authentication
-  if (!context.auth) {
-    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
-  }
+export const getConversationOpening = functions.https.onCall(
+  withSecureErrorHandling(async (data, context) => {
+    // Verify authentication
+    const userId = requireAuth(context);
+    requireAppCheck(context);
 
-  const userId = context.auth.uid;
+    // Rate limit: 10 requests per minute
+    const rateLimitResult = await RateLimiters.strict(userId);
+    if (!rateLimitResult.allowed) {
+      throw new functions.https.HttpsError(
+        'resource-exhausted',
+        'Too many requests. Please wait before trying again.'
+      );
+    }
 
-  try {
     // Fetch user context from Firestore
     const userDoc = await db.collection('users').doc(userId).get();
     const userData = userDoc.data();
@@ -267,20 +350,12 @@ export const getConversationOpening = functions.https.onCall(async (data, contex
       message: openingMessage,
       userContext,
     };
-  } catch (error) {
-    console.error('Failed to get conversation opening:', error);
-    throw new functions.https.HttpsError('internal', 'Failed to generate opening message');
-  }
-});
-
-interface ConversationTurn {
-  role: 'user' | 'assistant';
-  content: string;
-}
+  })
+);
 
 interface ConversationResponseData {
   currentMessage: string;
-  conversationHistory: ConversationTurn[];
+  conversationHistory: ValidatedConversationTurn[];
   userContext?: {
     userName?: string;
     recoveryType?: string;
@@ -292,37 +367,56 @@ interface ConversationResponseData {
  * Get AI response for ongoing voice conversation
  */
 export const getConversationResponseFn = functions.https.onCall(
-  async (data: ConversationResponseData, context) => {
+  withSecureErrorHandling(async (data: ConversationResponseData, context) => {
     // Verify authentication
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
-    }
+    const userId = requireAuth(context);
+    requireAppCheck(context);
 
-    const { currentMessage, conversationHistory, userContext } = data;
-
-    if (!currentMessage || typeof currentMessage !== 'string') {
-      throw new functions.https.HttpsError('invalid-argument', 'currentMessage is required');
-    }
-
-    try {
-      const response = await generateConversationResponse(
-        currentMessage,
-        conversationHistory || [],
-        userContext || {}
+    // Rate limit: 10 requests per minute (AI calls are expensive)
+    const rateLimitResult = await RateLimiters.strict(userId);
+    if (!rateLimitResult.allowed) {
+      throw new functions.https.HttpsError(
+        'resource-exhausted',
+        'Too many requests. Please wait before trying again.'
       );
-
-      return {
-        response,
-      };
-    } catch (error) {
-      console.error('Failed to get conversation response:', error);
-      throw new functions.https.HttpsError('internal', 'Failed to generate response');
     }
-  }
+
+    // Validate inputs
+    const currentMessage = validateString(data?.currentMessage, 'currentMessage', {
+      required: true,
+      minLength: 1,
+      maxLength: MAX_MESSAGE_LENGTH,
+    })!;
+
+    const conversationHistory = validateArray<ValidatedConversationTurn>(
+      data?.conversationHistory,
+      'conversationHistory',
+      {
+        required: false,
+        maxLength: MAX_CONVERSATION_HISTORY,
+        itemValidator: validateConversationTurn,
+      }
+    ) || [];
+
+    // Sanitize user context
+    const userContext = data?.userContext
+      ? sanitizeUserContext(data.userContext as Record<string, unknown>)
+      : {};
+
+    const response = await generateConversationResponse(
+      currentMessage,
+      conversationHistory,
+      userContext
+    );
+
+    return {
+      response,
+    };
+  })
 );
 
 interface SummaryRequestData {
-  conversationHistory: ConversationTurn[];
+  conversationHistory: ValidatedConversationTurn[];
   userContext?: {
     userName?: string;
     recoveryType?: string;
@@ -333,27 +427,41 @@ interface SummaryRequestData {
  * Generate summary of completed voice conversation
  */
 export const getConversationSummaryFn = functions.https.onCall(
-  async (data: SummaryRequestData, context) => {
+  withSecureErrorHandling(async (data: SummaryRequestData, context) => {
     // Verify authentication
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+    const userId = requireAuth(context);
+    requireAppCheck(context);
+
+    // Rate limit: 10 requests per minute
+    const rateLimitResult = await RateLimiters.strict(userId);
+    if (!rateLimitResult.allowed) {
+      throw new functions.https.HttpsError(
+        'resource-exhausted',
+        'Too many requests. Please wait before trying again.'
+      );
     }
 
-    const { conversationHistory, userContext } = data;
+    // Validate inputs
+    const conversationHistory = validateArray<ValidatedConversationTurn>(
+      data?.conversationHistory,
+      'conversationHistory',
+      {
+        required: true,
+        minLength: 1,
+        maxLength: MAX_CONVERSATION_HISTORY,
+        itemValidator: validateConversationTurn,
+      }
+    )!;
 
-    if (!conversationHistory || !Array.isArray(conversationHistory)) {
-      throw new functions.https.HttpsError('invalid-argument', 'conversationHistory is required');
-    }
+    // Sanitize user context
+    const userContext = data?.userContext
+      ? sanitizeUserContext(data.userContext as Record<string, unknown>)
+      : {};
 
-    try {
-      const summary = await generateConversationSummary(conversationHistory, userContext || {});
+    const summary = await generateConversationSummary(conversationHistory, userContext);
 
-      return summary;
-    } catch (error) {
-      console.error('Failed to generate conversation summary:', error);
-      throw new functions.https.HttpsError('internal', 'Failed to generate summary');
-    }
-  }
+    return summary;
+  })
 );
 
 // ============================================
@@ -365,52 +473,60 @@ export const getConversationSummaryFn = functions.https.onCall(
  * Used by the Dashboard to display mood charts and progress
  */
 export const getMoodTrends = functions.https.onCall(
-  async (data: MoodTrendsRequest, context): Promise<MoodTrendsResponse> => {
+  withSecureErrorHandling(async (data: MoodTrendsRequest, context): Promise<MoodTrendsResponse> => {
     // Verify authentication
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+    const userId = requireAuth(context);
+    requireAppCheck(context);
+
+    // Rate limit: 60 requests per minute (read operation)
+    const rateLimitResult = await RateLimiters.standard(userId);
+    if (!rateLimitResult.allowed) {
+      throw new functions.https.HttpsError(
+        'resource-exhausted',
+        'Too many requests. Please wait before trying again.'
+      );
     }
 
-    const userId = context.auth.uid;
-    const days = validateDays(data?.days);
+    // Validate days parameter
+    const days = validateNumber(data?.days, 'days', {
+      required: false,
+      min: 1,
+      max: 365,
+      integer: true,
+    }) || 30;
 
-    try {
-      // Fetch entries for the period
-      const entries = await fetchEntriesForPeriod(userId, days);
+    // Fetch entries for the period
+    const entries = await fetchEntriesForPeriod(userId, days);
 
-      // Calculate period boundaries
-      const periodEnd = new Date();
-      const periodStart = new Date();
-      periodStart.setDate(periodStart.getDate() - days);
+    // Calculate period boundaries
+    const periodEnd = new Date();
+    const periodStart = new Date();
+    periodStart.setDate(periodStart.getDate() - days);
 
-      // Check for insufficient data
-      const insufficientData = entries.length < 3;
+    // Check for insufficient data
+    const insufficientData = entries.length < 3;
 
-      // Build mood data points
-      const moodData = buildMoodDataPoints(entries);
+    // Build mood data points
+    const moodData = buildMoodDataPoints(entries);
 
-      // Calculate statistics
-      const moodDistribution = calculateMoodDistribution(entries);
-      const averageMoodScore = calculateAverageMoodScore(entries);
-      const trend = calculateTrend(entries);
+    // Calculate statistics
+    const moodDistribution = calculateMoodDistribution(entries);
+    const averageMoodScore = calculateAverageMoodScore(entries);
+    const trend = calculateTrend(entries);
 
-      return {
-        moodData,
-        averages: {
-          moodDistribution,
-          averageMoodScore,
-          totalEntries: entries.length,
-        },
-        trend,
-        insufficientData,
-        periodStart: periodStart.toISOString().split('T')[0],
-        periodEnd: periodEnd.toISOString().split('T')[0],
-      };
-    } catch (error) {
-      console.error('Failed to get mood trends:', error);
-      throw new functions.https.HttpsError('internal', 'Failed to retrieve mood trends');
-    }
-  }
+    return {
+      moodData,
+      averages: {
+        moodDistribution,
+        averageMoodScore,
+        totalEntries: entries.length,
+      },
+      trend,
+      insufficientData,
+      periodStart: periodStart.toISOString().split('T')[0],
+      periodEnd: periodEnd.toISOString().split('T')[0],
+    };
+  })
 );
 
 /**
@@ -418,16 +534,30 @@ export const getMoodTrends = functions.https.onCall(
  * Used by the Dashboard to display topics, sentiment, and stats
  */
 export const getInsightsSummary = functions.https.onCall(
-  async (data: InsightsSummaryRequest, context): Promise<InsightsSummaryResponse> => {
-    // Verify authentication
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
-    }
+  withSecureErrorHandling(
+    async (data: InsightsSummaryRequest, context): Promise<InsightsSummaryResponse> => {
+      // Verify authentication
+      const userId = requireAuth(context);
+      requireAppCheck(context);
 
-    const userId = context.auth.uid;
-    const days = validateDays(data?.days);
+      // Rate limit: 60 requests per minute (read operation)
+      const rateLimitResult = await RateLimiters.standard(userId);
+      if (!rateLimitResult.allowed) {
+        throw new functions.https.HttpsError(
+          'resource-exhausted',
+          'Too many requests. Please wait before trying again.'
+        );
+      }
 
-    try {
+      // Validate days parameter
+      const days =
+        validateNumber(data?.days, 'days', {
+          required: false,
+          min: 1,
+          max: 365,
+          integer: true,
+        }) || 30;
+
       // Fetch entries for the period
       const entries = await fetchEntriesForPeriod(userId, days);
 
@@ -454,9 +584,173 @@ export const getInsightsSummary = functions.https.onCall(
         averageMoodScore,
         insufficientData,
       };
-    } catch (error) {
-      console.error('Failed to get insights summary:', error);
-      throw new functions.https.HttpsError('internal', 'Failed to retrieve insights');
     }
-  }
+  )
 );
+
+// ============================================
+// NEW: Recovery Progress Analytics
+// ============================================
+
+/**
+ * Get recovery progress for a user
+ * Tracks mental/emotional recovery trajectory over time
+ */
+export const getRecoveryProgress = functions.https.onCall(
+  withSecureErrorHandling(
+    async (data: RecoveryProgressRequest, context): Promise<RecoveryProgressResponse> => {
+      // Verify authentication
+      const userId = requireAuth(context);
+      requireAppCheck(context);
+
+      // Rate limit: 60 requests per minute (read operation)
+      const rateLimitResult = await RateLimiters.standard(userId);
+      if (!rateLimitResult.allowed) {
+        throw new functions.https.HttpsError(
+          'resource-exhausted',
+          'Too many requests. Please wait before trying again.'
+        );
+      }
+
+      // Validate days parameter
+      const days =
+        validateNumber(data?.days, 'days', {
+          required: false,
+          min: 1,
+          max: 365,
+          integer: true,
+        }) || 30;
+
+      // Fetch entries for the period
+      const entries = await fetchEntriesForPeriod(userId, days);
+
+      // Build comprehensive recovery progress
+      const progress = await buildRecoveryProgress(userId, entries, days);
+
+      return progress;
+    }
+  )
+);
+
+/**
+ * Get pattern insights for a user
+ * AI-powered analysis of correlations, triggers, and recommendations
+ */
+export const getPatternInsights = functions.https.onCall(
+  withSecureErrorHandling(
+    async (data: PatternInsightsRequest, context): Promise<PatternInsightsResponse> => {
+      // Verify authentication
+      const userId = requireAuth(context);
+      requireAppCheck(context);
+
+      // Rate limit: 10 requests per minute (AI-powered, expensive)
+      const rateLimitResult = await RateLimiters.strict(userId);
+      if (!rateLimitResult.allowed) {
+        throw new functions.https.HttpsError(
+          'resource-exhausted',
+          'Too many requests. Please wait before trying again.'
+        );
+      }
+
+      // Validate days parameter
+      const days =
+        validateNumber(data?.days, 'days', {
+          required: false,
+          min: 1,
+          max: 365,
+          integer: true,
+        }) || 30;
+
+      // Fetch entries for the period
+      const entries = await fetchEntriesForPeriod(userId, days);
+
+      // Get user context for personalization
+      const userDoc = await db.collection('users').doc(userId).get();
+      const userData = userDoc.data();
+
+      const userContext = {
+        userName: userData?.displayName,
+        recoveryType: userData?.recoveryContext?.injuryDescription,
+      };
+
+      // Build pattern insights with AI
+      const insights = await buildPatternInsights(entries, userContext);
+
+      return insights;
+    }
+  )
+);
+
+/**
+ * Get weekly summary for a user
+ * AI-generated recap of the week's emotional journey
+ */
+export const getWeeklySummary = functions.https.onCall(
+  withSecureErrorHandling(
+    async (data: WeeklySummaryRequest, context): Promise<WeeklySummaryResponse> => {
+      // Verify authentication
+      const userId = requireAuth(context);
+      requireAppCheck(context);
+
+      // Rate limit: 10 requests per minute (AI-powered, expensive)
+      const rateLimitResult = await RateLimiters.strict(userId);
+      if (!rateLimitResult.allowed) {
+        throw new functions.https.HttpsError(
+          'resource-exhausted',
+          'Too many requests. Please wait before trying again.'
+        );
+      }
+
+      // Validate weekOffset parameter
+      const weekOffset =
+        validateNumber(data?.weekOffset, 'weekOffset', {
+          required: false,
+          min: 0,
+          max: 52,
+          integer: true,
+        }) || 0;
+
+      // Calculate week boundaries
+      const now = new Date();
+      const weekEnd = new Date(now);
+      weekEnd.setDate(weekEnd.getDate() - weekOffset * 7);
+      weekEnd.setHours(23, 59, 59, 999);
+
+      const weekStart = new Date(weekEnd);
+      weekStart.setDate(weekStart.getDate() - 6);
+      weekStart.setHours(0, 0, 0, 0);
+
+      // Fetch entries for the week
+      const entries = await fetchEntriesForWeek(userId, weekOffset);
+
+      // Get user context for personalization
+      const userDoc = await db.collection('users').doc(userId).get();
+      const userData = userDoc.data();
+
+      const userContext = {
+        userName: userData?.displayName,
+        recoveryType: userData?.recoveryContext?.injuryDescription,
+      };
+
+      // Build weekly summary with AI
+      const summary = await buildWeeklySummary(entries, weekStart, weekEnd, userContext);
+
+      return summary;
+    }
+  )
+);
+
+// ============================================
+// Scheduled Functions
+// ============================================
+
+/**
+ * Clean up old rate limit records daily
+ * Prevents unbounded storage growth
+ */
+export const cleanupRateLimitsScheduled = functions.pubsub
+  .schedule('every 24 hours')
+  .onRun(async () => {
+    const deleted = await cleanupRateLimits();
+    console.log(`Cleaned up ${deleted} old rate limit records`);
+  });

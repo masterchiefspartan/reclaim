@@ -19,6 +19,7 @@ import { getFirebaseAuth, getFirestoreDb } from '@services/firebase/client';
 import { withErrorHandling, silentAsync } from '@utils/errors';
 import type {
   EditableProfileFields,
+  NewOnboardingPayload,
   OnboardingPayload,
   UserPermissions,
   UserProfile,
@@ -120,7 +121,8 @@ export const upsertUserProfile = async (
 };
 
 /**
- * Saves onboarding profile data
+ * Saves onboarding profile data (legacy)
+ * @deprecated Use saveNewOnboardingProfile instead
  * @throws AppError on database errors
  */
 export const saveOnboardingProfile = async (
@@ -139,6 +141,38 @@ export const saveOnboardingProfile = async (
           plan: payload.plan,
           status: payload.plan === 'trial' ? 'trialing' : 'active',
         } satisfies UserSubscription,
+        updatedAt: serverTimestamp(),
+      });
+    },
+    { uid }
+  );
+};
+
+/**
+ * Saves the new agentic onboarding profile data
+ * Focuses on the person and their emotional journey
+ * @throws AppError on database errors
+ */
+export const saveNewOnboardingProfile = async (
+  uid: string,
+  payload: NewOnboardingPayload
+): Promise<void> => {
+  return withErrorHandling(
+    'saveNewOnboardingProfile',
+    async () => {
+      const ref = doc(getFirestoreDb(), usersCollection, uid);
+      await updateDoc(ref, {
+        displayName: payload.displayName,
+        recoveryProfile: {
+          situation: payload.situation,
+          situationDetail: payload.situationDetail || null,
+          whatTheyMiss: payload.whatTheyMiss,
+          customWhatTheyMiss: payload.customWhatTheyMiss || null,
+          emotionalState: payload.emotionalState,
+          supportNeed: payload.supportNeed,
+          completedAt: serverTimestamp(),
+        },
+        onboardingCompleted: true,
         updatedAt: serverTimestamp(),
       });
     },

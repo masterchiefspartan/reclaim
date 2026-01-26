@@ -1,11 +1,11 @@
 import { useCallback, useMemo, useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, TextInput, View, TouchableOpacity } from 'react-native';
 
 import { OnboardingLayout } from '@components/onboarding/OnboardingLayout';
 import { PrimaryButton } from '@components/common/PrimaryButton';
 import { AppText } from '@components/common/AppText';
 import type { OnboardingStackScreenProps } from '@navigation/types';
-import { signUpWithEmail } from '@services/auth/authService';
+import { signUpWithEmail, signInWithEmail } from '@services/auth/authService';
 import { useAuth } from '@hooks/useAuth';
 import { getUserFriendlyMessage } from '@utils/errors';
 import { useAppTheme } from '@hooks/useAppTheme';
@@ -17,6 +17,7 @@ export const SignUpScreen = ({ navigation }: OnboardingStackScreenProps<'SignUp'
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isSignInMode, setIsSignInMode] = useState(false);
   const { refreshProfile } = useAuth();
   const themedStyles = useMemo(
     () =>
@@ -55,7 +56,8 @@ export const SignUpScreen = ({ navigation }: OnboardingStackScreenProps<'SignUp'
       return 'Password must be at least 6 characters.';
     }
 
-    if (password !== confirmPassword) {
+    // Only check confirm password for sign up mode
+    if (!isSignInMode && password !== confirmPassword) {
       return 'Passwords do not match.';
     }
 
@@ -81,13 +83,42 @@ export const SignUpScreen = ({ navigation }: OnboardingStackScreenProps<'SignUp'
     } finally {
       setIsLoading(false);
     }
-  }, [confirmPassword, email, navigation, password, refreshProfile]);
+  }, [confirmPassword, email, navigation, password, refreshProfile, isSignInMode]);
+
+  const handleSignIn = useCallback(async () => {
+    const validationError = validateInputs();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setError('');
+      await signInWithEmail(email.trim(), password);
+      await refreshProfile();
+      // After sign in, auth state change will handle navigation
+    } catch (err) {
+      setError(getUserFriendlyMessage(err));
+    } finally {
+      setIsLoading(false);
+    }
+  }, [email, password, refreshProfile]);
+
+  const toggleMode = () => {
+    setIsSignInMode(!isSignInMode);
+    setError('');
+  };
 
   return (
     <OnboardingLayout
-      eyebrow="Create account"
-      title="Create your account"
-      subtitle="A few details to personalize your recovery experience."
+      eyebrow={isSignInMode ? 'Welcome back' : 'Create account'}
+      title={isSignInMode ? 'Sign in' : 'Create your account'}
+      subtitle={
+        isSignInMode
+          ? 'Sign in to continue your recovery journey.'
+          : 'A few details to personalize your recovery experience.'
+      }
     >
       <View style={styles.field}>
         <AppText>Email</AppText>
@@ -110,31 +141,34 @@ export const SignUpScreen = ({ navigation }: OnboardingStackScreenProps<'SignUp'
         <TextInput
           style={[styles.input, themedStyles.input]}
           secureTextEntry
-          placeholder="At least 6 characters"
+          placeholder={isSignInMode ? 'Your password' : 'At least 6 characters'}
           value={password}
           onChangeText={text => {
             setPassword(text);
             if (error) setError('');
           }}
-          autoComplete="password-new"
-          textContentType="newPassword"
+          autoComplete={isSignInMode ? 'password' : 'password-new'}
+          textContentType={isSignInMode ? 'password' : 'newPassword'}
         />
       </View>
-      <View style={styles.field}>
-        <AppText>Confirm Password</AppText>
-        <TextInput
-          style={[styles.input, themedStyles.input]}
-          secureTextEntry
-          placeholder="Repeat password"
-          value={confirmPassword}
-          onChangeText={text => {
-            setConfirmPassword(text);
-            if (error) setError('');
-          }}
-          autoComplete="password-new"
-          textContentType="newPassword"
-        />
-      </View>
+
+      {!isSignInMode && (
+        <View style={styles.field}>
+          <AppText>Confirm Password</AppText>
+          <TextInput
+            style={[styles.input, themedStyles.input]}
+            secureTextEntry
+            placeholder="Repeat password"
+            value={confirmPassword}
+            onChangeText={text => {
+              setConfirmPassword(text);
+              if (error) setError('');
+            }}
+            autoComplete="password-new"
+            textContentType="newPassword"
+          />
+        </View>
+      )}
 
       {error ? (
         <View style={[styles.errorContainer, themedStyles.errorContainer]}>
@@ -142,7 +176,17 @@ export const SignUpScreen = ({ navigation }: OnboardingStackScreenProps<'SignUp'
         </View>
       ) : null}
 
-      <PrimaryButton label="Create account" onPress={handleSignUp} isLoading={isLoading} />
+      <PrimaryButton
+        label={isSignInMode ? 'Sign in' : 'Create account'}
+        onPress={isSignInMode ? handleSignIn : handleSignUp}
+        isLoading={isLoading}
+      />
+
+      <TouchableOpacity onPress={toggleMode} style={styles.toggleButton}>
+        <AppText color={theme.colors.primary} style={styles.toggleText}>
+          {isSignInMode ? "Don't have an account? Create one" : 'Already have an account? Sign in'}
+        </AppText>
+      </TouchableOpacity>
     </OnboardingLayout>
   );
 };
@@ -164,5 +208,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     fontSize: 16,
     padding: 16,
+  },
+  toggleButton: {
+    alignItems: 'center',
+    paddingVertical: 12,
+  },
+  toggleText: {
+    fontSize: 15,
   },
 });

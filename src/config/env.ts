@@ -15,6 +15,12 @@ export interface AppEnv {
   // Note: AI service keys (Deepgram, Claude, ElevenLabs) are intentionally
   // NOT exposed client-side. They are only available in Firebase Functions.
   // Use getStreamingTokens() callable function to get temporary tokens.
+
+  // Firebase App Check - prevents unauthorized API access
+  appCheckSiteKey?: string;
+
+  // DEV ONLY: Skip paywall/onboarding for testing
+  devBypassPaywall?: boolean;
 }
 
 const getExtra = (): Record<string, string | undefined> => {
@@ -46,6 +52,10 @@ export const env: AppEnv = {
     appId: requireValue('EXPO_PUBLIC_FIREBASE_APP_ID'),
     measurementId: envValue('EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID'),
   },
+  // Firebase App Check site key (optional - enables App Check protection)
+  appCheckSiteKey: envValue('EXPO_PUBLIC_APP_CHECK_SITE_KEY'),
+  // DEV ONLY: Set to true to bypass paywall/onboarding
+  devBypassPaywall: envValue('EXPO_PUBLIC_DEV_BYPASS_PAYWALL') === 'true',
 };
 
 export const assertFirebaseConfig = () => {

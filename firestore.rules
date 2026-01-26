@@ -2,6 +2,10 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
+    // ============================================
+    // Helper Functions
+    // ============================================
+    
     function isAuthenticated() {
       return request.auth != null;
     }
@@ -10,39 +14,135 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
     
+    function isValidTimestamp(field) {
+      return field is timestamp;
+    }
+    
+    function isValidString(field, maxLen) {
+      return field is string && field.size() <= maxLen;
+    }
+    
+    function isValidStringOrNull(field, maxLen) {
+      return field == null || (field is string && field.size() <= maxLen);
+    }
+    
+    function isValidNumber(field, min, max) {
+      return field is number && field >= min && field <= max;
+    }
+    
+    function isValidNumberOrNull(field, min, max) {
+      return field == null || (field is number && field >= min && field <= max);
+    }
+    
+    // ============================================
+    // User Profiles
+    // ============================================
+    
     match /users/{userId} {
       allow read: if isOwner(userId);
-      allow write: if isOwner(userId);
+      
+      // Create: User can only create their own profile
+      allow create: if isOwner(userId) &&
+        request.resource.data.uid == userId &&
+        request.resource.data.keys().hasAll(['uid', 'email', 'createdAt']) &&
+        isValidString(request.resource.data.email, 320);
+      
+      // Update: User can only update their own profile with valid data
+      allow update: if isOwner(userId) &&
+        // Cannot change uid
+        request.resource.data.uid == resource.data.uid &&
+        // Validate optional fields
+        isValidStringOrNull(request.resource.data.displayName, 100) &&
+        isValidStringOrNull(request.resource.data.email, 320);
+      
+      // Delete: Users cannot delete their profile (admin only)
+      allow delete: if false;
     }
+    
+    // ============================================
+    // Journal Entries
+    // ============================================
     
     match /journalEntries/{entryId} {
+      // Read: Only owner can read their entries
       allow read: if isAuthenticated() && 
         resource.data.userId == request.auth.uid;
       
+      // Create: Validate required fields and ownership
+      // Allows additional fields: frameworkData, recoveryMetrics, structuredAnswers, etc.
       allow create: if isAuthenticated() && 
-        request.resource.data.userId == request.auth.uid;
+        request.resource.data.userId == request.auth.uid &&
+        // Required fields
+        request.resource.data.keys().hasAll(['userId', 'duration']) &&
+        // Validate types and ranges
+        isValidNumber(request.resource.data.duration, 0, 3600000) && // Max 1 hour in ms
+        // Validate optional string fields
+        isValidStringOrNull(request.resource.data.transcript, 50000) &&
+        isValidStringOrNull(request.resource.data.audioUrl, 2000) &&
+        isValidStringOrNull(request.resource.data.aiResponse, 10000) &&
+        // Validate mood score if present
+        isValidNumberOrNull(request.resource.data.moodScore, 1, 5);
       
+      // Update: Only owner can update, with validation
       allow update: if isAuthenticated() && 
-        resource.data.userId == request.auth.uid;
+        resource.data.userId == request.auth.uid &&
+        // Cannot change userId
+        request.resource.data.userId == resource.data.userId &&
+        // Validate optional fields on update
+        isValidStringOrNull(request.resource.data.transcript, 50000) &&
+        isValidStringOrNull(request.resource.data.aiResponse, 10000) &&
+        isValidNumberOrNull(request.resource.data.moodScore, 1, 5);
       
+      // Delete: Only owner can delete
       allow delete: if isAuthenticated() && 
         resource.data.userId == request.auth.uid;
     }
     
-    // Voice Conversations collection
+    // ============================================
+    // Voice Conversations
+    // ============================================
+    
     match /voiceConversations/{conversationId} {
+      // Read: Only owner can read their conversations
       allow read: if isAuthenticated() && 
         resource.data.userId == request.auth.uid;
       
+      // Create: Validate required fields and ownership
       allow create: if isAuthenticated() && 
-        request.resource.data.userId == request.auth.uid;
+        request.resource.data.userId == request.auth.uid &&
+        // Required fields
+        request.resource.data.keys().hasAll(['userId', 'startedAt', 'createdAt']) &&
+        // Validate duration if present
+        isValidNumberOrNull(request.resource.data.duration, 0, 3600) && // Max 1 hour in seconds
+        // Validate summary length if present
+        isValidStringOrNull(request.resource.data.summary, 5000);
       
+      // Update: Only owner can update, with validation
       allow update: if isAuthenticated() && 
-        resource.data.userId == request.auth.uid;
+        resource.data.userId == request.auth.uid &&
+        // Cannot change userId
+        request.resource.data.userId == resource.data.userId &&
+        // Validate optional fields
+        isValidStringOrNull(request.resource.data.summary, 5000) &&
+        isValidNumberOrNull(request.resource.data.moodAssessment, 1, 5);
       
+      // Delete: Only owner can delete
       allow delete: if isAuthenticated() && 
         resource.data.userId == request.auth.uid;
     }
+    
+    // ============================================
+    // Rate Limits (internal use)
+    // Only Cloud Functions can read/write
+    // ============================================
+    
+    match /_rateLimits/{document=**} {
+      allow read, write: if false; // Only accessible via Admin SDK
+    }
+    
+    // ============================================
+    // Default: Deny all other access
+    // ============================================
     
     match /{document=**} {
       allow read, write: if false;

@@ -24,10 +24,12 @@ import { JournalListScreen } from '@screens/journal/JournalListScreen';
 import { DashboardScreen } from '@screens/dashboard/DashboardScreen';
 import { SettingsScreen } from '@screens/settings/SettingsScreen';
 import { VoiceJournalScreen } from '@screens/voice/VoiceJournalScreen';
+import { ChatJournalScreen } from '@screens/voice/ChatJournalScreen';
 import { VoiceConversationScreen } from '@screens/voice/VoiceConversationScreen';
 import { AIResponseScreen } from '@screens/voice/AIResponseScreen';
 import { ProcessingScreen } from '@screens/voice/ProcessingScreen';
 import { CelebrationScreen } from '@screens/voice/CelebrationScreen';
+import { FrameworkSelectionScreen } from '@screens/voice/FrameworkSelectionScreen';
 import { EntryDetailScreen } from '@screens/journal/EntryDetailScreen';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -136,9 +138,19 @@ export const AppNavigator = () => {
               />
             )}
             <RootStack.Screen
+              name="FrameworkSelection"
+              component={FrameworkSelectionScreen}
+              options={{ presentation: 'modal' }}
+            />
+            <RootStack.Screen
               name="VoiceJournal"
               component={VoiceJournalScreen}
               options={{ presentation: 'modal' }}
+            />
+            <RootStack.Screen
+              name="ChatJournal"
+              component={ChatJournalScreen}
+              options={{ presentation: 'fullScreenModal', animation: 'slide_from_bottom' }}
             />
             <RootStack.Screen
               name="VoiceConversation"

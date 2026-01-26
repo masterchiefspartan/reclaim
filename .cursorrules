@@ -934,6 +934,20 @@ Before submitting code, ensure:
 - [ ] Firestore security rules tested
 - [ ] Secure storage used for sensitive data (not AsyncStorage)
 
+**Psychology Checklist (For UI Components):**
+- [ ] Respects user's vulnerable emotional state
+- [ ] Copy validates rather than minimizes struggle
+- [ ] Cognitive load appropriate for users in pain/on medication
+- [ ] CTA uses action + ownership language (not "Submit")
+- [ ] Error messages are blameless and actionable
+- [ ] Empty states are opportunity-framed
+- [ ] Loading states explain what's happening
+- [ ] Celebrations acknowledge user effort
+- [ ] No dark patterns (confirm-shaming, fake urgency)
+- [ ] Color psychology matches intended emotion
+- [ ] Works well in dark mode (night pain scenario)
+- [ ] Minimum 48pt touch targets (impaired motor control)
+
 ### Documentation Standards
 
 #### Code Comments
@@ -975,18 +989,104 @@ export const processTranscript = async (
 - ❌ Don't render plain text without `<Text>` wrapper
 - ❌ Don't swallow errors silently
 
+## Marketing Psychology Integration
+
+**CRITICAL: Every UI component must be designed with psychological principles in mind.**
+
+Reference: `@.cursor/MARKETING_PSYCHOLOGY.md` for complete guidelines.
+
+### Quick Psychology Checklist for Components
+
+Before creating ANY UI component, consider:
+
+1. **User State:** Recovery users are vulnerable, exhausted, isolated, and hopeful
+2. **Cognitive Load:** Minimize decisions - users have decision fatigue from medical choices
+3. **Emotional Validation:** Never minimize pain or struggle
+4. **Trust Building:** Warm but not saccharine, helpful but not pushy
+
+### Core Principles (Cialdini's 7)
+
+| Principle | Application |
+|-----------|-------------|
+| Reciprocity | Give value BEFORE asking (free first entry → subscription) |
+| Commitment | Small yeses lead to big yeses (micro-commitments in onboarding) |
+| Social Proof | "47,832 people journaled this week" - specific numbers |
+| Authority | Medical-adjacent design, research citations |
+| Liking | Beautiful UI, empathetic AI, warm copy |
+| Scarcity | ONLY legitimate urgency (recovery window is real) |
+| Unity | "Fellow recoverers", "we" language |
+
+### Copy Patterns
+
+```
+CTAs:
+✅ "Start my journey" (ownership, positive)
+✅ "Continue" (momentum, low friction)
+❌ "Submit" (clinical)
+❌ "Sign up now" (demanding)
+
+Error Messages:
+✅ "We couldn't save that right now. Your recording is safe."
+❌ "Error: Save failed"
+
+Success Messages:
+✅ "Entry saved ✨ You're building an amazing record."
+❌ "Saved successfully"
+
+Empty States:
+✅ "Your story starts here. Ready to begin?"
+❌ "No entries yet"
+```
+
+### Component Psychology Requirements
+
+**Buttons:**
+- Primary CTA: Warm color, rounded, 48pt minimum (impaired motor control)
+- Copy should include benefit, not just action
+- Never use "Submit" - use action + ownership words
+
+**Forms:**
+- Single field at a time for important data
+- Pre-fill when possible
+- Conversational labels ("What are you recovering from?" not "Recovery Type")
+
+**Loading States:**
+- Explain WHAT is happening ("Crafting your response...")
+- Show progress stages when possible
+- Never just "Loading..."
+
+**Empty States:**
+- Frame as opportunity, not failure
+- Always include clear next action
+- Use encouraging language
+
+**Celebrations:**
+- Every completed action deserves acknowledgment
+- Build investment by showing what they've built
+- Create anticipation for next session
+
+### Anti-Patterns (NEVER DO)
+
+- ❌ Confirm-shaming ("No thanks, I don't want to feel better")
+- ❌ Pain minimization ("It's not that bad!")
+- ❌ Toxic positivity ("Just think positive! 🌟")
+- ❌ Streak punishment ("You lost your streak 😢")
+- ❌ Fake urgency ("Only 2 spots left!")
+
 ### Cursor AI Instructions
 
 **ACCELERATION PRINCIPLES: Generate Complete Features, Not Components**
 
 When generating code:
 1. **SECURITY FIRST** - Always verify security checklist before generating code
-2. **GENERATE COMPLETE FEATURES** - Build entire features, not just components
+2. **PSYCHOLOGY AWARE** - Reference @.cursor/MARKETING_PSYCHOLOGY.md for all UI decisions
+3. **GENERATE COMPLETE FEATURES** - Build entire features, not just components
    - Example: "Create complete voice recording feature with recording, transcription, upload, error handling" NOT "Create a button"
-3. **USE COMPREHENSIVE PROMPTS** - Include all requirements in one prompt:
+4. **USE COMPREHENSIVE PROMPTS** - Include all requirements in one prompt:
    - Reference @BACKEND_PLAN.md for API contracts
    - Reference @APP_PLAN.md for UI requirements
    - Reference @ARCHITECTURE_DECISIONS.md for patterns
+   - Reference @.cursor/MARKETING_PSYCHOLOGY.md for psychology
    - Reference @codebase for existing patterns
 4. Always use TypeScript when possible
 5. Follow the file structure conventions
@@ -1021,7 +1121,12 @@ When generating code:
 - UI: Follow @APP_PLAN.md Section 5 specifications
 - Patterns: Follow @ARCHITECTURE_DECISIONS.md
 - Types: Use @types/journal.ts
-- Security: Follow @.cursorrules security checklist"
+- Security: Follow @.cursorrules security checklist
+- Psychology: Follow @.cursor/MARKETING_PSYCHOLOGY.md
+  - Empty state should be opportunity-framed
+  - Entry cards should show mood emoji first (emotional hook)
+  - Copy should use ownership language ('Your entries')
+  - Loading state should explain what's happening"
 ```
 
 When refactoring:

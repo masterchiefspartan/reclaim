@@ -114,6 +114,7 @@ const uploadAudio = async (uid: string, entryId: string, uri: string): Promise<U
 
 /**
  * Creates a new journal entry with audio upload
+ * Now supports recovery metrics for the mental side of recovery
  * @throws AppError with user-friendly message on failure
  */
 export const createJournalEntry = async (payload: CreateEntryPayload): Promise<string> => {
@@ -133,6 +134,10 @@ export const createJournalEntry = async (payload: CreateEntryPayload): Promise<s
         structuredAnswers: payload.structuredAnswers ?? null,
         // Include client-side transcript if available (will be overwritten by server)
         transcript: payload.transcript ?? null,
+        // Include user-provided recovery metrics (AI will augment these)
+        recoveryMetrics: payload.recoveryMetrics ?? null,
+        // Include framework data for guided journaling
+        frameworkData: payload.frameworkData ?? null,
         transcriptionStatus: 'pending',
         aiResponseStatus: 'pending',
         createdAt: serverTimestamp(),
@@ -175,6 +180,44 @@ export const updateEntryMood = async (
       });
     },
     { entryId, mood, moodScore }
+  );
+};
+
+/**
+ * Updates recovery metrics for an entry
+ * These metrics track the mental side of recovery: hope, energy, fear, identity
+ * @throws AppError with user-friendly message on failure
+ */
+export const updateEntryRecoveryMetrics = async (
+  entryId: string,
+  recoveryMetrics: {
+    hopeLevel?: number;
+    energyLevel?: number;
+    fearLevel?: number;
+    identityScore?: number;
+    connectionScore?: number;
+    sleepQuality?: number;
+    painLevel?: number;
+  }
+): Promise<void> => {
+  return withErrorHandling(
+    'updateEntryRecoveryMetrics',
+    async () => {
+      const refDoc = doc(getFirestoreDb(), journalCollection, entryId);
+
+      // Get existing metrics to merge
+      const snapshot = await getDoc(refDoc);
+      const existingMetrics = snapshot.data()?.recoveryMetrics || {};
+
+      await updateDoc(refDoc, {
+        recoveryMetrics: {
+          ...existingMetrics,
+          ...recoveryMetrics,
+        },
+        updatedAt: serverTimestamp(),
+      });
+    },
+    { entryId, recoveryMetrics }
   );
 };
 

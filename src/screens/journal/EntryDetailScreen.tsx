@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
-import { useRoute, RouteProp } from '@react-navigation/native';
+import { ScrollView, StyleSheet, TextInput, View, TouchableOpacity } from 'react-native';
+import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
 import { Audio } from 'expo-av';
+import { Feather } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText } from '@components/common/AppText';
 import { PrimaryButton } from '@components/common/PrimaryButton';
@@ -16,6 +18,8 @@ type RouteProps = RouteProp<RootStackParamList, 'EntryDetail'>;
 
 export const EntryDetailScreen = () => {
   const route = useRoute<RouteProps>();
+  const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
   const { entry, loading } = useJournalEntry(route.params?.entryId);
   const { theme } = useAppTheme();
   const [mood, setMood] = useState<MoodLevel>('neutral');
@@ -71,68 +75,95 @@ export const EntryDetailScreen = () => {
 
   if (loading || !entry) {
     return (
-      <View style={[styles.center, { backgroundColor: theme.colors.background }]}>
+      <View
+        style={[
+          styles.center,
+          { backgroundColor: theme.colors.background, paddingTop: insets.top },
+        ]}
+      >
         <AppText>Loading entry...</AppText>
       </View>
     );
   }
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <View style={styles.section}>
-        <AppText variant="h2">Entry Details</AppText>
-        <AppText>{statusBadge}</AppText>
-        <PrimaryButton label="Play audio" onPress={handlePlayAudio} />
+    <View
+      style={[styles.wrapper, { backgroundColor: theme.colors.background, paddingTop: insets.top }]}
+    >
+      {/* Header with back button */}
+      <View style={styles.header}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <Feather name="arrow-left" size={24} color={theme.colors.text} />
+        </TouchableOpacity>
+        <AppText variant="h3" style={styles.headerTitle}>
+          Entry Details
+        </AppText>
+        <View style={styles.backButton} />
       </View>
 
-      <View style={styles.section}>
-        <AppText variant="h3">Transcript</AppText>
-        <AppText>{entry.transcript ?? 'Transcription pending...'}</AppText>
-      </View>
-
-      <View style={styles.section}>
-        <AppText variant="h3">AI Response</AppText>
-        <AppText>{entry.aiResponse ?? 'Response will appear once ready.'}</AppText>
-      </View>
-
-      <View style={styles.section}>
-        <AppText variant="h3">Mood & Pain</AppText>
-        <MoodSelector value={mood} onChange={setMood} />
-        <View style={styles.inputRow}>
-          <View style={styles.inputGroup}>
-            <AppText>Mood Score (1-10)</AppText>
-            <TextInput
-              style={[
-                styles.input,
-                { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
-              ]}
-              keyboardType="numeric"
-              maxLength={2}
-              value={moodScore}
-              onChangeText={setMoodScore}
-            />
-          </View>
-          <View style={styles.inputGroup}>
-            <AppText>Pain (1-10)</AppText>
-            <TextInput
-              style={[
-                styles.input,
-                { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
-              ]}
-              keyboardType="numeric"
-              maxLength={2}
-              value={painLevel}
-              onChangeText={setPainLevel}
-            />
-          </View>
+      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+        <View style={styles.section}>
+          <AppText>{statusBadge}</AppText>
+          <PrimaryButton label="Play audio" onPress={handlePlayAudio} />
         </View>
-        <PrimaryButton label="Save mood" onPress={handleSaveMood} isLoading={isSavingMood} />
-      </View>
-    </ScrollView>
+
+        <View style={styles.section}>
+          <AppText variant="h3">Transcript</AppText>
+          <AppText>{entry.transcript ?? 'Transcription pending...'}</AppText>
+        </View>
+
+        <View style={styles.section}>
+          <AppText variant="h3">AI Response</AppText>
+          <AppText>{entry.aiResponse ?? 'Response will appear once ready.'}</AppText>
+        </View>
+
+        <View style={styles.section}>
+          <AppText variant="h3">Mood & Pain</AppText>
+          <MoodSelector value={mood} onChange={setMood} />
+          <View style={styles.inputRow}>
+            <View style={styles.inputGroup}>
+              <AppText>Mood Score (1-10)</AppText>
+              <TextInput
+                style={[
+                  styles.input,
+                  { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+                ]}
+                keyboardType="numeric"
+                maxLength={2}
+                value={moodScore}
+                onChangeText={setMoodScore}
+              />
+            </View>
+            <View style={styles.inputGroup}>
+              <AppText>Pain (1-10)</AppText>
+              <TextInput
+                style={[
+                  styles.input,
+                  { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+                ]}
+                keyboardType="numeric"
+                maxLength={2}
+                value={painLevel}
+                onChangeText={setPainLevel}
+              />
+            </View>
+          </View>
+          <PrimaryButton label="Save mood" onPress={handleSaveMood} isLoading={isSavingMood} />
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  backButton: {
+    padding: 8,
+    width: 40,
+  },
   center: {
     alignItems: 'center',
     flex: 1,
@@ -140,7 +171,21 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+  },
+  contentContainer: {
     padding: 24,
+    paddingBottom: 48,
+  },
+  header: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  headerTitle: {
+    flex: 1,
+    textAlign: 'center',
   },
   input: {
     borderRadius: 12,
@@ -158,5 +203,8 @@ const styles = StyleSheet.create({
   section: {
     gap: 12,
     marginBottom: 24,
+  },
+  wrapper: {
+    flex: 1,
   },
 });
