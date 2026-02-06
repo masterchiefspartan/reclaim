@@ -62,30 +62,44 @@ const MainTabs = () => {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarActiveTintColor: theme.colors.primary,
-        tabBarInactiveTintColor: theme.colors.muted,
+        tabBarInactiveTintColor: theme.colors.textMuted,
         tabBarStyle: {
           backgroundColor: theme.colors.surface,
+          borderTopColor: theme.colors.border,
+          borderTopWidth: 1,
+          height: 80,
+          paddingBottom: 20,
+          paddingTop: 8,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.05,
+          shadowRadius: 8,
+          elevation: 8,
         },
-        tabBarIcon: ({ color, size }) => {
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: '500',
+          marginTop: 4,
+        },
+        tabBarIconStyle: {
+          marginTop: 4,
+        },
+        tabBarIcon: ({ color }) => {
           const iconMap: Record<keyof MainTabParamList, keyof typeof Feather.glyphMap> = {
             HomeTab: 'home',
-            JournalTab: 'book-open',
-            DashboardTab: 'bar-chart-2',
-            SettingsTab: 'settings',
+            ExploreTab: 'compass',
+            JourneyTab: 'book',
+            ProfileTab: 'user',
           };
           const name = iconMap[route.name as keyof MainTabParamList] ?? 'circle';
-          return <Feather name={name} size={size} color={color} />;
+          return <Feather name={name} size={22} color={color} />;
         },
       })}
     >
       <Tabs.Screen name="HomeTab" component={HomeScreen} options={{ title: 'Home' }} />
-      <Tabs.Screen name="JournalTab" component={JournalListScreen} options={{ title: 'Journal' }} />
-      <Tabs.Screen
-        name="DashboardTab"
-        component={DashboardScreen}
-        options={{ title: 'Dashboard' }}
-      />
-      <Tabs.Screen name="SettingsTab" component={SettingsScreen} options={{ title: 'Settings' }} />
+      <Tabs.Screen name="ExploreTab" component={DashboardScreen} options={{ title: 'Explore' }} />
+      <Tabs.Screen name="JourneyTab" component={JournalListScreen} options={{ title: 'Journey' }} />
+      <Tabs.Screen name="ProfileTab" component={SettingsScreen} options={{ title: 'Profile' }} />
     </Tabs.Navigator>
   );
 };

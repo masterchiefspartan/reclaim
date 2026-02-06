@@ -1,3 +1,8 @@
+/**
+ * ProcessingScreen — Apple Glass Aesthetic
+ * ==========================================
+ * Minimal processing indicator with status text.
+ */
 import { useEffect, useMemo, useRef } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
@@ -52,12 +57,18 @@ export const ProcessingScreen = () => {
   if (!route.params?.entryId) {
     return (
       <View style={[styles.center, { backgroundColor: theme.colors.background }]}>
-        <AppText variant="h3">Missing entry</AppText>
-        <AppText>Please return to your journal and try again.</AppText>
-        <PrimaryButton
-          label="Go to Journal"
-          onPress={() => navigation.navigate('Main', { screen: 'JournalTab' })}
-        />
+        <AppText variant="title3" color={theme.colors.text}>
+          Missing entry
+        </AppText>
+        <AppText variant="subheadline" color={theme.colors.textSecondary}>
+          Please return to your journal and try again.
+        </AppText>
+        <View style={styles.buttonWrap}>
+          <PrimaryButton
+            label="Go to Journal"
+            onPress={() => navigation.navigate('Main', { screen: 'JourneyTab' })}
+          />
+        </View>
       </View>
     );
   }
@@ -65,12 +76,18 @@ export const ProcessingScreen = () => {
   if (error) {
     return (
       <View style={[styles.center, { backgroundColor: theme.colors.background }]}>
-        <AppText variant="h3">We hit a snag</AppText>
-        <AppText>{error}</AppText>
-        <PrimaryButton
-          label="Go to Journal"
-          onPress={() => navigation.navigate('Main', { screen: 'JournalTab' })}
-        />
+        <AppText variant="title3" color={theme.colors.text}>
+          We hit a snag
+        </AppText>
+        <AppText variant="subheadline" color={theme.colors.textSecondary}>
+          {error}
+        </AppText>
+        <View style={styles.buttonWrap}>
+          <PrimaryButton
+            label="Go to Journal"
+            onPress={() => navigation.navigate('Main', { screen: 'JourneyTab' })}
+          />
+        </View>
       </View>
     );
   }
@@ -78,22 +95,29 @@ export const ProcessingScreen = () => {
   return (
     <View style={[styles.center, { backgroundColor: theme.colors.background }]}>
       <ActivityIndicator size="large" color={theme.colors.primary} />
-      <AppText variant="h3">{loading ? 'Preparing your entry...' : statusMessage}</AppText>
-      <AppText style={styles.subtext}>This usually takes less than a minute.</AppText>
+      <AppText variant="title3" color={theme.colors.text} style={styles.statusText}>
+        {loading ? 'Preparing your entry...' : statusMessage}
+      </AppText>
+      <AppText variant="footnote" color={theme.colors.textTertiary}>
+        This usually takes less than a minute.
+      </AppText>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  buttonWrap: {
+    marginTop: 8,
+    width: '100%',
+  },
   center: {
     alignItems: 'center',
     flex: 1,
-    gap: 16,
+    gap: 12,
     justifyContent: 'center',
-    padding: 24,
+    paddingHorizontal: 32,
   },
-  subtext: {
-    opacity: 0.7,
+  statusText: {
     textAlign: 'center',
   },
 });

@@ -14,7 +14,7 @@ import type {
 export type { CustomerInfo, PurchasesPackage, PurchasesOffering, PurchasesStoreProduct };
 
 // Subscription plan types
-export type SubscriptionPlan = 'monthly' | 'yearly' | 'lifetime' | 'trial';
+export type SubscriptionPlan = 'monthly' | 'yearly' | 'trial';
 
 // Subscription status derived from RevenueCat
 export type SubscriptionStatus =

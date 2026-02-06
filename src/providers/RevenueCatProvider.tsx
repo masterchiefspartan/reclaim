@@ -29,6 +29,7 @@ import {
   setUserAttributes,
   addCustomerInfoUpdateListener,
 } from '@services/subscription/revenueCatService';
+import { syncSubscriptionToFirestore } from '@services/subscription/subscriptionSync';
 import { useAuth } from '@hooks/useAuth';
 import { logger } from '@utils/logger';
 import type {
@@ -161,11 +162,17 @@ export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children
 
     const unsubscribe = addCustomerInfoUpdateListener((customerInfo: CustomerInfo) => {
       logger.info('Customer info updated');
-      setSubscriptionState(parseCustomerInfo(customerInfo));
+      const newState = parseCustomerInfo(customerInfo);
+      setSubscriptionState(newState);
+
+      // Sync to Firestore
+      if (user?.uid) {
+        syncSubscriptionToFirestore(user.uid, newState);
+      }
     });
 
     return unsubscribe;
-  }, [isInitialized]);
+  }, [isInitialized, user?.uid]);
 
   // Fetch offerings when initialized
   useEffect(() => {
@@ -184,28 +191,37 @@ export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children
   }, [isInitialized]);
 
   // Purchase handler
-  const purchase = useCallback(async (pkg: PurchasesPackage): Promise<PurchaseResult> => {
-    setIsLoading(true);
-    setError(null);
+  const purchase = useCallback(
+    async (pkg: PurchasesPackage): Promise<PurchaseResult> => {
+      setIsLoading(true);
+      setError(null);
 
-    try {
-      const result = await purchasePackage(pkg);
+      try {
+        const result = await purchasePackage(pkg);
 
-      if (result.success && result.customerInfo) {
-        setSubscriptionState(parseCustomerInfo(result.customerInfo));
-      } else if (result.error && !result.userCancelled) {
-        setError(result.error);
+        if (result.success && result.customerInfo) {
+          const newState = parseCustomerInfo(result.customerInfo);
+          setSubscriptionState(newState);
+
+          // Sync to Firestore
+          if (user?.uid) {
+            syncSubscriptionToFirestore(user.uid, newState);
+          }
+        } else if (result.error && !result.userCancelled) {
+          setError(result.error);
+        }
+
+        return result;
+      } catch {
+        const errorMsg = 'An unexpected error occurred during purchase';
+        setError(errorMsg);
+        return { success: false, error: errorMsg };
+      } finally {
+        setIsLoading(false);
       }
-
-      return result;
-    } catch {
-      const errorMsg = 'An unexpected error occurred during purchase';
-      setError(errorMsg);
-      return { success: false, error: errorMsg };
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+    },
+    [user?.uid]
+  );
 
   // Restore handler
   const restore = useCallback(async (): Promise<RestoreResult> => {
@@ -216,7 +232,13 @@ export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children
       const result = await restorePurchases();
 
       if (result.success && result.customerInfo) {
-        setSubscriptionState(parseCustomerInfo(result.customerInfo));
+        const newState = parseCustomerInfo(result.customerInfo);
+        setSubscriptionState(newState);
+
+        // Sync to Firestore
+        if (user?.uid) {
+          syncSubscriptionToFirestore(user.uid, newState);
+        }
       } else if (result.error) {
         setError(result.error);
       }
@@ -229,7 +251,7 @@ export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [user?.uid]);
 
   // Refresh subscription state
   const refresh = useCallback(async () => {

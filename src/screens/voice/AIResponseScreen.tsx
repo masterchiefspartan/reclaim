@@ -1,10 +1,18 @@
+/**
+ * AIResponseScreen — Apple Glass Aesthetic
+ * ==========================================
+ * Clean AI response display with glass cards,
+ * mood selection, and Apple-style navigation.
+ */
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { Audio } from 'expo-av';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Feather } from '@expo/vector-icons';
 
 import { AppText } from '@components/common/AppText';
+import { GlassCard } from '@components/common/GlassCard';
 import { PrimaryButton } from '@components/common/PrimaryButton';
 import { MoodSelector } from '@components/common/MoodSelector';
 import { useJournalEntry } from '@hooks/useJournalEntries';
@@ -28,12 +36,8 @@ export const AIResponseScreen = () => {
   const soundRef = useRef<Audio.Sound | null>(null);
 
   useEffect(() => {
-    if (entry?.mood) {
-      setMood(entry.mood);
-    }
-    if (entry?.moodScore) {
-      setMoodScore(String(entry.moodScore));
-    }
+    if (entry?.mood) setMood(entry.mood);
+    if (entry?.moodScore) setMoodScore(String(entry.moodScore));
   }, [entry?.mood, entry?.moodScore]);
 
   useEffect(() => {
@@ -80,9 +84,11 @@ export const AIResponseScreen = () => {
 
   if (loading || !entry) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" />
-        <AppText>Loading entry...</AppText>
+      <View style={[styles.center, { backgroundColor: theme.colors.background }]}>
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+        <AppText variant="subheadline" color={theme.colors.textSecondary}>
+          Loading entry...
+        </AppText>
       </View>
     );
   }
@@ -94,10 +100,14 @@ export const AIResponseScreen = () => {
     entry.processingStage !== 'failed'
   ) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" />
-        <AppText variant="h3">{statusMessage}</AppText>
-        <AppText style={styles.subtext}>This usually takes about 30 seconds.</AppText>
+      <View style={[styles.center, { backgroundColor: theme.colors.background }]}>
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+        <AppText variant="title3" color={theme.colors.text}>
+          {statusMessage}
+        </AppText>
+        <AppText variant="footnote" color={theme.colors.textTertiary}>
+          This usually takes about 30 seconds.
+        </AppText>
       </View>
     );
   }
@@ -109,60 +119,92 @@ export const AIResponseScreen = () => {
     entry.aiResponseStatus === 'failed'
   ) {
     return (
-      <View style={styles.center}>
-        <AppText variant="h3" style={styles.errorText}>
+      <View style={[styles.center, { backgroundColor: theme.colors.background }]}>
+        <AppText variant="title3" color={theme.colors.text}>
           Something went wrong
         </AppText>
-        <AppText>We could not process your entry. You can still view it in your journal.</AppText>
-        <PrimaryButton
-          label="Go to Journal"
-          onPress={() => navigation.navigate('Main', { screen: 'JournalTab' })}
-        />
+        <AppText
+          variant="subheadline"
+          color={theme.colors.textSecondary}
+          style={styles.centeredText}
+        >
+          We couldn&apos;t process your entry. You can still view it in your journal.
+        </AppText>
+        <View style={styles.buttonWrap}>
+          <PrimaryButton
+            label="Go to Journal"
+            onPress={() => navigation.navigate('Main', { screen: 'JourneyTab' })}
+          />
+        </View>
       </View>
     );
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <AppText variant="h2">Your AI Companion</AppText>
+    <ScrollView
+      style={{ backgroundColor: theme.colors.background }}
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}
+    >
+      <AppText variant="largeTitle" color={theme.colors.text}>
+        Your AI Companion
+      </AppText>
 
-      <View
-        style={[
-          styles.responseCard,
-          { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
-        ]}
-      >
-        <AppText>{entry.aiResponse}</AppText>
-        {entry.aiResponseAudioUrl ? (
-          <PrimaryButton label="Listen to response" onPress={handlePlayResponse} />
-        ) : null}
-      </View>
+      {/* AI Response Card */}
+      <GlassCard style={styles.responseCard} blurEnabled={false}>
+        <AppText variant="body" color={theme.colors.text}>
+          {entry.aiResponse}
+        </AppText>
+        {entry.aiResponseAudioUrl && (
+          <PrimaryButton
+            label="Listen to response"
+            onPress={handlePlayResponse}
+            variant="secondary"
+            size="md"
+            icon={<Feather name="play" size={16} color={theme.colors.text} />}
+          />
+        )}
+      </GlassCard>
 
-      <View style={styles.section}>
-        <AppText variant="h3">How do you feel now?</AppText>
+      {/* Mood Section */}
+      <GlassCard style={styles.moodCard} blurEnabled={false}>
+        <AppText variant="headline" color={theme.colors.text}>
+          How do you feel now?
+        </AppText>
         <MoodSelector value={mood} onChange={setMood} />
         <TextInput
           style={[
             styles.input,
-            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+            {
+              backgroundColor: theme.colors.fillQuaternary,
+              color: theme.colors.text,
+            },
           ]}
           keyboardType="numeric"
           value={moodScore}
           onChangeText={setMoodScore}
           placeholder="Mood score (1-10)"
+          placeholderTextColor={theme.colors.textMuted}
         />
-        {saveError ? <AppText style={styles.errorText}>{saveError}</AppText> : null}
+        {saveError && (
+          <AppText variant="footnote" color={theme.colors.error}>
+            {saveError}
+          </AppText>
+        )}
         <PrimaryButton label="Save mood" onPress={handleSaveMood} isLoading={saving} />
-      </View>
+      </GlassCard>
 
-      <View style={styles.section}>
+      {/* Navigation */}
+      <View style={styles.navSection}>
         <PrimaryButton
-          label="View full entry"
+          label="View Full Entry"
           onPress={() => navigation.navigate('EntryDetail', { entryId: entry.id })}
+          variant="secondary"
         />
         <PrimaryButton
           label="Back to Home"
           onPress={() => navigation.navigate('Main', { screen: 'HomeTab' })}
+          variant="outline"
         />
       </View>
     </ScrollView>
@@ -170,36 +212,39 @@ export const AIResponseScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  buttonWrap: {
+    marginTop: 8,
+    width: '100%',
+  },
   center: {
     alignItems: 'center',
     flex: 1,
-    gap: 16,
+    gap: 12,
     justifyContent: 'center',
-    padding: 24,
+    paddingHorizontal: 32,
+  },
+  centeredText: {
+    textAlign: 'center',
   },
   container: {
-    gap: 24,
+    gap: 20,
     padding: 24,
-  },
-  errorText: {
-    color: '#ef4444',
+    paddingBottom: 48,
   },
   input: {
-    borderRadius: 12,
-    borderWidth: 1,
+    borderRadius: 10,
+    fontSize: 17,
     padding: 12,
   },
-  responseCard: {
-    borderRadius: 16,
-    borderWidth: 1,
-    gap: 12,
-    padding: 16,
-  },
-  section: {
+  moodCard: {
     gap: 16,
+    padding: 20,
   },
-  subtext: {
-    opacity: 0.6,
-    textAlign: 'center',
+  navSection: {
+    gap: 10,
+  },
+  responseCard: {
+    gap: 14,
+    padding: 20,
   },
 });

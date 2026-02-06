@@ -90,7 +90,11 @@ const PerspectiveCard: React.FC<PerspectiveCardProps> = ({
     >
       {/* Icon */}
       <View style={[styles.iconContainer, { backgroundColor: perspective.color + '20' }]}>
-        <Feather name={perspective.icon as keyof typeof Feather.glyphMap} size={24} color={perspective.color} />
+        <Feather
+          name={perspective.icon as keyof typeof Feather.glyphMap}
+          size={24}
+          color={perspective.color}
+        />
       </View>
 
       {/* Name */}

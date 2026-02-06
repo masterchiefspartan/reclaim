@@ -10,9 +10,8 @@ import { Platform } from 'react-native';
 // RevenueCat API Keys
 // In production, these should come from environment variables
 export const REVENUECAT_CONFIG = {
-  // Using the same key for both platforms in test mode
-  // In production, you may have different keys per platform
-  apiKey: 'test_WpZSjLTGsHDIlOOVKwYgNcyApYi',
+  // iOS Public API Key from RevenueCat dashboard
+  apiKey: 'appl_jsKgUeavhrnniCncrwsWsQRHRck',
 
   // Entitlement identifier - this is what grants access to premium features
   entitlementId: 'Re:Claim Pro',
@@ -34,11 +33,6 @@ export const PRODUCT_IDS = {
     android: 'reclaim_yearly',
     default: 'reclaim_yearly',
   }),
-  lifetime: Platform.select({
-    ios: 'reclaim_lifetime',
-    android: 'reclaim_lifetime',
-    default: 'reclaim_lifetime',
-  }),
 } as const;
 
 // Offering identifier (optional - uses default if not specified)
@@ -55,11 +49,6 @@ export const PRODUCT_DISPLAY_INFO = {
     title: 'Yearly',
     description: 'Save 50% with annual billing.',
     badge: 'Best Value',
-  },
-  lifetime: {
-    title: 'Lifetime',
-    description: 'One-time purchase. Access forever.',
-    badge: 'One Time',
   },
 } as const;
 

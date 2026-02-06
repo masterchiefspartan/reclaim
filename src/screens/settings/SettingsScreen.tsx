@@ -1,16 +1,21 @@
+/**
+ * SettingsScreen — Apple Glass Aesthetic
+ * ========================================
+ * Clean settings with glass cards, subscription management,
+ * and Apple-style grouped list rows.
+ */
 import { useCallback, useState } from 'react';
 import { Alert, Pressable, StyleSheet, Switch, TextInput, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import RevenueCatUI from 'react-native-purchases-ui';
 
 import { ScreenContainer } from '@components/common/ScreenContainer';
+import { GlassCard } from '@components/common/GlassCard';
 import { AppText } from '@components/common/AppText';
 import { PrimaryButton } from '@components/common/PrimaryButton';
 import { useAuth } from '@hooks/useAuth';
 import { useSubscription } from '@hooks/useSubscription';
 import { updateUserProfile } from '@services/auth/authService';
 import { useAppTheme } from '@hooks/useAppTheme';
-import { logger } from '@utils/logger';
 
 export const SettingsScreen = () => {
   const { user, profile, signOut, refreshProfile } = useAuth();
@@ -62,18 +67,6 @@ export const SettingsScreen = () => {
     );
   }, []);
 
-  // Open RevenueCat Customer Center
-  const handleOpenCustomerCenter = useCallback(async () => {
-    try {
-      await RevenueCatUI.presentCustomerCenter();
-    } catch (error) {
-      logger.error('Failed to open Customer Center', { error });
-      // Fallback to store management
-      openManagement();
-    }
-  }, [openManagement]);
-
-  // Format expiration date
   const formattedExpiration = expirationDate
     ? expirationDate.toLocaleDateString('en-US', {
         year: 'numeric',
@@ -82,160 +75,194 @@ export const SettingsScreen = () => {
       })
     : null;
 
-  // Get subscription status text
   const getSubscriptionStatusText = () => {
     if (!isSubscribed && !isTrialing) return 'No active subscription';
     if (isTrialing) return 'Free Trial';
     if (status === 'canceled') return 'Canceled (active until expiration)';
-    if (status === 'grace_period') return 'Payment Issue - Please update payment';
+    if (status === 'grace_period') return 'Payment Issue';
     return 'Active';
   };
 
   return (
     <ScreenContainer scrollable testID="settings-screen">
-      <AppText variant="h2">Settings</AppText>
+      <AppText variant="largeTitle" color={theme.colors.text} style={styles.screenTitle}>
+        Settings
+      </AppText>
 
-      {/* Subscription Section */}
+      {/* Subscription */}
       <View style={styles.section}>
-        <AppText variant="h3">Subscription</AppText>
-
-        <View
-          style={[
-            styles.subscriptionCard,
-            { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
-          ]}
-        >
-          {/* Status */}
+        <AppText variant="footnote" color={theme.colors.textTertiary} style={styles.sectionLabel}>
+          SUBSCRIPTION
+        </AppText>
+        <GlassCard style={styles.cardContent} blurEnabled={false}>
           <View style={styles.subscriptionRow}>
-            <AppText color={theme.colors.textSecondary}>Status</AppText>
+            <AppText variant="subheadline" color={theme.colors.textSecondary}>
+              Status
+            </AppText>
             <View style={styles.statusBadge}>
               <View
                 style={[
                   styles.statusDot,
                   {
                     backgroundColor:
-                      isSubscribed || isTrialing ? theme.colors.secondary : theme.colors.error,
+                      isSubscribed || isTrialing ? theme.colors.success : theme.colors.textMuted,
                   },
                 ]}
               />
               <AppText
-                variant="body"
-                color={isSubscribed || isTrialing ? theme.colors.secondary : theme.colors.error}
+                variant="subheadline"
+                color={
+                  isSubscribed || isTrialing ? theme.colors.success : theme.colors.textSecondary
+                }
               >
                 {getSubscriptionStatusText()}
               </AppText>
             </View>
           </View>
 
-          {/* Expiration */}
           {formattedExpiration && (
-            <View style={styles.subscriptionRow}>
-              <AppText color={theme.colors.textSecondary}>
-                {willRenew ? 'Renews' : 'Expires'}
-              </AppText>
-              <AppText>{formattedExpiration}</AppText>
-            </View>
+            <>
+              <View style={[styles.divider, { backgroundColor: theme.colors.divider }]} />
+              <View style={styles.subscriptionRow}>
+                <AppText variant="subheadline" color={theme.colors.textSecondary}>
+                  {willRenew ? 'Renews' : 'Expires'}
+                </AppText>
+                <AppText variant="subheadline" color={theme.colors.text}>
+                  {formattedExpiration}
+                </AppText>
+              </View>
+            </>
           )}
 
-          {/* Manage Subscription Button */}
+          <View style={[styles.divider, { backgroundColor: theme.colors.divider }]} />
+
           <Pressable
-            onPress={handleOpenCustomerCenter}
-            style={[styles.manageButton, { backgroundColor: theme.colors.muted }]}
+            onPress={openManagement}
+            style={styles.manageRow}
+            accessibilityRole="button"
+            accessibilityLabel="Manage Subscription"
           >
-            <Feather name="credit-card" size={18} color={theme.colors.text} />
-            <AppText style={styles.manageButtonText}>Manage Subscription</AppText>
-            <Feather name="chevron-right" size={18} color={theme.colors.textSecondary} />
+            <Feather name="credit-card" size={18} color={theme.colors.primary} />
+            <AppText variant="subheadline" color={theme.colors.primary} style={styles.manageText}>
+              Manage Subscription
+            </AppText>
+            <Feather name="chevron-right" size={16} color={theme.colors.textMuted} />
           </Pressable>
-        </View>
+        </GlassCard>
       </View>
 
-      {/* Profile Section */}
+      {/* Profile */}
       <View style={styles.section}>
-        <AppText variant="h3">Profile</AppText>
-        <View style={styles.infoRow}>
-          <Feather name="mail" size={18} color={theme.colors.textSecondary} />
-          <AppText color={theme.colors.textSecondary}>{profile?.email}</AppText>
-        </View>
-        <TextInput
-          style={[
-            styles.input,
-            {
-              backgroundColor: theme.colors.surface,
-              borderColor: theme.colors.border,
-              color: theme.colors.text,
-            },
-          ]}
-          placeholder="Display name"
-          placeholderTextColor={theme.colors.textSecondary}
-          value={displayName}
-          onChangeText={setDisplayName}
-        />
-        <PrimaryButton label="Save Profile" onPress={handleSaveProfile} isLoading={isSaving} />
-      </View>
-
-      {/* Notifications Section */}
-      <View style={styles.section}>
-        <AppText variant="h3">Notifications</AppText>
-        <View style={styles.row}>
-          <View style={styles.rowContent}>
-            <AppText>Daily check-in reminders</AppText>
-            <AppText variant="caption" color={theme.colors.textSecondary}>
-              Get reminded to journal each day
+        <AppText variant="footnote" color={theme.colors.textTertiary} style={styles.sectionLabel}>
+          PROFILE
+        </AppText>
+        <GlassCard style={styles.cardContent} blurEnabled={false}>
+          <View style={styles.infoRow}>
+            <Feather name="mail" size={16} color={theme.colors.textTertiary} />
+            <AppText variant="subheadline" color={theme.colors.textSecondary}>
+              {profile?.email}
             </AppText>
           </View>
-          <Switch
-            value={notificationsEnabled}
-            onValueChange={handleToggleNotifications}
-            trackColor={{ true: theme.colors.primary }}
+          <View style={[styles.divider, { backgroundColor: theme.colors.divider }]} />
+          <TextInput
+            style={[
+              styles.input,
+              {
+                backgroundColor: theme.colors.fillQuaternary,
+                color: theme.colors.text,
+              },
+            ]}
+            placeholder="Display name"
+            placeholderTextColor={theme.colors.textMuted}
+            value={displayName}
+            onChangeText={setDisplayName}
           />
-        </View>
+          <PrimaryButton
+            label="Save Profile"
+            onPress={handleSaveProfile}
+            isLoading={isSaving}
+            size="md"
+          />
+        </GlassCard>
       </View>
 
-      {/* Support Section */}
+      {/* Notifications */}
       <View style={styles.section}>
-        <AppText variant="h3">Support</AppText>
-
-        <SettingsLink
-          icon="help-circle"
-          label="Help & FAQ"
-          onPress={() => Alert.alert('Coming Soon', 'Help documentation coming soon.')}
-          theme={theme}
-        />
-
-        <SettingsLink
-          icon="message-square"
-          label="Contact Support"
-          onPress={() => Alert.alert('Contact Support', 'Email us at support@reclaim.app')}
-          theme={theme}
-        />
-
-        <SettingsLink
-          icon="file-text"
-          label="Privacy Policy"
-          onPress={() => Alert.alert('Coming Soon', 'Privacy policy link coming soon.')}
-          theme={theme}
-        />
-
-        <SettingsLink
-          icon="book"
-          label="Terms of Service"
-          onPress={() => Alert.alert('Coming Soon', 'Terms of service link coming soon.')}
-          theme={theme}
-        />
+        <AppText variant="footnote" color={theme.colors.textTertiary} style={styles.sectionLabel}>
+          NOTIFICATIONS
+        </AppText>
+        <GlassCard style={styles.cardContent} blurEnabled={false}>
+          <View style={styles.switchRow}>
+            <View style={styles.switchContent}>
+              <AppText variant="body" color={theme.colors.text}>
+                Daily check-in reminders
+              </AppText>
+              <AppText variant="footnote" color={theme.colors.textTertiary}>
+                Get reminded to journal each day
+              </AppText>
+            </View>
+            <Switch
+              value={notificationsEnabled}
+              onValueChange={handleToggleNotifications}
+              trackColor={{ true: theme.colors.primary, false: theme.colors.fillTertiary }}
+            />
+          </View>
+        </GlassCard>
       </View>
 
-      {/* Sign Out Section */}
+      {/* Support */}
       <View style={styles.section}>
-        <PrimaryButton label="Sign Out" onPress={handleSignOut} />
-        <AppText variant="caption" color={theme.colors.textSecondary} style={styles.versionText}>
+        <AppText variant="footnote" color={theme.colors.textTertiary} style={styles.sectionLabel}>
+          SUPPORT
+        </AppText>
+        <GlassCard style={styles.linkListCard} blurEnabled={false}>
+          <SettingsLink
+            icon="help-circle"
+            label="Help & FAQ"
+            onPress={() => Alert.alert('Coming Soon', 'Help documentation coming soon.')}
+            theme={theme}
+          />
+          <View style={[styles.divider, { backgroundColor: theme.colors.divider }]} />
+          <SettingsLink
+            icon="message-square"
+            label="Contact Support"
+            onPress={() => Alert.alert('Contact Support', 'Email us at support@reclaim.app')}
+            theme={theme}
+          />
+          <View style={[styles.divider, { backgroundColor: theme.colors.divider }]} />
+          <SettingsLink
+            icon="file-text"
+            label="Privacy Policy"
+            onPress={() => Alert.alert('Coming Soon', 'Privacy policy link coming soon.')}
+            theme={theme}
+          />
+          <View style={[styles.divider, { backgroundColor: theme.colors.divider }]} />
+          <SettingsLink
+            icon="book"
+            label="Terms of Service"
+            onPress={() => Alert.alert('Coming Soon', 'Terms of service link coming soon.')}
+            theme={theme}
+          />
+        </GlassCard>
+      </View>
+
+      {/* Sign Out */}
+      <View style={styles.section}>
+        <PrimaryButton label="Sign Out" onPress={handleSignOut} variant="secondary" />
+        <AppText variant="caption2" color={theme.colors.textMuted} style={styles.versionText}>
           Re:Claim v1.0.0
         </AppText>
       </View>
+
+      <View style={styles.bottomPad} />
     </ScreenContainer>
   );
 };
 
-// Settings Link Component
+// ============================================
+// Sub-Components
+// ============================================
+
 interface SettingsLinkProps {
   icon: keyof typeof Feather.glyphMap;
   label: string;
@@ -243,64 +270,73 @@ interface SettingsLinkProps {
   theme: ReturnType<typeof useAppTheme>['theme'];
 }
 
-const SettingsLink: React.FC<SettingsLinkProps> = ({ icon, label, onPress, theme }) => (
+const SettingsLink = ({ icon, label, onPress, theme }: SettingsLinkProps) => (
   <Pressable
     onPress={onPress}
-    style={[styles.settingsLink, { borderBottomColor: theme.colors.border }]}
+    style={({ pressed }) => [styles.linkRow, pressed && { opacity: 0.6 }]}
+    accessibilityRole="button"
   >
-    <Feather name={icon} size={20} color={theme.colors.textSecondary} />
-    <AppText style={styles.settingsLinkText}>{label}</AppText>
-    <Feather name="chevron-right" size={20} color={theme.colors.textSecondary} />
+    <Feather name={icon} size={18} color={theme.colors.textSecondary} />
+    <AppText variant="body" color={theme.colors.text} style={styles.linkText}>
+      {label}
+    </AppText>
+    <Feather name="chevron-right" size={16} color={theme.colors.textMuted} />
   </Pressable>
 );
 
 const styles = StyleSheet.create({
+  bottomPad: {
+    height: 40,
+  },
+  cardContent: {
+    gap: 12,
+    padding: 16,
+  },
+  divider: {
+    height: 0.5,
+  },
   infoRow: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: 8,
   },
   input: {
-    borderRadius: 12,
-    borderWidth: 1,
-    fontSize: 16,
+    borderRadius: 10,
+    fontSize: 17,
     padding: 12,
   },
-  manageButton: {
-    alignItems: 'center',
-    borderRadius: 8,
-    flexDirection: 'row',
-    gap: 10,
-    marginTop: 4,
-    padding: 12,
+  linkListCard: {
+    padding: 0,
   },
-  manageButtonText: {
-    flex: 1,
-    fontWeight: '500',
-  },
-  row: {
+  linkRow: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: 12,
-    justifyContent: 'space-between',
-  },
-  rowContent: {
-    flex: 1,
-    gap: 2,
-  },
-  section: {
-    gap: 12,
-    marginTop: 24,
-  },
-  settingsLink: {
-    alignItems: 'center',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    flexDirection: 'row',
-    gap: 12,
+    paddingHorizontal: 16,
     paddingVertical: 14,
   },
-  settingsLinkText: {
+  linkText: {
     flex: 1,
+  },
+  manageRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  manageText: {
+    flex: 1,
+  },
+  screenTitle: {
+    paddingTop: 8,
+  },
+  section: {
+    marginTop: 28,
+  },
+  sectionLabel: {
+    fontWeight: '600',
+    letterSpacing: 1,
+    marginBottom: 8,
+    paddingHorizontal: 4,
   },
   statusBadge: {
     alignItems: 'center',
@@ -312,16 +348,19 @@ const styles = StyleSheet.create({
     height: 8,
     width: 8,
   },
-  subscriptionCard: {
-    borderRadius: 12,
-    borderWidth: 1,
-    gap: 12,
-    padding: 16,
-  },
   subscriptionRow: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  switchContent: {
+    flex: 1,
+    gap: 2,
+  },
+  switchRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 12,
   },
   versionText: {
     marginTop: 8,

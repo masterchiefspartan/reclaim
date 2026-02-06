@@ -1,0 +1,1 @@
+export { CalendarStrip } from './CalendarStrip';

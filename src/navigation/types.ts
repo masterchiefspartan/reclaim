@@ -36,9 +36,9 @@ export type OnboardingStackParamList = {
 
 export type MainTabParamList = {
   HomeTab: undefined;
-  JournalTab: undefined;
-  DashboardTab: undefined;
-  SettingsTab: undefined;
+  ExploreTab: undefined;
+  JourneyTab: undefined;
+  ProfileTab: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

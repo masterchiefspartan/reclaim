@@ -1,17 +1,17 @@
 /**
- * Paywall Screen
- *
- * Displays subscription options using RevenueCat's paywall UI.
- * Falls back to custom UI if RevenueCat paywall is unavailable.
+ * PaywallScreen — Apple Glass Aesthetic
+ * =======================================
+ * Custom paywall with glass cards, product selection,
+ * and transformation-focused copy.
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, Pressable, StyleSheet, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import RevenueCatUI, { PAYWALL_RESULT } from 'react-native-purchases-ui';
 
 import { OnboardingLayout } from '@components/onboarding/OnboardingLayout';
 import { AppText } from '@components/common/AppText';
+import { GlassCard } from '@components/common/GlassCard';
 import { PrimaryButton } from '@components/common/PrimaryButton';
 import { LoadingState } from '@components/common/LoadingState';
 import { useSubscription } from '@hooks/useSubscription';
@@ -20,9 +20,6 @@ import { logger } from '@utils/logger';
 import type { OnboardingStackScreenProps } from '@navigation/types';
 import type { DisplayProduct } from '@/types/subscription';
 
-// Whether to use RevenueCat's native paywall UI
-const USE_REVENUECAT_PAYWALL = true;
-
 export const PaywallScreen = ({ navigation }: OnboardingStackScreenProps<'Paywall'>) => {
   const { theme } = useAppTheme();
   const { isInitialized, isLoading, error, products, isSubscribed, purchase, restore } =
@@ -30,7 +27,6 @@ export const PaywallScreen = ({ navigation }: OnboardingStackScreenProps<'Paywal
 
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<DisplayProduct | null>(null);
-  const [showingPaywall, setShowingPaywall] = useState(false);
 
   // Auto-select recommended product
   useEffect(() => {
@@ -47,37 +43,8 @@ export const PaywallScreen = ({ navigation }: OnboardingStackScreenProps<'Paywal
     }
   }, [isSubscribed, isPurchasing, navigation]);
 
-  // Present RevenueCat Paywall
-  const presentRevenueCatPaywall = useCallback(async () => {
-    setShowingPaywall(true);
-
-    try {
-      const result = await RevenueCatUI.presentPaywall();
-
-      switch (result) {
-        case PAYWALL_RESULT.PURCHASED:
-        case PAYWALL_RESULT.RESTORED:
-          logger.info('Paywall: Purchase/Restore successful');
-          navigation.navigate('ProfileSetup', { plan: 'monthly' });
-          break;
-        case PAYWALL_RESULT.CANCELLED:
-          logger.info('Paywall: User cancelled');
-          break;
-        case PAYWALL_RESULT.ERROR:
-          logger.error('Paywall: Error occurred');
-          Alert.alert('Error', 'Something went wrong. Please try again.');
-          break;
-      }
-    } catch (err) {
-      logger.error('Failed to present paywall', { error: err });
-      Alert.alert('Error', 'Unable to load subscription options. Please try again.');
-    } finally {
-      setShowingPaywall(false);
-    }
-  }, [navigation]);
-
-  // Handle custom purchase
-  const handleCustomPurchase = useCallback(async () => {
+  // Handle purchase
+  const handlePurchase = useCallback(async () => {
     if (!selectedProduct) return;
 
     setIsPurchasing(true);
@@ -86,6 +53,7 @@ export const PaywallScreen = ({ navigation }: OnboardingStackScreenProps<'Paywal
       const result = await purchase(selectedProduct);
 
       if (result.success) {
+        logger.info('Paywall: Purchase successful');
         navigation.navigate('ProfileSetup', { plan: 'monthly' });
       } else if (result.error && !result.userCancelled) {
         Alert.alert('Purchase Failed', result.error, [{ text: 'OK' }]);
@@ -114,15 +82,10 @@ export const PaywallScreen = ({ navigation }: OnboardingStackScreenProps<'Paywal
     }
   }, [restore, navigation]);
 
-  // Get button label
+  // Button label
   const buttonLabel = useMemo(() => {
     if (!selectedProduct) return 'Continue';
-
-    if (selectedProduct.packageType === 'LIFETIME') {
-      return `Get Lifetime Access - ${selectedProduct.price}`;
-    }
-
-    return `Start Subscription - ${selectedProduct.price}`;
+    return `Start Subscription — ${selectedProduct.price}`;
   }, [selectedProduct]);
 
   // Loading state
@@ -138,185 +101,130 @@ export const PaywallScreen = ({ navigation }: OnboardingStackScreenProps<'Paywal
     );
   }
 
-  // RevenueCat Paywall Mode
-  if (USE_REVENUECAT_PAYWALL) {
-    return (
-      <OnboardingLayout
-        eyebrow="Science-Backed Support"
-        title="Your Mental Recovery Companion"
-        subtitle="Research shows emotional support can improve recovery outcomes by 25%"
-      >
-        <View style={styles.rcPaywallContainer}>
-          {/* Science Badge */}
-          <View style={[styles.scienceBadge, { backgroundColor: theme.colors.primary + '10' }]}>
-            <Feather name="award" size={16} color={theme.colors.primary} />
-            <AppText variant="caption" color={theme.colors.primary} style={styles.scienceText}>
-              Based on 30+ years of expressive writing research
-            </AppText>
-          </View>
-
-          {/* Transformation-Focused Features */}
-          <View style={styles.features}>
-            <TransformFeature
-              beforeText="Struggling alone with recovery anxiety"
-              afterText="Daily support that actually understands"
-              theme={theme}
-            />
-            <TransformFeature
-              beforeText="Progress feels invisible day-to-day"
-              afterText="AI tracks patterns you can't see yourself"
-              theme={theme}
-            />
-            <TransformFeature
-              beforeText="Recovery taking longer than expected"
-              afterText="Week-by-week proof of your progress"
-              theme={theme}
-            />
-            <TransformFeature
-              beforeText="No one truly gets what you're going through"
-              afterText="A companion designed for your exact journey"
-              theme={theme}
-            />
-          </View>
-
-          {/* Stats Row */}
-          <View style={styles.statsRow}>
-            <View style={styles.statItem}>
-              <AppText variant="h2" color={theme.colors.primary}>
-                85%
-              </AppText>
-              <AppText
-                variant="caption"
-                color={theme.colors.textSecondary}
-                style={styles.statLabel}
-              >
-                report better{'\n'}mental health
-              </AppText>
-            </View>
-            <View style={[styles.statDivider, { backgroundColor: theme.colors.border }]} />
-            <View style={styles.statItem}>
-              <AppText variant="h2" color={theme.colors.primary}>
-                40%
-              </AppText>
-              <AppText
-                variant="caption"
-                color={theme.colors.textSecondary}
-                style={styles.statLabel}
-              >
-                better PT{'\n'}adherence
-              </AppText>
-            </View>
-            <View style={[styles.statDivider, { backgroundColor: theme.colors.border }]} />
-            <View style={styles.statItem}>
-              <AppText variant="h2" color={theme.colors.primary}>
-                3x
-              </AppText>
-              <AppText
-                variant="caption"
-                color={theme.colors.textSecondary}
-                style={styles.statLabel}
-              >
-                faster than{'\n'}typing
-              </AppText>
-            </View>
-          </View>
-
-          {/* Present Paywall Button */}
-          <PrimaryButton
-            label="Start Your Recovery Support"
-            onPress={presentRevenueCatPaywall}
-            isLoading={showingPaywall}
-            disabled={showingPaywall}
-          />
-
-          {/* Restore Link */}
-          <Pressable
-            onPress={handleRestore}
-            disabled={isPurchasing || showingPaywall}
-            style={styles.restoreButton}
-          >
-            <AppText variant="caption" color={theme.colors.primary}>
-              Restore Purchases
-            </AppText>
-          </Pressable>
-
-          {/* Disclaimer + Legal */}
-          <AppText variant="caption" color={theme.colors.textSecondary} style={styles.legalText}>
-            Re:Claim is not a substitute for professional medical care. Subscriptions auto-renew
-            unless cancelled 24 hours before period end.
-          </AppText>
-        </View>
-      </OnboardingLayout>
-    );
-  }
-
-  // Custom Paywall Mode (fallback)
   return (
     <OnboardingLayout
-      eyebrow="Membership"
-      title="Unlock Your Recovery Journey"
-      subtitle="Choose the plan that fits your needs."
+      eyebrow="Science-Backed Support"
+      title="Your Mental Recovery Companion"
+      subtitle="Research shows emotional support can improve recovery outcomes by 25%"
     >
-      {/* Error Display */}
+      {/* Error */}
       {error && (
-        <View style={[styles.errorContainer, { backgroundColor: `${theme.colors.error}15` }]}>
-          <AppText color={theme.colors.error} variant="caption">
+        <View style={[styles.errorContainer, { backgroundColor: theme.colors.fillQuaternary }]}>
+          <AppText color={theme.colors.error} variant="footnote">
             {error}
           </AppText>
         </View>
       )}
 
-      {/* Product Cards */}
-      <View style={styles.products}>
-        {products.map(product => (
-          <ProductCard
-            key={product.identifier}
-            product={product}
-            isSelected={selectedProduct?.identifier === product.identifier}
-            onSelect={() => setSelectedProduct(product)}
-            disabled={isPurchasing}
-            theme={theme}
-          />
-        ))}
-      </View>
-
-      {/* Features */}
-      <View style={styles.features}>
-        <AppText variant="caption" color={theme.colors.textSecondary} style={styles.featuresTitle}>
-          Included in Re:Claim Pro:
+      {/* Science Badge */}
+      <View style={[styles.scienceBadge, { backgroundColor: theme.colors.primarySubtle }]}>
+        <Feather name="award" size={14} color={theme.colors.primary} />
+        <AppText variant="caption1" color={theme.colors.primary} style={styles.scienceText}>
+          Based on 30+ years of expressive writing research
         </AppText>
-        <FeatureItem icon="mic" text="Unlimited voice journaling" theme={theme} />
-        <FeatureItem icon="message-circle" text="AI-powered conversations" theme={theme} />
-        <FeatureItem icon="trending-up" text="Progress tracking & insights" theme={theme} />
-        <FeatureItem icon="heart" text="Personalized recovery support" theme={theme} />
       </View>
 
-      {/* Actions */}
-      <View style={styles.actions}>
-        <PrimaryButton
-          label={buttonLabel}
-          onPress={handleCustomPurchase}
-          isLoading={isPurchasing}
-          disabled={isPurchasing || !selectedProduct}
+      {/* Product Cards */}
+      {products.length > 0 && (
+        <View style={styles.products}>
+          {products.map(product => (
+            <ProductCard
+              key={product.identifier}
+              product={product}
+              isSelected={selectedProduct?.identifier === product.identifier}
+              onSelect={() => setSelectedProduct(product)}
+              disabled={isPurchasing}
+              theme={theme}
+            />
+          ))}
+        </View>
+      )}
+
+      {/* Transformation Features */}
+      <View style={styles.features}>
+        <TransformFeature
+          beforeText="Struggling alone with recovery anxiety"
+          afterText="Daily support that actually understands"
+          theme={theme}
         />
-
-        <Pressable onPress={handleRestore} disabled={isPurchasing} style={styles.restoreButton}>
-          <AppText variant="caption" color={theme.colors.primary}>
-            Restore Purchases
-          </AppText>
-        </Pressable>
+        <TransformFeature
+          beforeText="Progress feels invisible day-to-day"
+          afterText="AI tracks patterns you can't see yourself"
+          theme={theme}
+        />
+        <TransformFeature
+          beforeText="Recovery taking longer than expected"
+          afterText="Week-by-week proof of your progress"
+          theme={theme}
+        />
       </View>
+
+      {/* Stats */}
+      <GlassCard style={styles.statsCard} blurEnabled={false}>
+        <View style={styles.statsRow}>
+          <View style={styles.statItem}>
+            <AppText variant="title2" color={theme.colors.primary}>
+              85%
+            </AppText>
+            <AppText variant="caption2" color={theme.colors.textTertiary} style={styles.statLabel}>
+              report better{'\n'}mental health
+            </AppText>
+          </View>
+          <View style={[styles.statDivider, { backgroundColor: theme.colors.divider }]} />
+          <View style={styles.statItem}>
+            <AppText variant="title2" color={theme.colors.primary}>
+              40%
+            </AppText>
+            <AppText variant="caption2" color={theme.colors.textTertiary} style={styles.statLabel}>
+              better PT{'\n'}adherence
+            </AppText>
+          </View>
+          <View style={[styles.statDivider, { backgroundColor: theme.colors.divider }]} />
+          <View style={styles.statItem}>
+            <AppText variant="title2" color={theme.colors.primary}>
+              3x
+            </AppText>
+            <AppText variant="caption2" color={theme.colors.textTertiary} style={styles.statLabel}>
+              faster than{'\n'}typing
+            </AppText>
+          </View>
+        </View>
+      </GlassCard>
+
+      {/* Purchase Button */}
+      <PrimaryButton
+        label={buttonLabel}
+        onPress={handlePurchase}
+        isLoading={isPurchasing}
+        disabled={isPurchasing || !selectedProduct}
+      />
+
+      {/* Restore */}
+      <Pressable
+        onPress={handleRestore}
+        disabled={isPurchasing}
+        style={styles.restoreButton}
+        accessibilityRole="button"
+        accessibilityLabel="Restore Purchases"
+      >
+        <AppText variant="footnote" color={theme.colors.primary}>
+          Restore Purchases
+        </AppText>
+      </Pressable>
 
       {/* Legal */}
-      <AppText variant="caption" color={theme.colors.textSecondary} style={styles.legalText}>
-        By subscribing, you agree to our Terms of Service and Privacy Policy. Subscriptions
-        auto-renew unless cancelled at least 24 hours before the end of the current period.
+      <AppText variant="caption2" color={theme.colors.textMuted} style={styles.legalText}>
+        Re:Claim is not a substitute for professional medical care. Subscriptions auto-renew unless
+        cancelled 24 hours before period end.
       </AppText>
     </OnboardingLayout>
   );
 };
 
-// Product Card Component
+// ============================================
+// Sub-Components
+// ============================================
+
 interface ProductCardProps {
   product: DisplayProduct;
   isSelected: boolean;
@@ -325,111 +233,87 @@ interface ProductCardProps {
   theme: ReturnType<typeof useAppTheme>['theme'];
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({
-  product,
-  isSelected,
-  onSelect,
-  disabled,
-  theme,
-}) => {
-  return (
-    <Pressable
-      onPress={onSelect}
-      disabled={disabled}
-      style={[
-        styles.productCard,
-        {
-          backgroundColor: theme.colors.surface,
-          borderColor: isSelected ? theme.colors.primary : theme.colors.border,
-          opacity: disabled ? 0.6 : 1,
-        },
-      ]}
-      accessibilityRole="radio"
-      accessibilityState={{ selected: isSelected }}
-    >
-      {/* Badge */}
-      {product.badge && (
-        <View style={[styles.badge, { backgroundColor: theme.colors.primary }]}>
-          <AppText style={styles.badgeText} color={theme.colors.surface}>
-            {product.badge}
-          </AppText>
-        </View>
+const ProductCard = ({ product, isSelected, onSelect, disabled, theme }: ProductCardProps) => (
+  <Pressable
+    onPress={onSelect}
+    disabled={disabled}
+    style={({ pressed }) => [
+      styles.productCard,
+      {
+        backgroundColor: isSelected ? theme.colors.primarySubtle : theme.colors.surface,
+        borderColor: isSelected ? theme.colors.primary : theme.colors.border,
+        opacity: disabled ? 0.6 : 1,
+      },
+      pressed && !disabled && { opacity: 0.85 },
+    ]}
+    accessibilityRole="radio"
+    accessibilityState={{ selected: isSelected }}
+  >
+    {/* Badge */}
+    {product.badge && (
+      <View style={[styles.badge, { backgroundColor: theme.colors.primary }]}>
+        <AppText style={styles.badgeText} color="#FFFFFF">
+          {product.badge}
+        </AppText>
+      </View>
+    )}
+
+    {/* Content */}
+    <View style={styles.productContent}>
+      <AppText variant="headline" color={theme.colors.text}>
+        {product.title}
+      </AppText>
+      <AppText variant="title2" color={theme.colors.text}>
+        {product.price}
+      </AppText>
+      {product.pricePerMonth && (
+        <AppText variant="caption1" color={theme.colors.textTertiary}>
+          {product.pricePerMonth}
+        </AppText>
       )}
-
-      {/* Content */}
-      <View style={styles.productContent}>
-        <AppText variant="h3">{product.title}</AppText>
-        <AppText variant="h2" style={styles.price}>
-          {product.price}
-        </AppText>
-        {product.pricePerMonth && (
-          <AppText variant="caption" color={theme.colors.textSecondary}>
-            {product.pricePerMonth}
-          </AppText>
-        )}
-        <AppText
-          variant="caption"
-          color={theme.colors.textSecondary}
-          style={styles.productDescription}
-        >
-          {product.description}
-        </AppText>
-      </View>
-
-      {/* Selection Indicator */}
-      <View style={styles.selectionIndicator}>
-        {isSelected ? (
-          <View style={[styles.checkmark, { backgroundColor: theme.colors.primary }]}>
-            <Feather name="check" size={16} color={theme.colors.surface} />
-          </View>
-        ) : (
-          <View style={[styles.radioOuter, { borderColor: theme.colors.border }]} />
-        )}
-      </View>
-    </Pressable>
-  );
-};
-
-// Feature Item Component
-interface FeatureItemProps {
-  icon: keyof typeof Feather.glyphMap;
-  text: string;
-  theme: ReturnType<typeof useAppTheme>['theme'];
-}
-
-const FeatureItem: React.FC<FeatureItemProps> = ({ icon, text, theme }) => (
-  <View style={styles.featureItem}>
-    <View style={[styles.featureIcon, { backgroundColor: `${theme.colors.primary}15` }]}>
-      <Feather name={icon} size={16} color={theme.colors.primary} />
+      <AppText
+        variant="caption1"
+        color={theme.colors.textSecondary}
+        style={styles.productDescription}
+      >
+        {product.description}
+      </AppText>
     </View>
-    <AppText variant="body" style={styles.featureText}>
-      {text}
-    </AppText>
-  </View>
+
+    {/* Selection */}
+    <View style={styles.selectionIndicator}>
+      {isSelected ? (
+        <View style={[styles.checkmark, { backgroundColor: theme.colors.primary }]}>
+          <Feather name="check" size={14} color="#FFFFFF" />
+        </View>
+      ) : (
+        <View style={[styles.radioOuter, { borderColor: theme.colors.border }]} />
+      )}
+    </View>
+  </Pressable>
 );
 
-// Transformation Feature Component (Before → After)
 interface TransformFeatureProps {
   beforeText: string;
   afterText: string;
   theme: ReturnType<typeof useAppTheme>['theme'];
 }
 
-const TransformFeature: React.FC<TransformFeatureProps> = ({ beforeText, afterText, theme }) => (
+const TransformFeature = ({ beforeText, afterText, theme }: TransformFeatureProps) => (
   <View style={styles.transformItem}>
     <View style={styles.transformBefore}>
       <Feather name="x" size={14} color={theme.colors.error} />
       <AppText
-        variant="caption"
-        color={theme.colors.textSecondary}
+        variant="footnote"
+        color={theme.colors.textTertiary}
         style={styles.transformBeforeText}
       >
         {beforeText}
       </AppText>
     </View>
     <View style={styles.transformAfter}>
-      <Feather name="check" size={14} color="#52C41A" />
-      <AppText variant="body" style={styles.transformAfterText}>
+      <Feather name="check" size={14} color={theme.colors.success} />
+      <AppText variant="subheadline" color={theme.colors.text} style={styles.transformAfterText}>
         {afterText}
       </AppText>
     </View>
@@ -437,14 +321,10 @@ const TransformFeature: React.FC<TransformFeatureProps> = ({ beforeText, afterTe
 );
 
 const styles = StyleSheet.create({
-  actions: {
-    alignItems: 'center',
-    gap: 12,
-  },
   badge: {
     borderRadius: 999,
     paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingVertical: 3,
     position: 'absolute',
     right: 12,
     top: -10,
@@ -457,50 +337,27 @@ const styles = StyleSheet.create({
   },
   checkmark: {
     alignItems: 'center',
-    borderRadius: 14,
-    height: 28,
+    borderRadius: 12,
+    height: 24,
     justifyContent: 'center',
-    width: 28,
+    width: 24,
   },
   errorContainer: {
-    borderRadius: 8,
+    borderRadius: 10,
     marginBottom: 8,
     padding: 12,
   },
-  featureIcon: {
-    alignItems: 'center',
-    borderRadius: 8,
-    height: 32,
-    justifyContent: 'center',
-    width: 32,
-  },
-  featureItem: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 12,
-  },
-  featureText: {
-    flex: 1,
-  },
   features: {
-    gap: 16,
-  },
-  featuresTitle: {
-    fontWeight: '600',
-    marginBottom: 4,
+    gap: 14,
   },
   legalText: {
-    lineHeight: 16,
+    lineHeight: 15,
     textAlign: 'center',
-  },
-  price: {
-    fontSize: 22,
-    fontWeight: '700',
   },
   productCard: {
     alignItems: 'center',
     borderRadius: 16,
-    borderWidth: 2,
+    borderWidth: 1.5,
     flexDirection: 'row',
     gap: 12,
     padding: 16,
@@ -510,7 +367,6 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   productDescription: {
-    lineHeight: 18,
     marginTop: 4,
   },
   products: {
@@ -518,67 +374,51 @@ const styles = StyleSheet.create({
   },
   radioOuter: {
     borderRadius: 12,
-    borderWidth: 2,
+    borderWidth: 1.5,
     height: 24,
     width: 24,
   },
-  rcPaywallContainer: {
-    gap: 20,
-  },
   restoreButton: {
+    alignSelf: 'center',
     padding: 8,
   },
-  selectionIndicator: {
-    alignItems: 'center',
-    height: 28,
-    justifyContent: 'center',
-    width: 28,
-  },
-  // Science badge styles
   scienceBadge: {
     alignItems: 'center',
-    borderRadius: 20,
+    alignSelf: 'center',
+    borderRadius: 14,
     flexDirection: 'row',
     gap: 6,
-    justifyContent: 'center',
     paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingVertical: 6,
   },
   scienceText: {
     fontWeight: '500',
   },
-  // Stats row styles
-  statsRow: {
+  selectionIndicator: {
     alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 16,
+    height: 24,
+    justifyContent: 'center',
+    width: 24,
+  },
+  statDivider: {
+    height: 36,
+    width: 0.5,
   },
   statItem: {
     alignItems: 'center',
     flex: 1,
   },
   statLabel: {
-    lineHeight: 14,
     marginTop: 4,
     textAlign: 'center',
   },
-  statDivider: {
-    height: 40,
-    width: 1,
+  statsCard: {
+    padding: 16,
   },
-  // Transformation feature styles
-  transformItem: {
-    gap: 4,
-  },
-  transformBefore: {
+  statsRow: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 8,
-  },
-  transformBeforeText: {
-    flex: 1,
-    textDecorationLine: 'line-through',
+    justifyContent: 'space-around',
   },
   transformAfter: {
     alignItems: 'center',
@@ -589,5 +429,17 @@ const styles = StyleSheet.create({
   transformAfterText: {
     flex: 1,
     fontWeight: '500',
+  },
+  transformBefore: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  transformBeforeText: {
+    flex: 1,
+    textDecorationLine: 'line-through',
+  },
+  transformItem: {
+    gap: 4,
   },
 });

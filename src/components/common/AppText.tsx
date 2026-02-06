@@ -1,3 +1,10 @@
+/**
+ * AppText — Universal text component
+ * ====================================
+ * Applies typography variants from the theme system.
+ * Supports all Apple-style typography variants (largeTitle, title1, body, etc.)
+ * and semantic aliases (h1, h2, etc.) for backward compatibility.
+ */
 import { Text, TextProps, StyleSheet } from 'react-native';
 
 import { useAppTheme } from '@hooks/useAppTheme';
@@ -5,7 +12,9 @@ import type { TypographyVariant } from '@theme/typography';
 import { baseTextStyle } from '@theme/typography';
 
 interface AppTextProps extends TextProps {
+  /** Typography variant from the theme scale */
   variant?: TypographyVariant;
+  /** Override text color */
   color?: string;
 }
 

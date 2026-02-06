@@ -187,8 +187,6 @@ function packageToDisplayProduct(pkg: PurchasesPackage): DisplayProduct {
   if (pkg.packageType === 'ANNUAL') {
     badge = PRODUCT_DISPLAY_INFO.yearly.badge;
     isRecommended = true;
-  } else if (pkg.packageType === 'LIFETIME') {
-    badge = PRODUCT_DISPLAY_INFO.lifetime.badge;
   }
 
   // Calculate price per month for annual subscriptions
@@ -225,9 +223,9 @@ export async function getDisplayOffering(): Promise<DisplayOffering | null> {
 
     const packages = offering.availablePackages.map(packageToDisplayProduct);
 
-    // Sort packages: yearly first (recommended), then monthly, then lifetime
+    // Sort packages: yearly first (recommended), then monthly
     packages.sort((a, b) => {
-      const order = { ANNUAL: 0, MONTHLY: 1, LIFETIME: 2 };
+      const order = { ANNUAL: 0, MONTHLY: 1 };
       const aOrder = order[a.packageType as keyof typeof order] ?? 99;
       const bOrder = order[b.packageType as keyof typeof order] ?? 99;
       return aOrder - bOrder;

@@ -1,8 +1,14 @@
+/**
+ * CelebrationScreen — Apple Glass Aesthetic
+ * ==========================================
+ * Clean celebration with glass card and subtle stats.
+ */
 import { StyleSheet, View } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { AppText } from '@components/common/AppText';
+import { GlassCard } from '@components/common/GlassCard';
 import { PrimaryButton } from '@components/common/PrimaryButton';
 import { useAppTheme } from '@hooks/useAppTheme';
 import { useAuth } from '@hooks/useAuth';
@@ -20,39 +26,53 @@ export const CelebrationScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <View
-        style={[
-          styles.card,
-          { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
-        ]}
-      >
-        <AppText variant="h2">Entry complete</AppText>
-        <AppText style={styles.subtitle}>You showed up for yourself today. That matters.</AppText>
-
-        <View style={styles.statsRow}>
-          <View style={styles.stat}>
-            <AppText variant="h1">{profile?.stats?.streakDays ?? 1}</AppText>
-            <AppText>Day streak</AppText>
-          </View>
-          <View style={styles.stat}>
-            <AppText variant="h1">{entry?.duration ? Math.round(entry.duration / 60) : 0}</AppText>
-            <AppText>Minutes</AppText>
-          </View>
+      <View style={styles.content}>
+        {/* Hero */}
+        <View style={styles.hero}>
+          <AppText style={styles.checkmark}>✓</AppText>
+          <AppText variant="title1" color={theme.colors.text}>
+            Entry complete
+          </AppText>
+          <AppText variant="subheadline" color={theme.colors.textSecondary} style={styles.subtitle}>
+            You showed up for yourself today. That matters.
+          </AppText>
         </View>
+
+        {/* Stats */}
+        <GlassCard style={styles.statsCard} blurEnabled={false}>
+          <View style={styles.statsRow}>
+            <View style={styles.stat}>
+              <AppText variant="largeTitle" color={theme.colors.primary}>
+                {profile?.stats?.streakDays ?? 1}
+              </AppText>
+              <AppText variant="footnote" color={theme.colors.textTertiary}>
+                Day streak
+              </AppText>
+            </View>
+            <View style={[styles.divider, { backgroundColor: theme.colors.divider }]} />
+            <View style={styles.stat}>
+              <AppText variant="largeTitle" color={theme.colors.primary}>
+                {entry?.duration ? Math.round(entry.duration / 60) : 0}
+              </AppText>
+              <AppText variant="footnote" color={theme.colors.textTertiary}>
+                Minutes
+              </AppText>
+            </View>
+          </View>
+        </GlassCard>
       </View>
 
+      {/* Actions */}
       <View style={styles.actions}>
-        <PrimaryButton
-          label="View Dashboard"
-          onPress={() => navigation.navigate('Main', { screen: 'DashboardTab' })}
-        />
         <PrimaryButton
           label="View Entry"
           onPress={() => navigation.replace('EntryDetail', { entryId: route.params.entryId })}
+          variant="primary"
         />
         <PrimaryButton
           label="Back to Home"
           onPress={() => navigation.navigate('Main', { screen: 'HomeTab' })}
+          variant="secondary"
         />
       </View>
     </View>
@@ -61,34 +81,48 @@ export const CelebrationScreen = () => {
 
 const styles = StyleSheet.create({
   actions: {
-    gap: 12,
-    marginTop: 24,
+    gap: 10,
+    paddingBottom: 40,
+    paddingHorizontal: 24,
   },
-  card: {
-    borderRadius: 20,
-    borderWidth: 1,
-    gap: 16,
-    padding: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.06,
-    shadowRadius: 20,
+  checkmark: {
+    color: '#34C759',
+    fontSize: 48,
+    fontWeight: '700',
+    marginBottom: 8,
   },
   container: {
     flex: 1,
-    padding: 24,
+    justifyContent: 'space-between',
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  divider: {
+    height: '60%',
+    width: 0.5,
+  },
+  hero: {
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 32,
   },
   stat: {
     alignItems: 'center',
     flex: 1,
     gap: 4,
   },
+  statsCard: {
+    padding: 24,
+  },
   statsRow: {
+    alignItems: 'center',
     flexDirection: 'row',
-    gap: 16,
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
   },
   subtitle: {
-    opacity: 0.75,
+    textAlign: 'center',
   },
 });
